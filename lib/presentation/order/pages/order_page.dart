@@ -4,9 +4,12 @@ import 'package:flutter_pos_2/core/constants/colors.dart';
 import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
 import 'package:flutter_pos_2/core/extensions/string_ext.dart';
 import 'package:flutter_pos_2/data/datasources/auth_local_datasource.dart';
+import 'package:flutter_pos_2/data/datasources/reservation_local_datasource.dart';
+import 'package:flutter_pos_2/data/datasources/reservation_remote_datasource.dart';
 import 'package:flutter_pos_2/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:flutter_pos_2/presentation/home/models/order_item.dart';
 import 'package:flutter_pos_2/presentation/home/pages/dashboard_page.dart';
+import 'package:flutter_pos_2/presentation/reservation/bloc/reservation_bloc.dart';
 import 'package:flutter_pos_2/presentation/table/models/table_model.dart';
 import 'package:flutter_pos_2/presentation/table/pages/pilih_meja_page.dart';
 
@@ -338,26 +341,39 @@ class _OrderPageState extends State<OrderPage> {
             ProcessButton(
               price: 0,
               onPressed: () async {
-                /// 1️⃣ VALIDASI MEJA
-                if (selectedTable == null) {
-                  _showError('Silakan pilih meja terlebih dahulu');
+                if (indexValue.value == 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Pilih metode pembayaran')),
+                  );
                   return;
                 }
 
-                /// 2️⃣ VALIDASI METODE PEMBAYARAN
-                if (indexValue.value == 0) {
-                  _showError('Silakan pilih metode pembayaran');
-                  return;
-                } else if (indexValue.value == 1) {
+                if (indexValue.value == 1) {
                   showDialog(
                     context: context,
-                    builder: (context) => PaymentCashDialog(price: totalPrice),
+                    builder: (_) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider.value(value: context.read<OrderBloc>()),
+                        BlocProvider(
+                          create: (_) => ReservationBloc(
+                            ReservationRemoteDatasource(),
+                            ReservationLocalDatasource.instance,
+                          ),
+                        ),
+                      ],
+                      child: PaymentCashDialog(
+                        price: totalPrice,
+                        tableId: selectedTable?.id ?? 0, // ✅ tambahkan ini),
+                      ),
+                    ),
                   );
-                } else if (indexValue.value == 2) {
+                }
+
+                if (indexValue.value == 2) {
                   showDialog(
                     context: context,
                     barrierDismissible: false,
-                    builder: (context) => PaymentQrisDialog(price: totalPrice),
+                    builder: (_) => PaymentQrisDialog(price: totalPrice),
                   );
                 }
               },

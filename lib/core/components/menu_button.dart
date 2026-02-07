@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pos_2/core/components/spaces.dart';
 import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../constants/colors.dart';
 
 class MenuButton extends StatelessWidget {
@@ -10,8 +9,9 @@ class MenuButton extends StatelessWidget {
   final String label;
   final bool isActive;
   final VoidCallback onPressed;
-  final bool isImage;
+  final bool isImage; // true = png/jpg/jpeg, false = svg
   final double size;
+  final bool isNetwork; // true = load image dari url
 
   const MenuButton({
     super.key,
@@ -21,10 +21,56 @@ class MenuButton extends StatelessWidget {
     required this.onPressed,
     this.isImage = false,
     this.size = 90,
+    this.isNetwork = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    Widget iconWidget;
+
+    if (isNetwork) {
+      // support network image
+      if (iconPath.toLowerCase().endsWith('.svg')) {
+        iconWidget = SvgPicture.network(
+          iconPath,
+          width: size,
+          height: size,
+          placeholderBuilder: (context) => const CircularProgressIndicator(),
+          colorFilter: ColorFilter.mode(
+            isActive ? AppColors.white : AppColors.primary,
+            BlendMode.srcIn,
+          ),
+        );
+      } else {
+        iconWidget = Image.network(
+          iconPath,
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
+          color: isActive ? AppColors.white : AppColors.primary,
+          errorBuilder: (context, error, stackTrace) =>
+              Icon(Icons.broken_image, size: size, color: AppColors.primary),
+        );
+      }
+    } else {
+      // asset image
+      iconWidget = isImage
+          ? Image.asset(
+              iconPath,
+              width: size,
+              height: size,
+              fit: BoxFit.contain,
+              color: isActive ? AppColors.white : AppColors.primary,
+            )
+          : SvgPicture.asset(
+              iconPath,
+              colorFilter: ColorFilter.mode(
+                isActive ? AppColors.white : AppColors.primary,
+                BlendMode.srcIn,
+              ),
+            );
+    }
+
     return InkWell(
       onTap: onPressed,
       borderRadius: const BorderRadius.all(Radius.circular(6.0)),
@@ -48,21 +94,7 @@ class MenuButton extends StatelessWidget {
         child: Column(
           children: [
             const SpaceHeight(8.0),
-            isImage
-                ? Image.asset(
-                    iconPath,
-                    width: size,
-                    height: size,
-                    fit: BoxFit.contain,
-                    color: isActive ? AppColors.white : AppColors.primary,
-                  )
-                : SvgPicture.asset(
-                    iconPath,
-                    colorFilter: ColorFilter.mode(
-                      isActive ? AppColors.white : AppColors.primary,
-                      BlendMode.srcIn,
-                    ),
-                  ),
+            iconWidget,
             const SpaceHeight(8.0),
             Text(
               label,

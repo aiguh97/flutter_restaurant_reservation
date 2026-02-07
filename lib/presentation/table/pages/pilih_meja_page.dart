@@ -10,6 +10,7 @@ import 'package:flutter_pos_2/presentation/table/bloc/table_event.dart';
 import 'package:flutter_pos_2/presentation/table/bloc/table_state.dart';
 import 'package:flutter_pos_2/presentation/table/models/table_model.dart';
 import 'package:flutter_pos_2/presentation/table/pages/table_item.dart';
+import 'package:flutter_pos_2/presentation/table/pages/main_table_item.dart';
 
 class PilihMejaPage extends StatelessWidget {
   const PilihMejaPage({super.key});
@@ -49,122 +50,84 @@ class PilihMejaPage extends StatelessWidget {
               const SpaceHeight(8),
 
               /// TABLE LAYOUT
+              /// TABLE LAYOUT
               Expanded(
                 child: BlocBuilder<TableBloc, TableState>(
                   builder: (context, state) {
                     if (state is TableLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
-
                     if (state is TableLoaded) {
                       final tables = state.tables;
 
-                      final TableModel? mainTable = tables
-                          .where((e) => e.type == 'main')
-                          .cast<TableModel?>()
-                          .firstOrNull;
+                      // 1. Masukkan semua meja ke dalam Map agar bisa dipanggil berdasarkan ID
+                      final Map<int, TableModel> tableMap = {
+                        for (var t in tables) t.id: t,
+                      };
 
-                      final otherTables = tables
-                          .where((e) => e.type != 'main')
-                          .toList();
+                      // 2. Tentukan posisi ID meja pada Grid (0-14)
+                      // ID 1 adalah Main Table, diletakkan di slot 7
+                      // Slot 4 dan 10 adalah null (SizedBox/Kosong)
+                      final Map<int, int?> layoutConfig = {
+                        0: 2, 1: 3, 2: 4,
+                        3: 5, 4: null, 5: 6,
+                        6: 7, 7: 1, 8: 8, // Slot 7 = ID 1 (Main)
+                        9: 9, 10: null, 11: 10,
+                        12: 11, 13: 12, 14: 13,
+                      };
 
                       return Column(
                         children: [
-                          /// LEGEND
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                _LegendItem(
-                                  color: Colors.green,
-                                  label: 'Available',
-                                ),
-                                SizedBox(width: 16),
-                                _LegendItem(
-                                  color: Colors.red,
-                                  label: 'Occupied',
-                                ),
-                                SizedBox(width: 16),
-                                _LegendItem(
-                                  color: Color(0xFF7C39ED),
-                                  label: 'Selected',
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const SpaceHeight(12),
-
-                          /// MAIN TABLE (TENGAH)
-                          if (mainTable != null) ...[
-                            GestureDetector(
-                              onTap: () {
-                                context.read<TableBloc>().add(
-                                  SelectTable(mainTable),
-                                );
-                              },
-                              child: TableItem(
-                                table: mainTable,
-                                isSelected:
-                                    state.selectedTable?.id == mainTable.id,
-                              ),
-                            ),
-                            const SpaceHeight(24),
-                          ],
-
-                          /// TITLE
-                          Row(
-                            children: const [
-                              Expanded(child: Divider()),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8),
-                                child: Text(
-                                  '2-SEAT TABLES',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                              Expanded(child: Divider()),
-                            ],
-                          ),
-
-                          const SpaceHeight(12),
-
-                          /// GRID TABLES
+                          // ... (Bagian Legend & Title tetap sama)
                           Expanded(
-                            child: GridView.builder(
-                              padding: const EdgeInsets.all(16),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    crossAxisSpacing: 20,
-                                    mainAxisSpacing: 28,
-                                    childAspectRatio: 0.8,
-                                  ),
-                              itemCount: otherTables.length,
-                              itemBuilder: (context, index) {
-                                final table = otherTables[index];
-                                final isSelected =
-                                    state.selectedTable?.id == table.id;
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
+                              child: GridView.builder(
+                                padding: const EdgeInsets.all(16),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: 20,
+                                      mainAxisSpacing: 28,
+                                      childAspectRatio: 1,
+                                    ),
+                                itemCount: 15,
+                                itemBuilder: (context, index) {
+                                  // Ambil ID meja untuk index grid ini
+                                  final targetId = layoutConfig[index];
 
-                                return GestureDetector(
-                                  onTap: table.isOccupied
-                                      ? null
-                                      : () {
-                                          context.read<TableBloc>().add(
+                                  // Jika index ini diset null (slot kosong), tampilkan SizedBox
+                                  if (targetId == null) return const SizedBox();
+
+                                  // Cari data meja di tableMap berdasarkan ID
+                                  final table = tableMap[targetId];
+                                  if (table == null) return const SizedBox();
+
+                                  // Render Meja
+                                  return GestureDetector(
+                                    onTap: table.isOccupied || table.isReserved
+                                        ? null
+                                        : () => context.read<TableBloc>().add(
                                             SelectTable(table),
-                                          );
-                                        },
-                                  child: TableItem(
-                                    table: table,
-                                    isSelected: isSelected,
-                                  ),
-                                );
-                              },
+                                          ),
+                                    child: table.id == 1
+                                        ? MainTableItem(
+                                            table: table,
+                                            isSelected:
+                                                state.selectedTable?.id ==
+                                                table.id,
+                                          )
+                                        : TableItem(
+                                            table: table,
+                                            isSelected:
+                                                state.selectedTable?.id ==
+                                                table.id,
+                                          ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ],

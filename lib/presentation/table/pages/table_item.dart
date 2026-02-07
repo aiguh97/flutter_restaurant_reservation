@@ -8,30 +8,38 @@ class TableItem extends StatelessWidget {
 
   const TableItem({super.key, required this.table, required this.isSelected});
 
+  bool get isDisabled => table.isOccupied || table.isReserved;
+
   @override
   Widget build(BuildContext context) {
     final Color color = isSelected
-        ? AppColors.primary
+        ? Theme.of(context).primaryColor
         : table.isOccupied
-        ? Colors.red
+        ? Colors.yellow
+        : table.isReserved
+        ? Colors
+              .red // ubah grey → merah supaya sesuai legend
         : Colors.green;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        /// ── ──  (KURSI ATAS)
-        _ChairRow(color),
+    return Opacity(
+      opacity: isDisabled ? 0.6 : 1.0, // visual disabled
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          /// ── ──  (KURSI ATAS)
+          _ChairRow(color),
 
-        const SizedBox(height: 6),
+          const SizedBox(height: 6),
 
-        /// TABLE
-        _TableBox(color),
+          /// TABLE
+          _TableBox(color),
 
-        const SizedBox(height: 6),
+          const SizedBox(height: 6),
 
-        /// ── ──  (KURSI BAWAH)
-        _ChairRow(color),
-      ],
+          /// ── ──  (KURSI BAWAH)
+          _ChairRow(color),
+        ],
+      ),
     );
   }
 
@@ -45,14 +53,24 @@ class TableItem extends StatelessWidget {
         border: Border.all(color: color, width: 2),
         color: color.withOpacity(isSelected ? 0.04 : 0.06),
       ),
-      child: Text(
-        table.name,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: color,
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            table.name,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+          // TAMBAHKAN INI UNTUK DEBUG:
+          Text(
+            'ID: ${table.id}',
+            style: TextStyle(fontSize: 9, color: color.withOpacity(0.7)),
+          ),
+        ],
       ),
     );
   }

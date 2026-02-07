@@ -50,6 +50,7 @@ dependencies:
   widgets_to_image: ^1.0.0
   mobile_scanner: ^5.2.1
   json_annotation: ^4.9.0
+  equatable: ^2.0.8
 
 dev_dependencies:
   build_runner: ^2.4.7

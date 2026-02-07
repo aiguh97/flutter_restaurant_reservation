@@ -1,4 +1,4 @@
-enum TableStatus { available, occupied }
+enum TableStatus { available, reserved, occupied }
 
 class TableModel {
   final int id;
@@ -6,11 +6,11 @@ class TableModel {
   final int capacity;
   final String type;
 
-  /// kalau nanti mau floor plan → masih aman
+  /// Posisi untuk floor plan
   final double positionX;
   final double positionY;
 
-  /// status meja
+  /// Status meja
   final TableStatus status;
 
   TableModel({
@@ -24,14 +24,23 @@ class TableModel {
   });
 
   bool get isOccupied => status == TableStatus.occupied;
+  bool get isReserved => status == TableStatus.reserved;
   bool get isAvailable => status == TableStatus.available;
 
-  /// ✅ FACTORY AMAN (API kebal typo & null)
+  /// ✅ Factory dari API
   factory TableModel.fromMap(Map<String, dynamic> map) {
-    final bool occupied =
-        _parseBool(map['is_occupied']) ||
-        _parseInt(map['status']) == 1 ||
-        map['status'] == 'occupied';
+    TableStatus tableStatus = TableStatus.available;
+
+    final bool occupied = _parseBool(map['is_occupied']);
+    final bool reserved = _parseBool(map['is_reserved']);
+
+    if (occupied) {
+      tableStatus = TableStatus.occupied;
+    } else if (reserved) {
+      tableStatus = TableStatus.reserved;
+    } else {
+      tableStatus = TableStatus.available;
+    }
 
     return TableModel(
       id: _parseInt(map['id']),
@@ -40,12 +49,11 @@ class TableModel {
       type: map['type']?.toString() ?? '',
       positionX: _parseDouble(map['position_x']),
       positionY: _parseDouble(map['position_y']),
-      status: occupied ? TableStatus.occupied : TableStatus.available,
+      status: tableStatus,
     );
   }
 
   // ================== SAFE PARSER ==================
-
   static int _parseInt(dynamic value) {
     if (value == null) return 0;
     if (value is int) return value;
@@ -67,9 +75,8 @@ class TableModel {
     if (value is bool) return value;
     if (value is int) return value == 1;
     if (value is String) {
-      return value.toLowerCase() == 'true' ||
-          value.toLowerCase() == 'yes' ||
-          value == '1';
+      final v = value.toLowerCase();
+      return v == 'true' || v == 'yes' || v == '1';
     }
     return false;
   }

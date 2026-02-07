@@ -18,12 +18,24 @@ class TableBloc extends Bloc<TableEvent, TableState> {
   ) async {
     emit(TableLoading());
 
-    final result = await datasource.getTables();
-
-    result.fold(
-      (error) => emit(TableError(error)),
-      (tables) => emit(TableLoaded(tables: tables)),
+    // final result = await datasource.getTables();
+    // Hardcode date & time
+    final result = await datasource.getTables(
+      date: '2026-02-07',
+      time: '18:30',
     );
+
+    result.fold((error) => emit(TableError(error)), (tables) {
+      // ✅ PRINT SEMUA TABLE UNTUK DEBUG
+      for (var table in tables) {
+        print(
+          'Tablessss: id=${table.id}, name=${table.name}, '
+          'occupied=${table.isOccupied}, reserved=${table.isReserved}, available=${table.isAvailable}',
+        );
+      }
+
+      emit(TableLoaded(tables: tables));
+    });
   }
 
   void _onSelectTable(SelectTable event, Emitter<TableState> emit) {

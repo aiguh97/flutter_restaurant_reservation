@@ -14,9 +14,12 @@ class MainTableItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color color = isSelected
-        ? const Color.fromARGB(255, 56, 0, 153)
+        ? Theme.of(context).primaryColor
         : table.isOccupied
-        ? Colors.red
+        ? Colors.yellow
+        : table.isReserved
+        ? Colors
+              .red // ubah grey → merah supaya sesuai legend
         : Colors.green;
 
     return Center(

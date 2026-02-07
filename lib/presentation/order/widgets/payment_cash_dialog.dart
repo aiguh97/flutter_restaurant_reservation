@@ -7,6 +7,8 @@ import 'package:flutter_pos_2/data/datasources/product_local_datasource.dart';
 import 'package:flutter_pos_2/presentation/order/bloc/order/order_bloc.dart';
 import 'package:flutter_pos_2/presentation/order/models/order_model.dart';
 import 'package:flutter_pos_2/presentation/order/widgets/payment_success_dialog.dart';
+import 'package:flutter_pos_2/presentation/reservation/bloc/reservation_bloc.dart';
+import 'package:flutter_pos_2/presentation/reservation/bloc/reservation_event.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/components/buttons.dart';
@@ -16,7 +18,12 @@ import '../../../core/constants/colors.dart';
 
 class PaymentCashDialog extends StatefulWidget {
   final int price;
-  const PaymentCashDialog({super.key, required this.price});
+  final int tableId; // tambahkan ini
+  const PaymentCashDialog({
+    super.key,
+    required this.price,
+    required this.tableId,
+  });
 
   @override
   State<PaymentCashDialog> createState() => _PaymentCashDialogState();
@@ -106,7 +113,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
           // ),
           const SpaceHeight(30.0),
           BlocConsumer<OrderBloc, OrderState>(
-            listener: (context, state) {
+            listener: (context, state) async {
               state.maybeWhen(
                 orElse: () {},
                 success:
@@ -119,7 +126,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                       idKasir,
                       namaKasir,
                       _,
-                    ) {
+                    ) async {
                       final orderModel = OrderModel(
                         paymentMethod: payment,
                         nominalBayar: nominal,
@@ -128,14 +135,42 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                         totalPrice: total,
                         idKasir: idKasir,
                         namaKasir: namaKasir,
-                        //tranction time format 2024-01-03T22:12:22
                         transactionTime: DateFormat(
                           'yyyy-MM-ddTHH:mm:ss',
                         ).format(DateTime.now()),
                         isSync: false,
                       );
+
                       ProductLocalDatasource.instance.saveOrder(orderModel);
+
+                      // ✅ BUAT RESERVATION
+                      final reservationBloc = context.read<ReservationBloc>();
+
+                      // pastikan ambil tableId dari selected table
+                      final tableId = widget.tableId;
+
+                      final date = DateFormat(
+                        'yyyy-MM-dd',
+                      ).format(DateTime.now());
+                      final startTime = DateFormat(
+                        'HH:mm',
+                      ).format(DateTime.now());
+                      final endTime = DateFormat(
+                        'HH:mm',
+                      ).format(DateTime.now().add(const Duration(hours: 2)));
+
+                      reservationBloc.add(
+                        CreateReservation(
+                          tableId: tableId,
+                          orderId: orderModel.id ?? 0,
+                          date: date,
+                          startTime: startTime,
+                          endTime: endTime,
+                        ),
+                      );
+
                       context.pop();
+
                       showDialog(
                         context: context,
                         builder: (context) => const PaymentSuccessDialog(),
@@ -145,60 +180,47 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
             },
             builder: (context, state) {
               return state.maybeWhen(
-                orElse: () {
-                  return const SizedBox();
-                },
+                orElse: () => const SizedBox(),
                 success:
-                    (data, qty, total, payment, _, idKasir, mameKasir, __) {
+                    (data, qty, total, payment, _, idKasir, namaKasir, __) {
                       return Button.filled(
                         onPressed: () {
-                          //check if price is empty
                           if (priceController!.text.isEmpty) {
-                            //show dialog error
                             showDialog(
                               context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Error'),
-                                  content: const Text('Please input the price'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
+                              builder: (_) => AlertDialog(
+                                title: const Text('Error'),
+                                content: const Text('Please input the price'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
                             );
                             return;
                           }
 
-                          //if price less than total price
                           if (priceController!.text.toIntegerFromText < total) {
-                            //show dialog error
                             showDialog(
                               context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Error'),
-                                  content: const Text(
-                                    'The nominal is less than the total price',
+                              builder: (_) => AlertDialog(
+                                title: const Text('Error'),
+                                content: const Text(
+                                  'The nominal is less than the total price',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('OK'),
                                   ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
+                                ],
+                              ),
                             );
                             return;
                           }
+
                           context.read<OrderBloc>().add(
                             OrderEvent.addNominalBayar(
                               priceController!.text.toIntegerFromText,
@@ -208,9 +230,6 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                         label: 'Pay',
                       );
                     },
-                error: (message) {
-                  return const SizedBox();
-                },
               );
             },
           ),
