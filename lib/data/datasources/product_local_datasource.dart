@@ -1,12 +1,12 @@
 import 'package:flutter_pos_2/data/models/response/product_response_model.dart';
 import 'package:flutter_pos_2/presentation/order/models/order_model.dart';
+import 'package:flutter_pos_2/presentation/setting/models/category_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../presentation/home/models/draft_order_item.dart';
 import '../../presentation/home/models/order_item.dart';
 import '../../presentation/order/models/draft_order_model.dart';
 import '../models/request/order_request_model.dart';
-import '../models/response/category_response_model.dart';
 
 class ProductLocalDatasource {
   ProductLocalDatasource._init();

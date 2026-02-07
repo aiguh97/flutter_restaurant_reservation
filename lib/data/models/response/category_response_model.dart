@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter_pos_2/presentation/setting/models/category_model.dart';
+
 class CategoryResponseModel {
   final bool status;
   final String message;
-  final List<Category> data;
+  final List<CategoryResponse> data;
 
   CategoryResponseModel({
     required this.status,
@@ -18,46 +20,63 @@ class CategoryResponseModel {
 
   factory CategoryResponseModel.fromMap(Map<String, dynamic> json) =>
       CategoryResponseModel(
-        status: json["status"],
-        message: json["message"],
-        data: List<Category>.from(json["data"].map((x) => Category.fromMap(x))),
+        status: _parseBool(json["status"]),
+        message: json["message"]?.toString() ?? '',
+        data: List<CategoryResponse>.from(
+          json["data"].map((x) => CategoryResponse.fromMap(x)),
+        ),
       );
 
+  /// Helper function untuk convert dynamic ke bool
+  static bool _parseBool(dynamic value) {
+    if (value == null) return false;
+    if (value is bool) return value;
+    if (value is String) {
+      return value.toLowerCase() == 'true';
+    }
+    if (value is int) {
+      return value != 0;
+    }
+    return false;
+  }
+
   Map<String, dynamic> toMap() => {
-        "status": status,
-        "message": message,
-        "data": List<dynamic>.from(data.map((x) => x.toMap())),
-      };
+    "status": status,
+    "message": message,
+    "data": List<dynamic>.from(data.map((x) => x.toMap())),
+  };
 }
 
-class Category {
+class CategoryResponse {
   final int id;
   final String name;
+  final String? description;
+  final String? image;
 
-  Category({
+  CategoryResponse({
     required this.id,
     required this.name,
+    this.description,
+    this.image,
   });
 
-  factory Category.fromJson(String str) => Category.fromMap(json.decode(str));
-
-  String toJson() => json.encode(toMap());
-
-  factory Category.fromMap(Map<String, dynamic> json) => Category(
-        id: json["id"],
-        name: json["name"],
-      );
-
-  factory Category.fromLocal(Map<String, dynamic> json) => Category(
-        id: json["category_id"],
-        name: json["name"],
+  factory CategoryResponse.fromMap(Map<String, dynamic> json) =>
+      CategoryResponse(
+        id: int.tryParse(json['id']?.toString() ?? '0') ?? 0,
+        name: json['name']?.toString() ?? '',
+        description: json['description']?.toString(),
+        image: json['image']?.toString(),
       );
 
   Map<String, dynamic> toMap() => {
-        "category_id": id,
-        "name": name,
-      };
+    "id": id,
+    "name": name,
+    "description": description,
+    "image": image,
+  };
 
-  @override
-  String toString() => name;
+  /// Convert ke Bloc Category model
+  Category toCategoryBloc() {
+    return Category(id: id, name: name, description: description, image: image);
+  }
 }

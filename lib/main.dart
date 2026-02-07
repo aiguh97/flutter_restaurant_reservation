@@ -11,12 +11,12 @@ import 'package:flutter_pos_2/data/datasources/report_remote_datasource.dart';
 import 'package:flutter_pos_2/presentation/auth/pages/login_page.dart';
 import 'package:flutter_pos_2/presentation/draft_order/bloc/draft_order/draft_order_bloc.dart';
 import 'package:flutter_pos_2/presentation/history/bloc/history/history_bloc.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/category/category_bloc.dart';
 import 'package:flutter_pos_2/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:flutter_pos_2/presentation/home/bloc/product/product_bloc.dart';
 import 'package:flutter_pos_2/presentation/home/pages/dashboard_page.dart';
 import 'package:flutter_pos_2/presentation/order/bloc/order/order_bloc.dart';
 import 'package:flutter_pos_2/presentation/order/bloc/qris/qris_bloc.dart';
+import 'package:flutter_pos_2/presentation/setting/bloc/category/category_bloc.dart';
 import 'package:flutter_pos_2/presentation/setting/bloc/report/close_cashier/close_cashier_bloc.dart';
 import 'package:flutter_pos_2/presentation/setting/bloc/report/product_sales/product_sales_bloc.dart';
 import 'package:flutter_pos_2/presentation/setting/bloc/report/summary/summary_bloc.dart';
@@ -53,9 +53,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SyncOrderBloc(OrderRemoteDatasource()),
         ),
-        BlocProvider(
-          create: (context) => CategoryBloc(ProductRemoteDatasource()),
-        ),
+        BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
         BlocProvider(
           create: (context) => DraftOrderBloc(ProductLocalDatasource.instance),
         ),

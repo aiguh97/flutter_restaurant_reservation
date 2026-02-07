@@ -4,8 +4,6 @@ import 'package:flutter_pos_2/data/models/request/product_request_model.dart';
 import 'package:flutter_pos_2/data/models/response/add_product_response_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_pos_2/data/models/response/product_response_model.dart';
-
-import '../models/response/category_response_model.dart';
 import 'auth_local_datasource.dart';
 
 class ProductRemoteDatasource {
@@ -51,24 +49,6 @@ class ProductRemoteDatasource {
       return right(AddProductResponseModel.fromJson(body));
     } else {
       return left(body);
-    }
-  }
-
-  //get categories
-  Future<Either<String, CategoryResponseModel>> getCategories() async {
-    final authData = await AuthLocalDatasource().getAuthData();
-    final response = await http.get(
-      Uri.parse('${Variables.baseUrl}/api/list-categories'),
-      headers: {
-        'Authorization': 'Bearer ${authData.token}',
-        'Accept': 'application/json',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      return right(CategoryResponseModel.fromJson(response.body));
-    } else {
-      return left(response.body);
     }
   }
 }

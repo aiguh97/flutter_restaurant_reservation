@@ -6,6 +6,7 @@ import 'package:flutter_pos_2/presentation/auth/pages/login_page.dart';
 import 'package:flutter_pos_2/presentation/common/widgets/logout_button.dart';
 import 'package:flutter_pos_2/presentation/home/pages/dashboard_page.dart';
 import 'package:flutter_pos_2/presentation/setting/bloc/report/close_cashier/close_cashier_bloc.dart';
+import 'package:flutter_pos_2/presentation/setting/pages/manage_category_page.dart';
 import 'package:flutter_pos_2/presentation/setting/pages/manage_printer_page.dart';
 import 'package:flutter_pos_2/presentation/setting/pages/report/report_page.dart';
 import 'package:flutter_pos_2/presentation/setting/pages/save_server_key_page.dart';
@@ -79,7 +80,7 @@ class _SettingPageState extends State<SettingPage> {
                     child: MenuButton(
                       iconPath: Assets.images.close.path,
                       label: 'Manage Category',
-                      onPressed: () => context.push(const ManageProductPage()),
+                      onPressed: () => context.push(const ManageCategoryPage()),
                       isImage: true,
                     ),
                   ),

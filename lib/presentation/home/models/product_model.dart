@@ -4,7 +4,7 @@ import 'package:flutter_pos_2/presentation/setting/models/category_model.dart';
 class ProductModel {
   final String image;
   final String name;
-  final CategoryModel category;
+  final Category category;
   final int price;
   final int stock;
 
@@ -18,15 +18,26 @@ class ProductModel {
 
   /// ✅ FACTORY AMAN
   factory ProductModel.fromMap(Map<String, dynamic> map) {
-    final categoryValue = map['category']?.toString() ?? '';
+    final categoryData = map['category'];
+
+    // Jika API mengirim category sebagai Map
+    Category category;
+    if (categoryData is Map<String, dynamic>) {
+      category = Category.fromJson(categoryData);
+    }
+    // Jika API hanya mengirim String (nama category)
+    else if (categoryData is String) {
+      category = Category(id: 0, name: categoryData);
+    }
+    // Fallback
+    else {
+      category = Category(id: 0, name: '');
+    }
 
     return ProductModel(
       image: map['image']?.toString() ?? '',
       name: map['name']?.toString() ?? '',
-      category: CategoryModel(
-        value: categoryValue,
-        name: categoryValue.toUpperCase(), // atau mapping manual
-      ),
+      category: category,
       price: _parseInt(map['price']),
       stock: _parseInt(map['stock']),
     );

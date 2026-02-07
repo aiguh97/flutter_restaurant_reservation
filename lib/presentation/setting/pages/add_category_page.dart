@@ -8,22 +8,47 @@ import '../../../core/components/image_picker_widget.dart';
 import '../../../core/components/buttons.dart';
 import '../../../core/components/spaces.dart';
 
+import '../models/category_model.dart';
+
 class AddCategoryPage extends StatefulWidget {
-  const AddCategoryPage({super.key});
+  final Category? category; // null = add, non-null = edit
+
+  const AddCategoryPage({super.key, this.category});
 
   @override
   State<AddCategoryPage> createState() => _AddCategoryPageState();
 }
 
 class _AddCategoryPageState extends State<AddCategoryPage> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  File? imageFile; // tetap File? untuk multipart
+  late TextEditingController nameController;
+  late TextEditingController descriptionController;
+  File? imageFile;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(text: widget.category?.name ?? '');
+    descriptionController = TextEditingController(
+      text: widget.category?.description ?? '',
+    );
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isEdit = widget.category != null;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Category'), centerTitle: true),
+      appBar: AppBar(
+        title: Text(isEdit ? 'Edit Category' : 'Add Category'),
+        centerTitle: true,
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -36,19 +61,17 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
           const SpaceHeight(16),
           ImagePickerWidget(
             label: 'Image',
+            initialImage: widget.category?.image,
             onChanged: (file) {
-              // Convert XFile? -> File?
-              if (file != null) {
-                imageFile = File(file.path);
-              }
+              if (file != null) imageFile = File(file.path);
             },
           ),
           const SpaceHeight(20),
           Button.filled(
-            label: 'Save',
+            label: isEdit ? 'Update' : 'Save',
             onPressed: () {
-              final String name = nameController.text.trim();
-              final String description = descriptionController.text.trim();
+              final name = nameController.text.trim();
+              final description = descriptionController.text.trim();
 
               if (name.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -60,13 +83,24 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                 return;
               }
 
-              context.read<CategoryBloc>().add(
-                AddCategory(
-                  name: name,
-                  description: description.isEmpty ? null : description,
-                  image: imageFile,
-                ),
-              );
+              if (isEdit) {
+                context.read<CategoryBloc>().add(
+                  UpdateCategory(
+                    category: widget.category!,
+                    name: name,
+                    description: description.isEmpty ? null : description,
+                    image: imageFile,
+                  ),
+                );
+              } else {
+                context.read<CategoryBloc>().add(
+                  AddCategory(
+                    name: name,
+                    description: description.isEmpty ? null : description,
+                    image: imageFile,
+                  ),
+                );
+              }
 
               Navigator.pop(context);
             },

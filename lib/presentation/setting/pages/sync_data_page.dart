@@ -1,17 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pos_2/core/components/spaces.dart';
-import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
-import 'package:flutter_pos_2/data/datasources/auth_local_datasource.dart';
 import 'package:flutter_pos_2/presentation/home/bloc/product/product_bloc.dart';
-import 'package:flutter_pos_2/presentation/order/bloc/order/order_bloc.dart';
 import 'package:flutter_pos_2/presentation/setting/bloc/sync_order/sync_order_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/pages/add_product_page.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../data/datasources/product_local_datasource.dart';
-import '../../home/bloc/category/category_bloc.dart';
 
 class SyncDataPage extends StatefulWidget {
   const SyncDataPage({super.key});
@@ -109,47 +103,54 @@ class _SyncDataPageState extends State<SyncDataPage> {
             },
           ),
           const SpaceHeight(20),
+
           //button sync categories
-          BlocConsumer<CategoryBloc, CategoryState>(
-            listener: (context, state) {
-              state.maybeMap(
-                orElse: () {},
-                loaded: (data) async {
-                  await ProductLocalDatasource.instance.removeAllCategories();
-                  await ProductLocalDatasource.instance.insertAllCategories(
-                    data.categories,
-                  );
-                  context.read<CategoryBloc>().add(
-                    const CategoryEvent.getCategoriesLocal(),
-                  );
-                  context.pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      backgroundColor: AppColors.primary,
-                      content: Text('Sync data categories success'),
-                    ),
-                  );
-                },
-              );
-            },
-            builder: (context, state) {
-              return state.maybeWhen(
-                orElse: () {
-                  return ElevatedButton(
-                    onPressed: () {
-                      context.read<CategoryBloc>().add(
-                        const CategoryEvent.getCategories(),
-                      );
-                    },
-                    child: const Text('Sync Data Categories'),
-                  );
-                },
-                loading: () {
-                  return const Center(child: CircularProgressIndicator());
-                },
-              );
-            },
-          ),
+          // BlocConsumer<CategoryBloc, CategoryState>(
+          //   listener: (context, state) {
+          //     state.maybeMap(
+          //       loaded: (data) async {
+          //         // Simpan ke local
+          //         await ProductLocalDatasource.instance.removeAllCategories();
+          //         await ProductLocalDatasource.instance.insertAllCategories(
+          //           data.categories,
+          //         );
+
+          //         // Ambil data lokal lagi
+          //         context.read<CategoryBloc>().add(
+          //           const CategoryEvent.getCategoriesLocal(),
+          //         );
+
+          //         // Tutup halaman jika perlu
+          //         Navigator.of(context).pop();
+
+          //         // Tampilkan snackbar sukses
+          //         ScaffoldMessenger.of(context).showSnackBar(
+          //           const SnackBar(
+          //             backgroundColor:
+          //                 Colors.green, // ganti sesuai AppColors.primary
+          //             content: Text('Sync data categories success'),
+          //           ),
+          //         );
+          //       },
+          //       orElse: () {},
+          //     );
+          //   },
+          //   builder: (context, state) {
+          //     return state.maybeWhen(
+          //       loading: () => const Center(child: CircularProgressIndicator()),
+          //       orElse: () {
+          //         return ElevatedButton(
+          //           onPressed: () {
+          //             context.read<CategoryBloc>().add(
+          //               const CategoryEvent.getCategories(),
+          //             );
+          //           },
+          //           child: const Text('Sync Data Categories'),
+          //         );
+          //       },
+          //     );
+          //   },
+          // ),
         ],
       ),
     );

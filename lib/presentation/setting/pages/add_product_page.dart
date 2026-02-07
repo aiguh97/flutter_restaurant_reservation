@@ -1,22 +1,18 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
 import 'package:flutter_pos_2/core/extensions/string_ext.dart';
-import 'package:flutter_pos_2/presentation/history/pages/history_page.dart';
-import 'package:flutter_pos_2/presentation/home/pages/dashboard_page.dart';
+import 'package:flutter_pos_2/presentation/setting/bloc/category/category_bloc.dart';
+import 'package:flutter_pos_2/presentation/setting/bloc/category/category_state.dart';
 import 'package:flutter_pos_2/presentation/setting/models/category_model.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_pos_2/presentation/setting/bloc/category/category_event.dart';
 
 import '../../../core/components/buttons.dart';
 import '../../../core/components/custom_dropdown.dart';
 import '../../../core/components/custom_text_field.dart';
 import '../../../core/components/image_picker_widget.dart';
 import '../../../core/components/spaces.dart';
-import '../../../data/models/response/category_response_model.dart';
 import '../../../data/models/response/product_response_model.dart';
-import '../../home/bloc/category/category_bloc.dart';
 import '../../home/bloc/product/product_bloc.dart';
 
 class AddProductPage extends StatefulWidget {
@@ -31,32 +27,29 @@ class _AddProductPageState extends State<AddProductPage> {
   TextEditingController? priceController;
   TextEditingController? stockController;
 
-  Category? category;
+  Category? selectedCategory; // gunakan Category dari API
 
   XFile? imageFile;
 
   bool isBestSeller = false;
 
-  final List<CategoryModel> categories = [
-    CategoryModel(name: 'Drink', value: 'drink'),
-    CategoryModel(name: 'Food', value: 'food'),
-    CategoryModel(name: 'Snack', value: 'snack'),
-  ];
-
   @override
   void initState() {
+    super.initState();
     nameController = TextEditingController();
     priceController = TextEditingController();
     stockController = TextEditingController();
-    super.initState();
+
+    // Load categories dari API
+    context.read<CategoryBloc>().add(LoadCategories());
   }
 
   @override
   void dispose() {
-    super.dispose();
     nameController!.dispose();
     priceController!.dispose();
     stockController!.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,9 +58,7 @@ class _AddProductPageState extends State<AddProductPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           'Add Product',
@@ -84,16 +75,12 @@ class _AddProductPageState extends State<AddProductPage> {
             controller: priceController!,
             label: 'Product Price',
             keyboardType: TextInputType.number,
-            onChanged: (value) {},
           ),
           const SpaceHeight(16.0),
           ImagePickerWidget(
             label: 'Photo',
             onChanged: (file) {
-              if (file == null) {
-                return;
-              }
-              imageFile = file;
+              if (file != null) imageFile = file;
             },
           ),
           const SpaceHeight(16.0),
@@ -107,43 +94,42 @@ class _AddProductPageState extends State<AddProductPage> {
             children: [
               Checkbox(
                 value: isBestSeller,
-                onChanged: (value) {
-                  setState(() {
-                    isBestSeller = value!;
-                  });
-                },
+                onChanged: (value) => setState(() => isBestSeller = value!),
               ),
               const Text('Best Seller'),
             ],
           ),
           const SpaceHeight(16.0),
+
+          /// Dropdown Category dari API
           BlocBuilder<CategoryBloc, CategoryState>(
             builder: (context, state) {
               List<Category> categories = [];
-              state.maybeWhen(
-                orElse: () {},
-                loadedLocal: (data) {
-                  categories = data;
-                },
-              );
-              return CustomDropdown<Category>(
-                value: categories.first,
-                items: categories,
+              if (state is CategoryLoaded) {
+                categories = state.categories;
+              }
+
+              return CustomDropdown<String>(
+                value: selectedCategory?.name,
+                items: categories.map((e) => e.name).toList(),
                 label: 'Category',
                 onChanged: (value) {
-                  category = value!;
+                  setState(() {
+                    selectedCategory = categories.firstWhere(
+                      (c) => c.name == value,
+                    );
+                  });
                 },
               );
             },
           ),
+
           const SpaceHeight(16.0),
           Row(
             children: [
               Expanded(
                 child: Button.outlined(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+                  onPressed: () => Navigator.pop(context),
                   label: 'Batal',
                 ),
               ),
@@ -152,44 +138,38 @@ class _AddProductPageState extends State<AddProductPage> {
                 child: BlocConsumer<ProductBloc, ProductState>(
                   listener: (context, state) {
                     state.maybeMap(
+                      success: (_) => Navigator.pop(context),
                       orElse: () {},
-                      success: (_) {
-                        Navigator.pop(context);
-                      },
                     );
                   },
                   builder: (context, state) {
-                    return state.maybeWhen(
-                      orElse: () {
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                      loading: () {
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                      success: (_) {
-                        return Button.filled(
-                          onPressed: () {
-                            final String name = nameController!.text;
-                            final int price =
-                                priceController!.text.toIntegerFromText;
-                            final int stock =
-                                stockController!.text.toIntegerFromText;
-                            final Product product = Product(
-                              name: name,
-                              price: price,
-                              stock: stock,
-                              category: category!.name,
-                              categoryId: category!.id,
-                              isBestSeller: isBestSeller,
-                              image: imageFile!.path,
-                            );
-                            context.read<ProductBloc>().add(
-                              ProductEvent.addProduct(product, imageFile!),
-                            );
-                          },
-                          label: 'Simpan',
+                    return Button.filled(
+                      onPressed: () {
+                        if (selectedCategory == null || imageFile == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Category and image are required'),
+                            ),
+                          );
+
+                          return;
+                        }
+
+                        final product = Product(
+                          name: nameController!.text,
+                          price: priceController!.text.toIntegerFromText,
+                          stock: stockController!.text.toIntegerFromText,
+                          category: selectedCategory!.name,
+                          categoryId: selectedCategory!.id,
+                          isBestSeller: isBestSeller,
+                          image: imageFile!.path,
+                        );
+
+                        context.read<ProductBloc>().add(
+                          ProductEvent.addProduct(product, imageFile!),
                         );
                       },
+                      label: 'Simpan',
                     );
                   },
                 ),

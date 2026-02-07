@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_pos_2/core/constants/variables.dart';
 import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
-import 'package:flutter_pos_2/data/models/response/category_response_model.dart';
 import 'package:flutter_pos_2/presentation/draft_order/pages/draft_order_page.dart';
 import 'package:flutter_pos_2/presentation/home/bloc/product/product_bloc.dart';
 import 'package:flutter_pos_2/presentation/setting/bloc/category/category_bloc.dart';
 import 'package:flutter_pos_2/presentation/setting/bloc/category/category_state.dart';
-import 'package:flutter_pos_2/presentation/setting/pages/add_product_page.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 import '../../../core/assets/assets.gen.dart';
@@ -15,7 +14,6 @@ import '../../../core/components/menu_button.dart';
 import '../../../core/components/search_input.dart';
 import '../../../core/components/spaces.dart';
 import '../../../data/datasources/auth_local_datasource.dart';
-// import '../bloc/category/category_bloc.dart';
 import '../widgets/product_card.dart';
 import '../widgets/product_empty.dart';
 
@@ -103,62 +101,67 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           const SpaceHeight(16.0),
- 
-      BlocBuilder<CategoryBloc, CategoryState>(
-  builder: (context, state) {
-    if (state is CategoryLoading) {
-      return const Center(child: CircularProgressIndicator());
-    } else if (state is CategoryError) {
-      return Center(child: Text(state.message));
-    } else if (state is CategoryLoaded) {
-      final categories = state.categories;
-      return SizedBox(
-        height: 90,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            // Tombol All
-            SizedBox(
-              height: 80,
-              width: 90,
-              child: MenuButton(
-                iconPath: Assets.icons.allCategories.path,
-                label: 'All',
-                isActive: currentIndex == 0,
-                onPressed: () {
-                  onCategoryTap(0);
-                  context.read<ProductBloc>().add(const ProductEvent.fetchLocal());
-                },
-              ),
-            ),
-            const SizedBox(width: 10),
-            // Tombol kategori dari API
-            ...categories.map((e) {
-              return SizedBox(
-                height: 80,
-                width: 90,
-                child: MenuButton(
-                  iconPath: Variables.imageBaseUrl + (e.image ?? 'default.png'),
-                  label: e.name,
-                  isActive: currentIndex == e.id,
-                  isImage: true,
-                  isNetwork: true, // karena dari URL
-                  onPressed: () {
-                    onCategoryTap(e.id);
-                    context.read<ProductBloc>().add(ProductEvent.fetchByCategory(e.name));
-                  },
-                ),
-              );
-            }).toList(),
-          ],
-        ),
-      );
-    }
-    return const SizedBox(); // default
-  },
-),
 
-         
+          BlocBuilder<CategoryBloc, CategoryState>(
+            builder: (context, state) {
+              if (state is CategoryLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is CategoryError) {
+                return Center(child: Text(state.message));
+              } else if (state is CategoryLoaded) {
+                final categories = state.categories;
+                return SizedBox(
+                  height: 90,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      // Tombol All
+                      SizedBox(
+                        height: 80,
+                        width: 90,
+                        child: MenuButton(
+                          iconPath: Assets.icons.allCategories.path,
+                          label: 'All',
+                          isActive: currentIndex == 0,
+                          onPressed: () {
+                            onCategoryTap(0);
+                            context.read<ProductBloc>().add(
+                              const ProductEvent.fetchLocal(),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      // Tombol kategori dari API
+                      ...categories.map((e) {
+                        return SizedBox(
+                          height: 80,
+                          width: 90,
+                          child: MenuButton(
+                            iconPath:
+                                Variables.imageBaseUrl +
+                                (e.image ?? 'default.png'),
+                            label: e.name,
+                            isActive: currentIndex == e.id,
+                            isImage: true,
+                            isNetwork: true, // karena dari URL
+                            onPressed: () {
+                              onCategoryTap(e.id);
+                              context.read<ProductBloc>().add(
+                                ProductEvent.fetchByCategory(e.name),
+                              );
+                            },
+                          ),
+                        );
+                      }).toList(),
+                    ],
+                  ),
+                );
+              }
+              return const SizedBox(); // default
+            },
+          ),
+
           // ValueListenableBuilder(
           //   valueListenable: indexValue,
           //   builder: (context, value, _) => Row(
@@ -228,26 +231,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-    );
-  }
-}
-
-Widget buildCategoryImage(String imageUrl) {
-  if (imageUrl.toLowerCase().endsWith('.svg')) {
-    return SvgPicture.network(
-      imageUrl,
-      width: 50,
-      height: 50,
-      placeholderBuilder: (context) => const CircularProgressIndicator(),
-    );
-  } else {
-    return Image.network(
-      imageUrl,
-      width: 50,
-      height: 50,
-      fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) =>
-          const Icon(Icons.broken_image, size: 50),
     );
   }
 }
