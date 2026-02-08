@@ -30,12 +30,22 @@ class SyncOrderBloc extends Bloc<SyncOrderEvent, SyncOrderState> {
           paymentMethod: order.paymentMethod,
           orderItems: orderItems,
         );
-        final response = await orderRemoteDatasource.sendOrder(orderRequest);
-        if (response) {
-          await ProductLocalDatasource.instance.updateIsSyncOrderById(
-            order.id!,
-          );
-        }
+
+        final result = await orderRemoteDatasource.sendOrder(orderRequest);
+
+        // ✅ Cara menangani Either<String, int>
+        await result.fold(
+          (error) async {
+            // Log error jika diperlukan atau biarkan saja untuk lanjut ke order berikutnya
+            print("Sync failed for order ${order.id}: $error");
+          },
+          (orderIdServer) async {
+            // Jika sukses (Right), update status sync di lokal
+            await ProductLocalDatasource.instance.updateIsSyncOrderById(
+              order.id!,
+            );
+          },
+        );
       }
 
       emit(const SyncOrderState.success());
@@ -59,12 +69,18 @@ class SyncOrderBloc extends Bloc<SyncOrderEvent, SyncOrderState> {
           paymentMethod: order.paymentMethod,
           orderItems: orderItems,
         );
-        final response = await orderRemoteDatasource.sendOrder(orderRequest);
-        if (response) {
-          await ProductLocalDatasource.instance.updateIsSyncOrderById(
-            order.id!,
-          );
-        }
+
+        final result = await orderRemoteDatasource.sendOrder(orderRequest);
+
+        // ✅ Gunakan fold untuk menangani result
+        await result.fold(
+          (error) async => print("Sync close cashier failed: $error"),
+          (orderId) async {
+            await ProductLocalDatasource.instance.updateIsSyncOrderById(
+              order.id!,
+            );
+          },
+        );
       }
 
       emit(const SyncOrderState.successCloseChasier());

@@ -7,25 +7,16 @@ import '../../core/constants/variables.dart';
 import '../../presentation/table/models/table_model.dart';
 
 class TableRemoteDatasource {
-  Future<Either<String, List<TableModel>>> getTables({
-    String? date,
-    String? time,
-  }) async {
+  Future<Either<String, List<TableModel>>> getTables() async {
     try {
       final authData = await AuthLocalDatasource().getAuthData();
-      // 1. Tambahkan pengecekan ini
+
       if (authData == null || authData.token == null) {
         return left('Sesi login berakhir');
       }
 
-      // Build query params jika date & time dikirim
-      final queryParams = <String, String>{};
-      if (date != null) queryParams['date'] = date;
-      if (time != null) queryParams['time'] = time;
-
-      final uri = Uri.parse(
-        '${Variables.baseUrl}/api/tables',
-      ).replace(queryParameters: queryParams);
+      // Endpoint polos tanpa query parameter
+      final uri = Uri.parse('${Variables.baseUrl}/api/tables');
 
       final response = await http.get(
         uri,
@@ -36,7 +27,9 @@ class TableRemoteDatasource {
       );
 
       if (response.statusCode == 200) {
+        // Karena response API adalah [...], maka kita decode langsung ke List
         final List<dynamic> jsonList = json.decode(response.body);
+
         final tables = jsonList
             .map<TableModel>(
               (e) => TableModel.fromMap(e as Map<String, dynamic>),
@@ -45,12 +38,11 @@ class TableRemoteDatasource {
 
         return right(tables);
       } else {
-        // Bisa parsing json error message kalau backend mengirim {"message": "..."}
         final errorBody = json.decode(response.body);
-        return left(errorBody['message'] ?? 'Unknown error');
+        return left(errorBody['message'] ?? 'Gagal mengambil data meja');
       }
     } catch (e) {
-      return left(e.toString());
+      return left('Terjadi kesalahan: $e');
     }
   }
 }

@@ -1,4 +1,4 @@
-package com.teguhdev.restoguh
+package com.teguhdev.restoris
 
 import io.flutter.embedding.android.FlutterActivity
 

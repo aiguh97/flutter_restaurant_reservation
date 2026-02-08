@@ -92,46 +92,53 @@ class _MyAccountPageState extends State<MyAccountPage> {
     );
   }
 
-  void _showDisableConfirmation(BuildContext context) {
+  void _showDisableConfirmation(BuildContext parentContext) {
     showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
+      context: parentContext,
+      builder: (dialogContext) => AlertDialog(
         title: const Text("Nonaktifkan 2FA?"),
         content: const Text("Keamanan akun Anda akan berkurang."),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text("Batal"),
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(context);
+              Navigator.pop(dialogContext); // tutup dialog konfirmasi
 
+              // tampilkan loading pakai PARENT context
               showDialog(
-                context: context,
+                context: parentContext,
                 barrierDismissible: false,
-                builder: (context) =>
+                builder: (_) =>
                     const Center(child: CircularProgressIndicator()),
               );
 
               final result = await AuthRemoteDatasource().disable2FA();
 
-              if (mounted) Navigator.pop(context); // Tutup loading
+              if (!mounted) return;
 
-              result.fold((error) => _showSnackBar(context, error), (
-                message,
-              ) async {
-                await AuthLocalDatasource().update2FAStatus(false);
+              Navigator.pop(parentContext); // tutup loading
 
-                if (mounted) {
+              result.fold(
+                (error) {
+                  _showSnackBar(parentContext, error);
+                },
+                (message) async {
+                  await AuthLocalDatasource().update2FAStatus(false);
+
+                  if (!mounted) return;
+
                   setState(() {
                     _authData = _authData?.copyWith(
                       user: _authData?.user?.copyWith(twoFactorEnabled: false),
                     );
                   });
-                  _showSnackBar(context, message);
-                }
-              });
+
+                  _showSnackBar(parentContext, message);
+                },
+              );
             },
             child: const Text(
               "Ya, Nonaktifkan",
@@ -172,7 +179,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
         ),
         Text(
           "Role : ${user.roles}",
-          style: const TextStyle(color: Colors.grey),
+          style: const TextStyle(color: Colors.white),
         ),
       ],
     );

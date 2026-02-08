@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/datasources/table_remote_datasource.dart';
 import 'table_event.dart';
 import 'table_state.dart';
+import 'package:intl/intl.dart';
 
 class TableBloc extends Bloc<TableEvent, TableState> {
   final TableRemoteDatasource datasource;
@@ -12,30 +13,20 @@ class TableBloc extends Bloc<TableEvent, TableState> {
     on<SelectTable>(_onSelectTable);
   }
 
+  // Di dalam TableBloc
   Future<void> _onFetchTables(
     FetchTables event,
     Emitter<TableState> emit,
   ) async {
     emit(TableLoading());
 
-    // final result = await datasource.getTables();
-    // Hardcode date & time
-    final result = await datasource.getTables(
-      date: '2026-02-07',
-      time: '18:30',
+    // Panggil tanpa parameter
+    final result = await datasource.getTables();
+
+    result.fold(
+      (error) => emit(TableError(error)),
+      (tables) => emit(TableLoaded(tables: tables)),
     );
-
-    result.fold((error) => emit(TableError(error)), (tables) {
-      // ✅ PRINT SEMUA TABLE UNTUK DEBUG
-      for (var table in tables) {
-        print(
-          'Tablessss: id=${table.id}, name=${table.name}, '
-          'occupied=${table.isOccupied}, reserved=${table.isReserved}, available=${table.isAvailable}',
-        );
-      }
-
-      emit(TableLoaded(tables: tables));
-    });
   }
 
   void _onSelectTable(SelectTable event, Emitter<TableState> emit) {

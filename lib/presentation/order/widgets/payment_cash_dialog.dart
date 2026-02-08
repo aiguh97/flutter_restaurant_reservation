@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restoguh/core/extensions/build_context_ext.dart';
 import 'package:restoguh/core/extensions/int_ext.dart';
 import 'package:restoguh/core/extensions/string_ext.dart';
+import 'package:restoguh/data/datasources/order_remote_datasource.dart';
 import 'package:restoguh/data/datasources/product_local_datasource.dart';
+import 'package:restoguh/data/models/request/order_request_model.dart';
 import 'package:restoguh/presentation/order/bloc/order/order_bloc.dart';
 import 'package:restoguh/presentation/order/models/order_model.dart';
 import 'package:restoguh/presentation/order/widgets/payment_success_dialog.dart';
@@ -52,11 +54,11 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
             icon: const Icon(Icons.highlight_off),
             color: AppColors.primary,
           ),
-          const Center(
+          Center(
             child: Padding(
               padding: EdgeInsets.only(top: 12.0),
               child: Text(
-                'Payment - Cash',
+                'Payment - Cash ${widget.tableId}',
                 style: TextStyle(
                   color: AppColors.primary,
                   fontSize: 16,
@@ -166,6 +168,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                           date: date,
                           startTime: startTime,
                           endTime: endTime,
+                          status: 'reserved',
                         ),
                       );
 
@@ -181,55 +184,109 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
             builder: (context, state) {
               return state.maybeWhen(
                 orElse: () => const SizedBox(),
-                success:
-                    (data, qty, total, payment, _, idKasir, namaKasir, __) {
-                      return Button.filled(
-                        onPressed: () {
-                          if (priceController!.text.isEmpty) {
-                            showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                title: const Text('Error'),
-                                content: const Text('Please input the price'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              ),
-                            );
-                            return;
-                          }
+                success: (data, qty, total, payment, _, idKasir, namaKasir, __) {
+                  return Button.filled(
+                    onPressed: () async {
+                      final nominalBayar =
+                          priceController!.text.toIntegerFromText;
 
-                          if (priceController!.text.toIntegerFromText < total) {
-                            showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                title: const Text('Error'),
-                                content: const Text(
-                                  'The nominal is less than the total price',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              ),
-                            );
-                            return;
-                          }
+                      if (nominalBayar < total) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Nominal bayar kurang!'),
+                          ),
+                        );
+                        return;
+                      }
 
-                          context.read<OrderBloc>().add(
-                            OrderEvent.addNominalBayar(
-                              priceController!.text.toIntegerFromText,
+                      // 1. Tampilkan Loading
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) =>
+                            const Center(child: CircularProgressIndicator()),
+                      );
+
+                      // 2. Siapkan Request Order
+                      final orderRequest = OrderRequestModel(
+                        transactionTime: DateFormat(
+                          'yyyy-MM-dd HH:mm:ss',
+                        ).format(DateTime.now()),
+                        kasirId: idKasir,
+                        totalPrice: total,
+                        totalItem: qty,
+                        paymentMethod: 'CASH',
+                        orderItems: data
+                            .map(
+                              (item) => OrderItemModel(
+                                productId: item.product.id!,
+                                quantity: item.quantity,
+                                totalPrice: item.product.price * item.quantity,
+                              ),
+                            )
+                            .toList(),
+                      );
+
+                      // 3. Kirim Order ke API
+                      final result = await OrderRemoteDatasource().sendOrder(
+                        orderRequest,
+                      );
+
+                      if (!mounted) return;
+                      Navigator.pop(context); // Tutup loading
+
+                      result.fold(
+                        (error) => ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(error))),
+                        (orderId) {
+                          // ✅ 4. JIKA ORDER SUKSES, KIRIM RESERVASI
+                          context.read<ReservationBloc>().add(
+                            CreateReservation(
+                              tableId: widget.tableId,
+                              orderId: orderId, // Menggunakan ID dari server
+                              date: DateFormat(
+                                'yyyy-MM-dd',
+                              ).format(DateTime.now()),
+                              startTime: DateFormat(
+                                'HH:mm:ss',
+                              ).format(DateTime.now()),
+                              endTime: DateFormat('HH:mm:ss').format(
+                                DateTime.now().add(const Duration(hours: 2)),
+                              ),
+                              status: 'reserved', // Meja langsung merah
                             ),
                           );
+
+                          // 5. Simpan ke Local Database (Optional/Offline Support)
+                          final orderModel = OrderModel(
+                            id: orderId,
+                            paymentMethod: 'CASH',
+                            nominalBayar: nominalBayar,
+                            orders: data,
+                            totalQuantity: qty,
+                            totalPrice: total,
+                            idKasir: idKasir,
+                            namaKasir: namaKasir,
+                            transactionTime: DateFormat(
+                              'yyyy-MM-dd HH:mm:ss',
+                            ).format(DateTime.now()),
+                            isSync: true,
+                          );
+                          ProductLocalDatasource.instance.saveOrder(orderModel);
+
+                          // 6. Selesai! Tutup Dialog Bayar dan Tampilkan Sukses
+                          Navigator.pop(context); // Tutup PaymentCashDialog
+                          showDialog(
+                            context: context,
+                            builder: (context) => const PaymentSuccessDialog(),
+                          );
                         },
-                        label: 'Pay',
                       );
                     },
+                    label: 'Pay Now',
+                  );
+                },
               );
             },
           ),

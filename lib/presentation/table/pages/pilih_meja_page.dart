@@ -18,147 +18,149 @@ class PilihMejaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
+      // Pastikan FetchTables dipanggil
       create: (_) => TableBloc(TableRemoteDatasource())..add(FetchTables()),
       child: Scaffold(
         appBar: AppBar(title: const Text('Pilih Meja'), centerTitle: true),
         body: SafeArea(
-          child: Column(
-            children: [
-              const SpaceHeight(16),
+          child: BlocBuilder<TableBloc, TableState>(
+            builder: (context, state) {
+              if (state is TableLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-              /// TIME SLOT (UI only)
-              SizedBox(
-                height: 40,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  children: const [
-                    _TimeChip('09:00 AM'),
-                    _TimeChip('09:30 AM'),
-                    _TimeChip('10:00 AM'),
-                    _TimeChip('10:30 AM'),
-                  ],
-                ),
-              ),
+              if (state is TableError) {
+                return Center(child: Text('Error: ${state.message}'));
+              }
 
-              const SpaceHeight(16),
-              const Text(
-                'Select Table',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              if (state is TableLoaded) {
+                final tables = state.tables;
 
-              const SpaceHeight(8),
+                // Map ID ke Model
+                final Map<int, TableModel> tableMap = {
+                  for (var t in tables) t.id: t,
+                };
 
-              /// TABLE LAYOUT
-              /// TABLE LAYOUT
-              Expanded(
-                child: BlocBuilder<TableBloc, TableState>(
-                  builder: (context, state) {
-                    if (state is TableLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (state is TableLoaded) {
-                      final tables = state.tables;
+                // Konfigurasi Layout (Index Grid -> ID Meja)
+                final Map<int, int?> layoutConfig = {
+                  0: 2,
+                  1: 3,
+                  2: 4,
+                  3: 5,
+                  4: null,
+                  5: 6,
+                  6: 7,
+                  7: 1,
+                  8: 8,
+                  9: 9,
+                  10: null,
+                  11: 10,
+                  12: 11,
+                  13: 12,
+                  14: 13,
+                };
 
-                      // 1. Masukkan semua meja ke dalam Map agar bisa dipanggil berdasarkan ID
-                      final Map<int, TableModel> tableMap = {
-                        for (var t in tables) t.id: t,
-                      };
+                return Column(
+                  children: [
+                    const SpaceHeight(16),
 
-                      // 2. Tentukan posisi ID meja pada Grid (0-14)
-                      // ID 1 adalah Main Table, diletakkan di slot 7
-                      // Slot 4 dan 10 adalah null (SizedBox/Kosong)
-                      final Map<int, int?> layoutConfig = {
-                        0: 2, 1: 3, 2: 4,
-                        3: 5, 4: null, 5: 6,
-                        6: 7, 7: 1, 8: 8, // Slot 7 = ID 1 (Main)
-                        9: 9, 10: null, 11: 10,
-                        12: 11, 13: 12, 14: 13,
-                      };
+                    // ... (UI Time Slot tetap sama)
+                    const Text(
+                      'Select Table',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SpaceHeight(16),
 
-                      return Column(
-                        children: [
-                          // ... (Bagian Legend & Title tetap sama)
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                              ),
-                              child: GridView.builder(
-                                padding: const EdgeInsets.all(16),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3,
-                                      crossAxisSpacing: 20,
-                                      mainAxisSpacing: 28,
-                                      childAspectRatio: 1,
-                                    ),
-                                itemCount: 15,
-                                itemBuilder: (context, index) {
-                                  // Ambil ID meja untuk index grid ini
-                                  final targetId = layoutConfig[index];
+                    // LEGEND (PENTING AGAR TIDAK BINGUNG)
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _LegendItem(color: Colors.white, label: 'Avail'),
+                        SizedBox(width: 10),
+                        _LegendItem(color: Colors.orange, label: 'Reserved'),
+                        SizedBox(width: 10),
+                        _LegendItem(color: Colors.red, label: 'Occupied'),
+                      ],
+                    ),
 
-                                  // Jika index ini diset null (slot kosong), tampilkan SizedBox
-                                  if (targetId == null) return const SizedBox();
-
-                                  // Cari data meja di tableMap berdasarkan ID
-                                  final table = tableMap[targetId];
-                                  if (table == null) return const SizedBox();
-
-                                  // Render Meja
-                                  return GestureDetector(
-                                    onTap: table.isOccupied || table.isReserved
-                                        ? null
-                                        : () => context.read<TableBloc>().add(
-                                            SelectTable(table),
-                                          ),
-                                    child: table.id == 1
-                                        ? MainTableItem(
-                                            table: table,
-                                            isSelected:
-                                                state.selectedTable?.id ==
-                                                table.id,
-                                          )
-                                        : TableItem(
-                                            table: table,
-                                            isSelected:
-                                                state.selectedTable?.id ==
-                                                table.id,
-                                          ),
-                                  );
-                                },
-                              ),
+                    Expanded(
+                      child: GridView.builder(
+                        padding: const EdgeInsets.all(20),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 15,
+                              mainAxisSpacing: 15,
+                              childAspectRatio: 1,
                             ),
-                          ),
-                        ],
-                      );
-                    }
+                        itemCount: 15,
+                        itemBuilder: (context, index) {
+                          final targetId = layoutConfig[index];
+                          if (targetId == null) return const SizedBox();
 
-                    return const SizedBox();
-                  },
-                ),
-              ),
+                          final table = tableMap[targetId];
+                          // JIKA TABLE TIDAK ADA DI DATABASE, JANGAN BLANK
+                          if (table == null) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.help_outline,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            );
+                          }
 
-              /// CONFIRM BUTTON
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: BlocBuilder<TableBloc, TableState>(
-                  builder: (context, state) {
-                    final TableModel? selectedTable = state is TableLoaded
-                        ? state.selectedTable
-                        : null;
+                          return GestureDetector(
+                            onTap: (table.isOccupied || table.isReserved)
+                                ? () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Meja ini sudah dipesan/terisi',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                : () => context.read<TableBloc>().add(
+                                    SelectTable(table),
+                                  ),
+                            child: table.id == 1
+                                ? MainTableItem(
+                                    table: table,
+                                    isSelected:
+                                        state.selectedTable?.id == table.id,
+                                  )
+                                : TableItem(
+                                    table: table,
+                                    isSelected:
+                                        state.selectedTable?.id == table.id,
+                                  ),
+                          );
+                        },
+                      ),
+                    ),
 
-                    return Button.filled(
-                      label: 'Confirm Table',
-                      disabled: selectedTable == null,
-                      onPressed: () {
-                        Navigator.pop(context, selectedTable);
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
+                    // CONFIRM BUTTON
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Button.filled(
+                        label: 'Confirm Table',
+                        disabled: state.selectedTable == null,
+                        onPressed: () =>
+                            Navigator.pop(context, state.selectedTable),
+                      ),
+                    ),
+                  ],
+                );
+              }
+
+              return const Center(child: Text("No Data"));
+            },
           ),
         ),
       ),

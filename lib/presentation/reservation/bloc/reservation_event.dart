@@ -6,6 +6,7 @@ class CreateReservation extends ReservationEvent {
   final String date;
   final String startTime;
   final String endTime;
+  final String status;
 
   CreateReservation({
     required this.tableId,
@@ -13,5 +14,6 @@ class CreateReservation extends ReservationEvent {
     required this.date,
     required this.startTime,
     required this.endTime,
+    required this.status,
   });
 }

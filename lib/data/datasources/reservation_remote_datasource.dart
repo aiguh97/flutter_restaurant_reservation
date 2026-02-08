@@ -31,6 +31,7 @@ class ReservationRemoteDatasource {
         'date': date,
         'start_time': startTime,
         'end_time': endTime,
+        'status': 'reserved', // <-- Tambahkan baris ini
       }),
     );
 
