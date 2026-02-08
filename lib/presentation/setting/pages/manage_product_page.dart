@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
 import 'package:flutter_pos_2/presentation/home/pages/dashboard_page.dart';
-
-import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/spaces.dart';
 import '../../home/bloc/product/product_bloc.dart';
-import '../../home/models/product_category.dart';
-import '../../home/models/product_model.dart';
 import '../widgets/menu_product_item.dart';
 import 'add_product_page.dart';
 
@@ -19,6 +15,12 @@ class ManageProductPage extends StatefulWidget {
 }
 
 class _ManageProductPageState extends State<ManageProductPage> {
+  Future<void> _refreshProducts() async {
+    context.read<ProductBloc>().add(const ProductEvent.fetch());
+    // Bisa tunggu sebentar jika mau animasi loading terlihat
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,44 +37,83 @@ class _ManageProductPageState extends State<ManageProductPage> {
         ),
         centerTitle: true,
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          BlocBuilder<ProductBloc, ProductState>(
+      body: RefreshIndicator(
+        onRefresh: _refreshProducts,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: BlocBuilder<ProductBloc, ProductState>(
             builder: (context, state) {
               return state.maybeWhen(
-                orElse: () {
-                  return const Center(child: CircularProgressIndicator());
-                },
-                success: (products) {
-                  return ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: products.length,
-                    separatorBuilder: (context, index) =>
-                        const SpaceHeight(20.0),
-                    itemBuilder: (context, index) =>
-                        MenuProductItem(data: products[index]),
-                  );
-                },
+                loading: () => ListView.separated(
+                  itemCount: 5, // skeleton 5 item
+                  separatorBuilder: (_, __) => const SpaceHeight(20),
+                  itemBuilder: (_, __) => const _ProductSkeleton(),
+                ),
+                success: (products) => ListView.separated(
+                  itemCount: products.length,
+                  separatorBuilder: (_, __) => const SpaceHeight(20),
+                  itemBuilder: (context, index) =>
+                      MenuProductItem(data: products[index]),
+                ),
+                orElse: () => const Center(child: Text('No products found')),
               );
             },
           ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          await Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) {
-                return const AddProductPage();
-              },
-            ),
+            MaterialPageRoute(builder: (context) => const AddProductPage()),
           );
         },
         child: const Icon(Icons.add),
       ),
+    );
+  }
+}
+
+// Skeleton sederhana untuk loading
+class _ProductSkeleton extends StatelessWidget {
+  const _ProductSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade300,
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        const SpaceWidth(22),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 16,
+                width: double.infinity,
+                color: Colors.grey.shade300,
+              ),
+              const SpaceHeight(8),
+              Container(height: 12, width: 150, color: Colors.grey.shade300),
+              const SpaceHeight(16),
+              Row(
+                children: [
+                  Container(height: 31, width: 60, color: Colors.grey.shade300),
+                  const SpaceWidth(6),
+                  Container(height: 31, width: 31, color: Colors.grey.shade300),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

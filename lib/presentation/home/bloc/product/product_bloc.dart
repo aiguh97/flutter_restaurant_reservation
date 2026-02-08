@@ -15,7 +15,9 @@ part 'product_state.dart';
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final ProductRemoteDatasource _productRemoteDatasource;
   List<Product> products = [];
+
   ProductBloc(this._productRemoteDatasource) : super(const _Initial()) {
+    // FETCH ALL PRODUCTS
     on<_Fetch>((event, emit) async {
       emit(const ProductState.loading());
       final response = await _productRemoteDatasource.getProducts();
@@ -25,29 +27,64 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       });
     });
 
+    // FETCH LOCAL PRODUCTS
     on<_FetchLocal>((event, emit) async {
       emit(const ProductState.loading());
-      final localPproducts = await ProductLocalDatasource.instance
+      final localProducts = await ProductLocalDatasource.instance
           .getAllProduct();
-      products = localPproducts;
-
+      products = localProducts;
       emit(ProductState.success(products));
     });
 
-    on<_FetchByCategory>((event, emit) async {
+    // UPDATE PRODUCT
+    // UPDATE PRODUCT
+    on<_UpdateProduct>((event, emit) async {
+      // 1. Ambil list produk terakhir dari state sebelum berubah jadi loading
+      final currentState = state;
+      List<Product> oldProducts = [];
+      if (currentState is _Success) {
+        oldProducts = List<Product>.from(currentState.products);
+      }
+
       emit(const ProductState.loading());
 
-      final newProducts = event.category == 'all'
-          ? products
-          : products
-                .where((element) => element.category == event.category)
-                .toList();
+      final requestData = ProductRequestModel(
+        id: event.product.id,
+        name: event.product.name,
+        price: event.product.price,
+        stock: event.product.stock,
+        category: event.product.category ?? '',
+        categoryId: event.product.categoryId ?? 0,
+        isBestSeller: event.product.isBestSeller ? 1 : 0,
+        image: event.image,
+      );
 
-      emit(ProductState.success(newProducts));
+      final response = await _productRemoteDatasource.updateProduct(
+        requestData,
+      );
+
+      response.fold((l) => emit(ProductState.error(l)), (r) {
+        // 2. Jika server sukses, jangan hanya update list lokal.
+        // Cara paling aman: Panggil fetch() agar data sinkron dengan database
+        add(const ProductEvent.fetch());
+
+        // Atau jika ingin update manual di list (agar cepat tanpa loading server lagi):
+        /*
+      if (r.data.isNotEmpty) {
+        final updatedProduct = r.data.first;
+        final index = oldProducts.indexWhere((p) => p.id == updatedProduct.id);
+        if (index != -1) {
+          oldProducts[index] = updatedProduct;
+        }
+      }
+      emit(ProductState.success(oldProducts));
+      */
+      });
     });
-
+    // ADD PRODUCT
     on<_AddProduct>((event, emit) async {
       emit(const ProductState.loading());
+
       final requestData = ProductRequestModel(
         name: event.product.name,
         price: event.product.price,
@@ -59,30 +96,54 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       );
 
       final response = await _productRemoteDatasource.addProduct(requestData);
-      // products.add(newProduct);
+
       response.fold((l) => emit(ProductState.error(l)), (r) {
         products.add(r.data);
         emit(ProductState.success(products));
       });
-
-      emit(ProductState.success(products));
     });
 
+    // DELETE PRODUCT
+    on<_DeleteProduct>((event, emit) async {
+      emit(const ProductState.loading());
+
+      final response = await _productRemoteDatasource.deleteProduct(
+        event.productId,
+      );
+
+      response.fold((l) => emit(ProductState.error(l)), (_) {
+        products.removeWhere((p) => p.id == event.productId);
+        emit(ProductState.success(products));
+      });
+    });
+
+    // FETCH BY CATEGORY
+    on<_FetchByCategory>((event, emit) async {
+      emit(const ProductState.loading());
+
+      final newProducts = event.category == 'all'
+          ? products
+          : products.where((p) => p.category == event.category).toList();
+
+      emit(ProductState.success(newProducts));
+    });
+
+    // SEARCH PRODUCT
     on<_SearchProduct>((event, emit) async {
       emit(const ProductState.loading());
+
       final newProducts = products
           .where(
-            (element) =>
-                element.name.toLowerCase().contains(event.query.toLowerCase()),
+            (p) => p.name.toLowerCase().contains(event.query.toLowerCase()),
           )
           .toList();
 
       emit(ProductState.success(newProducts));
     });
 
+    // FETCH ALL FROM STATE
     on<_FetchAllFromState>((event, emit) async {
       emit(const ProductState.loading());
-
       emit(ProductState.success(products));
     });
   }

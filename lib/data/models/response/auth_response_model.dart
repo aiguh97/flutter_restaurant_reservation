@@ -1,72 +1,71 @@
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 class AuthResponseModel {
-  final User user;
-  final String token;
+  final User? user;
+  final String? token;
+  final bool is2faRequired;
+  final int? userId;
+  final String? message;
+  final String? email;
 
   AuthResponseModel({
-    required this.user,
-    required this.token,
+    this.user,
+    this.token,
+    this.is2faRequired = false,
+    this.userId,
+    this.message,
+    this.email,
   });
 
+  // Fungsi dari String JSON ke Object
   factory AuthResponseModel.fromJson(String str) =>
       AuthResponseModel.fromMap(json.decode(str));
 
+  // Fungsi dari Object ke String JSON
   String toJson() => json.encode(toMap());
 
   factory AuthResponseModel.fromMap(Map<String, dynamic> json) =>
       AuthResponseModel(
-        user: User.fromMap(json["user"]),
+        user: json["user"] == null ? null : User.fromMap(json["user"]),
         token: json["token"],
+        // Perbaikan logika: Cek field 'message' ATAU '2fa_required'
+        is2faRequired:
+            json["message"] == "2FA_REQUIRED" ||
+            (json["2fa_required"] ?? false),
+        userId: json["user_id"],
+        message: json["message"],
+        email: json["email"],
       );
 
   Map<String, dynamic> toMap() => {
-        "user": user.toMap(),
-        "token": token,
-      };
+    "user": user?.toMap(),
+    "token": token,
+    "2fa_required": is2faRequired,
+    "user_id": userId,
+    "message": message,
+    "email": email,
+  };
 }
 
 class User {
-  final int id;
-  final String name;
-  final String email;
-  final String phone;
-  final String roles;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final int? id;
+  final String? name;
+  final String? email;
+  final String? roles;
 
-  User({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.roles,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  factory User.fromJson(String str) => User.fromMap(json.decode(str));
-
-  String toJson() => json.encode(toMap());
+  User({this.id, this.name, this.email, this.roles});
 
   factory User.fromMap(Map<String, dynamic> json) => User(
-        id: json["id"],
-        name: json["name"],
-        email: json["email"],
-        phone: json["phone"] ?? '',
-        roles: json["roles"] ?? '',
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-      );
+    id: json["id"],
+    name: json["name"],
+    email: json["email"],
+    roles: json["roles"],
+  );
 
   Map<String, dynamic> toMap() => {
-        "id": id,
-        "name": name,
-        "email": email,
-        "phone": phone,
-        "roles": roles,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-      };
+    "id": id,
+    "name": name,
+    "email": email,
+    "roles": roles,
+  };
 }

@@ -131,7 +131,7 @@ class _OrderPageState extends State<OrderPage> {
                                         data,
                                         tableNumberController.text.toInt,
                                         orderNameController.text,
-                                        authData.user.name,
+                                        authData?.user?.name ?? 'Guest',
                                       );
 
                                   //print for customer

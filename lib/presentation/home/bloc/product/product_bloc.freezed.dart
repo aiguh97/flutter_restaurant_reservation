@@ -26,6 +26,8 @@ mixin _$ProductEvent {
     required TResult Function(Product product, XFile image) addProduct,
     required TResult Function(String query) searchProduct,
     required TResult Function() fetchAllFromState,
+    required TResult Function(Product product, XFile? image) updateProduct,
+    required TResult Function(int productId) deleteProduct,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
@@ -36,6 +38,8 @@ mixin _$ProductEvent {
     TResult? Function(Product product, XFile image)? addProduct,
     TResult? Function(String query)? searchProduct,
     TResult? Function()? fetchAllFromState,
+    TResult? Function(Product product, XFile? image)? updateProduct,
+    TResult? Function(int productId)? deleteProduct,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
@@ -46,6 +50,8 @@ mixin _$ProductEvent {
     TResult Function(Product product, XFile image)? addProduct,
     TResult Function(String query)? searchProduct,
     TResult Function()? fetchAllFromState,
+    TResult Function(Product product, XFile? image)? updateProduct,
+    TResult Function(int productId)? deleteProduct,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +63,8 @@ mixin _$ProductEvent {
     required TResult Function(_AddProduct value) addProduct,
     required TResult Function(_SearchProduct value) searchProduct,
     required TResult Function(_FetchAllFromState value) fetchAllFromState,
+    required TResult Function(_UpdateProduct value) updateProduct,
+    required TResult Function(_DeleteProduct value) deleteProduct,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
@@ -67,6 +75,8 @@ mixin _$ProductEvent {
     TResult? Function(_AddProduct value)? addProduct,
     TResult? Function(_SearchProduct value)? searchProduct,
     TResult? Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult? Function(_UpdateProduct value)? updateProduct,
+    TResult? Function(_DeleteProduct value)? deleteProduct,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
@@ -77,6 +87,8 @@ mixin _$ProductEvent {
     TResult Function(_AddProduct value)? addProduct,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult Function(_UpdateProduct value)? updateProduct,
+    TResult Function(_DeleteProduct value)? deleteProduct,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
 }
@@ -153,6 +165,8 @@ class _$StartedImpl implements _Started {
     required TResult Function(Product product, XFile image) addProduct,
     required TResult Function(String query) searchProduct,
     required TResult Function() fetchAllFromState,
+    required TResult Function(Product product, XFile? image) updateProduct,
+    required TResult Function(int productId) deleteProduct,
   }) {
     return started();
   }
@@ -167,6 +181,8 @@ class _$StartedImpl implements _Started {
     TResult? Function(Product product, XFile image)? addProduct,
     TResult? Function(String query)? searchProduct,
     TResult? Function()? fetchAllFromState,
+    TResult? Function(Product product, XFile? image)? updateProduct,
+    TResult? Function(int productId)? deleteProduct,
   }) {
     return started?.call();
   }
@@ -181,6 +197,8 @@ class _$StartedImpl implements _Started {
     TResult Function(Product product, XFile image)? addProduct,
     TResult Function(String query)? searchProduct,
     TResult Function()? fetchAllFromState,
+    TResult Function(Product product, XFile? image)? updateProduct,
+    TResult Function(int productId)? deleteProduct,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -199,6 +217,8 @@ class _$StartedImpl implements _Started {
     required TResult Function(_AddProduct value) addProduct,
     required TResult Function(_SearchProduct value) searchProduct,
     required TResult Function(_FetchAllFromState value) fetchAllFromState,
+    required TResult Function(_UpdateProduct value) updateProduct,
+    required TResult Function(_DeleteProduct value) deleteProduct,
   }) {
     return started(this);
   }
@@ -213,6 +233,8 @@ class _$StartedImpl implements _Started {
     TResult? Function(_AddProduct value)? addProduct,
     TResult? Function(_SearchProduct value)? searchProduct,
     TResult? Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult? Function(_UpdateProduct value)? updateProduct,
+    TResult? Function(_DeleteProduct value)? deleteProduct,
   }) {
     return started?.call(this);
   }
@@ -227,6 +249,8 @@ class _$StartedImpl implements _Started {
     TResult Function(_AddProduct value)? addProduct,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult Function(_UpdateProduct value)? updateProduct,
+    TResult Function(_DeleteProduct value)? deleteProduct,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -290,6 +314,8 @@ class _$FetchImpl implements _Fetch {
     required TResult Function(Product product, XFile image) addProduct,
     required TResult Function(String query) searchProduct,
     required TResult Function() fetchAllFromState,
+    required TResult Function(Product product, XFile? image) updateProduct,
+    required TResult Function(int productId) deleteProduct,
   }) {
     return fetch();
   }
@@ -304,6 +330,8 @@ class _$FetchImpl implements _Fetch {
     TResult? Function(Product product, XFile image)? addProduct,
     TResult? Function(String query)? searchProduct,
     TResult? Function()? fetchAllFromState,
+    TResult? Function(Product product, XFile? image)? updateProduct,
+    TResult? Function(int productId)? deleteProduct,
   }) {
     return fetch?.call();
   }
@@ -318,6 +346,8 @@ class _$FetchImpl implements _Fetch {
     TResult Function(Product product, XFile image)? addProduct,
     TResult Function(String query)? searchProduct,
     TResult Function()? fetchAllFromState,
+    TResult Function(Product product, XFile? image)? updateProduct,
+    TResult Function(int productId)? deleteProduct,
     required TResult orElse(),
   }) {
     if (fetch != null) {
@@ -336,6 +366,8 @@ class _$FetchImpl implements _Fetch {
     required TResult Function(_AddProduct value) addProduct,
     required TResult Function(_SearchProduct value) searchProduct,
     required TResult Function(_FetchAllFromState value) fetchAllFromState,
+    required TResult Function(_UpdateProduct value) updateProduct,
+    required TResult Function(_DeleteProduct value) deleteProduct,
   }) {
     return fetch(this);
   }
@@ -350,6 +382,8 @@ class _$FetchImpl implements _Fetch {
     TResult? Function(_AddProduct value)? addProduct,
     TResult? Function(_SearchProduct value)? searchProduct,
     TResult? Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult? Function(_UpdateProduct value)? updateProduct,
+    TResult? Function(_DeleteProduct value)? deleteProduct,
   }) {
     return fetch?.call(this);
   }
@@ -364,6 +398,8 @@ class _$FetchImpl implements _Fetch {
     TResult Function(_AddProduct value)? addProduct,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult Function(_UpdateProduct value)? updateProduct,
+    TResult Function(_DeleteProduct value)? deleteProduct,
     required TResult orElse(),
   }) {
     if (fetch != null) {
@@ -458,6 +494,8 @@ class _$FetchByCategoryImpl implements _FetchByCategory {
     required TResult Function(Product product, XFile image) addProduct,
     required TResult Function(String query) searchProduct,
     required TResult Function() fetchAllFromState,
+    required TResult Function(Product product, XFile? image) updateProduct,
+    required TResult Function(int productId) deleteProduct,
   }) {
     return fetchByCategory(category);
   }
@@ -472,6 +510,8 @@ class _$FetchByCategoryImpl implements _FetchByCategory {
     TResult? Function(Product product, XFile image)? addProduct,
     TResult? Function(String query)? searchProduct,
     TResult? Function()? fetchAllFromState,
+    TResult? Function(Product product, XFile? image)? updateProduct,
+    TResult? Function(int productId)? deleteProduct,
   }) {
     return fetchByCategory?.call(category);
   }
@@ -486,6 +526,8 @@ class _$FetchByCategoryImpl implements _FetchByCategory {
     TResult Function(Product product, XFile image)? addProduct,
     TResult Function(String query)? searchProduct,
     TResult Function()? fetchAllFromState,
+    TResult Function(Product product, XFile? image)? updateProduct,
+    TResult Function(int productId)? deleteProduct,
     required TResult orElse(),
   }) {
     if (fetchByCategory != null) {
@@ -504,6 +546,8 @@ class _$FetchByCategoryImpl implements _FetchByCategory {
     required TResult Function(_AddProduct value) addProduct,
     required TResult Function(_SearchProduct value) searchProduct,
     required TResult Function(_FetchAllFromState value) fetchAllFromState,
+    required TResult Function(_UpdateProduct value) updateProduct,
+    required TResult Function(_DeleteProduct value) deleteProduct,
   }) {
     return fetchByCategory(this);
   }
@@ -518,6 +562,8 @@ class _$FetchByCategoryImpl implements _FetchByCategory {
     TResult? Function(_AddProduct value)? addProduct,
     TResult? Function(_SearchProduct value)? searchProduct,
     TResult? Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult? Function(_UpdateProduct value)? updateProduct,
+    TResult? Function(_DeleteProduct value)? deleteProduct,
   }) {
     return fetchByCategory?.call(this);
   }
@@ -532,6 +578,8 @@ class _$FetchByCategoryImpl implements _FetchByCategory {
     TResult Function(_AddProduct value)? addProduct,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult Function(_UpdateProduct value)? updateProduct,
+    TResult Function(_DeleteProduct value)? deleteProduct,
     required TResult orElse(),
   }) {
     if (fetchByCategory != null) {
@@ -603,6 +651,8 @@ class _$FetchLocalImpl implements _FetchLocal {
     required TResult Function(Product product, XFile image) addProduct,
     required TResult Function(String query) searchProduct,
     required TResult Function() fetchAllFromState,
+    required TResult Function(Product product, XFile? image) updateProduct,
+    required TResult Function(int productId) deleteProduct,
   }) {
     return fetchLocal();
   }
@@ -617,6 +667,8 @@ class _$FetchLocalImpl implements _FetchLocal {
     TResult? Function(Product product, XFile image)? addProduct,
     TResult? Function(String query)? searchProduct,
     TResult? Function()? fetchAllFromState,
+    TResult? Function(Product product, XFile? image)? updateProduct,
+    TResult? Function(int productId)? deleteProduct,
   }) {
     return fetchLocal?.call();
   }
@@ -631,6 +683,8 @@ class _$FetchLocalImpl implements _FetchLocal {
     TResult Function(Product product, XFile image)? addProduct,
     TResult Function(String query)? searchProduct,
     TResult Function()? fetchAllFromState,
+    TResult Function(Product product, XFile? image)? updateProduct,
+    TResult Function(int productId)? deleteProduct,
     required TResult orElse(),
   }) {
     if (fetchLocal != null) {
@@ -649,6 +703,8 @@ class _$FetchLocalImpl implements _FetchLocal {
     required TResult Function(_AddProduct value) addProduct,
     required TResult Function(_SearchProduct value) searchProduct,
     required TResult Function(_FetchAllFromState value) fetchAllFromState,
+    required TResult Function(_UpdateProduct value) updateProduct,
+    required TResult Function(_DeleteProduct value) deleteProduct,
   }) {
     return fetchLocal(this);
   }
@@ -663,6 +719,8 @@ class _$FetchLocalImpl implements _FetchLocal {
     TResult? Function(_AddProduct value)? addProduct,
     TResult? Function(_SearchProduct value)? searchProduct,
     TResult? Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult? Function(_UpdateProduct value)? updateProduct,
+    TResult? Function(_DeleteProduct value)? deleteProduct,
   }) {
     return fetchLocal?.call(this);
   }
@@ -677,6 +735,8 @@ class _$FetchLocalImpl implements _FetchLocal {
     TResult Function(_AddProduct value)? addProduct,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult Function(_UpdateProduct value)? updateProduct,
+    TResult Function(_DeleteProduct value)? deleteProduct,
     required TResult orElse(),
   }) {
     if (fetchLocal != null) {
@@ -774,6 +834,8 @@ class _$AddProductImpl implements _AddProduct {
     required TResult Function(Product product, XFile image) addProduct,
     required TResult Function(String query) searchProduct,
     required TResult Function() fetchAllFromState,
+    required TResult Function(Product product, XFile? image) updateProduct,
+    required TResult Function(int productId) deleteProduct,
   }) {
     return addProduct(product, image);
   }
@@ -788,6 +850,8 @@ class _$AddProductImpl implements _AddProduct {
     TResult? Function(Product product, XFile image)? addProduct,
     TResult? Function(String query)? searchProduct,
     TResult? Function()? fetchAllFromState,
+    TResult? Function(Product product, XFile? image)? updateProduct,
+    TResult? Function(int productId)? deleteProduct,
   }) {
     return addProduct?.call(product, image);
   }
@@ -802,6 +866,8 @@ class _$AddProductImpl implements _AddProduct {
     TResult Function(Product product, XFile image)? addProduct,
     TResult Function(String query)? searchProduct,
     TResult Function()? fetchAllFromState,
+    TResult Function(Product product, XFile? image)? updateProduct,
+    TResult Function(int productId)? deleteProduct,
     required TResult orElse(),
   }) {
     if (addProduct != null) {
@@ -820,6 +886,8 @@ class _$AddProductImpl implements _AddProduct {
     required TResult Function(_AddProduct value) addProduct,
     required TResult Function(_SearchProduct value) searchProduct,
     required TResult Function(_FetchAllFromState value) fetchAllFromState,
+    required TResult Function(_UpdateProduct value) updateProduct,
+    required TResult Function(_DeleteProduct value) deleteProduct,
   }) {
     return addProduct(this);
   }
@@ -834,6 +902,8 @@ class _$AddProductImpl implements _AddProduct {
     TResult? Function(_AddProduct value)? addProduct,
     TResult? Function(_SearchProduct value)? searchProduct,
     TResult? Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult? Function(_UpdateProduct value)? updateProduct,
+    TResult? Function(_DeleteProduct value)? deleteProduct,
   }) {
     return addProduct?.call(this);
   }
@@ -848,6 +918,8 @@ class _$AddProductImpl implements _AddProduct {
     TResult Function(_AddProduct value)? addProduct,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult Function(_UpdateProduct value)? updateProduct,
+    TResult Function(_DeleteProduct value)? deleteProduct,
     required TResult orElse(),
   }) {
     if (addProduct != null) {
@@ -948,6 +1020,8 @@ class _$SearchProductImpl implements _SearchProduct {
     required TResult Function(Product product, XFile image) addProduct,
     required TResult Function(String query) searchProduct,
     required TResult Function() fetchAllFromState,
+    required TResult Function(Product product, XFile? image) updateProduct,
+    required TResult Function(int productId) deleteProduct,
   }) {
     return searchProduct(query);
   }
@@ -962,6 +1036,8 @@ class _$SearchProductImpl implements _SearchProduct {
     TResult? Function(Product product, XFile image)? addProduct,
     TResult? Function(String query)? searchProduct,
     TResult? Function()? fetchAllFromState,
+    TResult? Function(Product product, XFile? image)? updateProduct,
+    TResult? Function(int productId)? deleteProduct,
   }) {
     return searchProduct?.call(query);
   }
@@ -976,6 +1052,8 @@ class _$SearchProductImpl implements _SearchProduct {
     TResult Function(Product product, XFile image)? addProduct,
     TResult Function(String query)? searchProduct,
     TResult Function()? fetchAllFromState,
+    TResult Function(Product product, XFile? image)? updateProduct,
+    TResult Function(int productId)? deleteProduct,
     required TResult orElse(),
   }) {
     if (searchProduct != null) {
@@ -994,6 +1072,8 @@ class _$SearchProductImpl implements _SearchProduct {
     required TResult Function(_AddProduct value) addProduct,
     required TResult Function(_SearchProduct value) searchProduct,
     required TResult Function(_FetchAllFromState value) fetchAllFromState,
+    required TResult Function(_UpdateProduct value) updateProduct,
+    required TResult Function(_DeleteProduct value) deleteProduct,
   }) {
     return searchProduct(this);
   }
@@ -1008,6 +1088,8 @@ class _$SearchProductImpl implements _SearchProduct {
     TResult? Function(_AddProduct value)? addProduct,
     TResult? Function(_SearchProduct value)? searchProduct,
     TResult? Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult? Function(_UpdateProduct value)? updateProduct,
+    TResult? Function(_DeleteProduct value)? deleteProduct,
   }) {
     return searchProduct?.call(this);
   }
@@ -1022,6 +1104,8 @@ class _$SearchProductImpl implements _SearchProduct {
     TResult Function(_AddProduct value)? addProduct,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult Function(_UpdateProduct value)? updateProduct,
+    TResult Function(_DeleteProduct value)? deleteProduct,
     required TResult orElse(),
   }) {
     if (searchProduct != null) {
@@ -1093,6 +1177,8 @@ class _$FetchAllFromStateImpl implements _FetchAllFromState {
     required TResult Function(Product product, XFile image) addProduct,
     required TResult Function(String query) searchProduct,
     required TResult Function() fetchAllFromState,
+    required TResult Function(Product product, XFile? image) updateProduct,
+    required TResult Function(int productId) deleteProduct,
   }) {
     return fetchAllFromState();
   }
@@ -1107,6 +1193,8 @@ class _$FetchAllFromStateImpl implements _FetchAllFromState {
     TResult? Function(Product product, XFile image)? addProduct,
     TResult? Function(String query)? searchProduct,
     TResult? Function()? fetchAllFromState,
+    TResult? Function(Product product, XFile? image)? updateProduct,
+    TResult? Function(int productId)? deleteProduct,
   }) {
     return fetchAllFromState?.call();
   }
@@ -1121,6 +1209,8 @@ class _$FetchAllFromStateImpl implements _FetchAllFromState {
     TResult Function(Product product, XFile image)? addProduct,
     TResult Function(String query)? searchProduct,
     TResult Function()? fetchAllFromState,
+    TResult Function(Product product, XFile? image)? updateProduct,
+    TResult Function(int productId)? deleteProduct,
     required TResult orElse(),
   }) {
     if (fetchAllFromState != null) {
@@ -1139,6 +1229,8 @@ class _$FetchAllFromStateImpl implements _FetchAllFromState {
     required TResult Function(_AddProduct value) addProduct,
     required TResult Function(_SearchProduct value) searchProduct,
     required TResult Function(_FetchAllFromState value) fetchAllFromState,
+    required TResult Function(_UpdateProduct value) updateProduct,
+    required TResult Function(_DeleteProduct value) deleteProduct,
   }) {
     return fetchAllFromState(this);
   }
@@ -1153,6 +1245,8 @@ class _$FetchAllFromStateImpl implements _FetchAllFromState {
     TResult? Function(_AddProduct value)? addProduct,
     TResult? Function(_SearchProduct value)? searchProduct,
     TResult? Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult? Function(_UpdateProduct value)? updateProduct,
+    TResult? Function(_DeleteProduct value)? deleteProduct,
   }) {
     return fetchAllFromState?.call(this);
   }
@@ -1167,6 +1261,8 @@ class _$FetchAllFromStateImpl implements _FetchAllFromState {
     TResult Function(_AddProduct value)? addProduct,
     TResult Function(_SearchProduct value)? searchProduct,
     TResult Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult Function(_UpdateProduct value)? updateProduct,
+    TResult Function(_DeleteProduct value)? deleteProduct,
     required TResult orElse(),
   }) {
     if (fetchAllFromState != null) {
@@ -1178,6 +1274,384 @@ class _$FetchAllFromStateImpl implements _FetchAllFromState {
 
 abstract class _FetchAllFromState implements ProductEvent {
   const factory _FetchAllFromState() = _$FetchAllFromStateImpl;
+}
+
+/// @nodoc
+abstract class _$$UpdateProductImplCopyWith<$Res> {
+  factory _$$UpdateProductImplCopyWith(
+    _$UpdateProductImpl value,
+    $Res Function(_$UpdateProductImpl) then,
+  ) = __$$UpdateProductImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({Product product, XFile? image});
+}
+
+/// @nodoc
+class __$$UpdateProductImplCopyWithImpl<$Res>
+    extends _$ProductEventCopyWithImpl<$Res, _$UpdateProductImpl>
+    implements _$$UpdateProductImplCopyWith<$Res> {
+  __$$UpdateProductImplCopyWithImpl(
+    _$UpdateProductImpl _value,
+    $Res Function(_$UpdateProductImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of ProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? product = null, Object? image = freezed}) {
+    return _then(
+      _$UpdateProductImpl(
+        null == product
+            ? _value.product
+            : product // ignore: cast_nullable_to_non_nullable
+                  as Product,
+        freezed == image
+            ? _value.image
+            : image // ignore: cast_nullable_to_non_nullable
+                  as XFile?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$UpdateProductImpl implements _UpdateProduct {
+  const _$UpdateProductImpl(this.product, this.image);
+
+  @override
+  final Product product;
+  @override
+  final XFile? image;
+
+  @override
+  String toString() {
+    return 'ProductEvent.updateProduct(product: $product, image: $image)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateProductImpl &&
+            (identical(other.product, product) || other.product == product) &&
+            (identical(other.image, image) || other.image == image));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, product, image);
+
+  /// Create a copy of ProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateProductImplCopyWith<_$UpdateProductImpl> get copyWith =>
+      __$$UpdateProductImplCopyWithImpl<_$UpdateProductImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function() fetch,
+    required TResult Function(String category) fetchByCategory,
+    required TResult Function() fetchLocal,
+    required TResult Function(Product product, XFile image) addProduct,
+    required TResult Function(String query) searchProduct,
+    required TResult Function() fetchAllFromState,
+    required TResult Function(Product product, XFile? image) updateProduct,
+    required TResult Function(int productId) deleteProduct,
+  }) {
+    return updateProduct(product, image);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function()? fetch,
+    TResult? Function(String category)? fetchByCategory,
+    TResult? Function()? fetchLocal,
+    TResult? Function(Product product, XFile image)? addProduct,
+    TResult? Function(String query)? searchProduct,
+    TResult? Function()? fetchAllFromState,
+    TResult? Function(Product product, XFile? image)? updateProduct,
+    TResult? Function(int productId)? deleteProduct,
+  }) {
+    return updateProduct?.call(product, image);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function()? fetch,
+    TResult Function(String category)? fetchByCategory,
+    TResult Function()? fetchLocal,
+    TResult Function(Product product, XFile image)? addProduct,
+    TResult Function(String query)? searchProduct,
+    TResult Function()? fetchAllFromState,
+    TResult Function(Product product, XFile? image)? updateProduct,
+    TResult Function(int productId)? deleteProduct,
+    required TResult orElse(),
+  }) {
+    if (updateProduct != null) {
+      return updateProduct(product, image);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_Fetch value) fetch,
+    required TResult Function(_FetchByCategory value) fetchByCategory,
+    required TResult Function(_FetchLocal value) fetchLocal,
+    required TResult Function(_AddProduct value) addProduct,
+    required TResult Function(_SearchProduct value) searchProduct,
+    required TResult Function(_FetchAllFromState value) fetchAllFromState,
+    required TResult Function(_UpdateProduct value) updateProduct,
+    required TResult Function(_DeleteProduct value) deleteProduct,
+  }) {
+    return updateProduct(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_Fetch value)? fetch,
+    TResult? Function(_FetchByCategory value)? fetchByCategory,
+    TResult? Function(_FetchLocal value)? fetchLocal,
+    TResult? Function(_AddProduct value)? addProduct,
+    TResult? Function(_SearchProduct value)? searchProduct,
+    TResult? Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult? Function(_UpdateProduct value)? updateProduct,
+    TResult? Function(_DeleteProduct value)? deleteProduct,
+  }) {
+    return updateProduct?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_Fetch value)? fetch,
+    TResult Function(_FetchByCategory value)? fetchByCategory,
+    TResult Function(_FetchLocal value)? fetchLocal,
+    TResult Function(_AddProduct value)? addProduct,
+    TResult Function(_SearchProduct value)? searchProduct,
+    TResult Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult Function(_UpdateProduct value)? updateProduct,
+    TResult Function(_DeleteProduct value)? deleteProduct,
+    required TResult orElse(),
+  }) {
+    if (updateProduct != null) {
+      return updateProduct(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _UpdateProduct implements ProductEvent {
+  const factory _UpdateProduct(final Product product, final XFile? image) =
+      _$UpdateProductImpl;
+
+  Product get product;
+  XFile? get image;
+
+  /// Create a copy of ProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UpdateProductImplCopyWith<_$UpdateProductImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$DeleteProductImplCopyWith<$Res> {
+  factory _$$DeleteProductImplCopyWith(
+    _$DeleteProductImpl value,
+    $Res Function(_$DeleteProductImpl) then,
+  ) = __$$DeleteProductImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int productId});
+}
+
+/// @nodoc
+class __$$DeleteProductImplCopyWithImpl<$Res>
+    extends _$ProductEventCopyWithImpl<$Res, _$DeleteProductImpl>
+    implements _$$DeleteProductImplCopyWith<$Res> {
+  __$$DeleteProductImplCopyWithImpl(
+    _$DeleteProductImpl _value,
+    $Res Function(_$DeleteProductImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of ProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? productId = null}) {
+    return _then(
+      _$DeleteProductImpl(
+        null == productId
+            ? _value.productId
+            : productId // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$DeleteProductImpl implements _DeleteProduct {
+  const _$DeleteProductImpl(this.productId);
+
+  @override
+  final int productId;
+
+  @override
+  String toString() {
+    return 'ProductEvent.deleteProduct(productId: $productId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DeleteProductImpl &&
+            (identical(other.productId, productId) ||
+                other.productId == productId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, productId);
+
+  /// Create a copy of ProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DeleteProductImplCopyWith<_$DeleteProductImpl> get copyWith =>
+      __$$DeleteProductImplCopyWithImpl<_$DeleteProductImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function() fetch,
+    required TResult Function(String category) fetchByCategory,
+    required TResult Function() fetchLocal,
+    required TResult Function(Product product, XFile image) addProduct,
+    required TResult Function(String query) searchProduct,
+    required TResult Function() fetchAllFromState,
+    required TResult Function(Product product, XFile? image) updateProduct,
+    required TResult Function(int productId) deleteProduct,
+  }) {
+    return deleteProduct(productId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function()? fetch,
+    TResult? Function(String category)? fetchByCategory,
+    TResult? Function()? fetchLocal,
+    TResult? Function(Product product, XFile image)? addProduct,
+    TResult? Function(String query)? searchProduct,
+    TResult? Function()? fetchAllFromState,
+    TResult? Function(Product product, XFile? image)? updateProduct,
+    TResult? Function(int productId)? deleteProduct,
+  }) {
+    return deleteProduct?.call(productId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function()? fetch,
+    TResult Function(String category)? fetchByCategory,
+    TResult Function()? fetchLocal,
+    TResult Function(Product product, XFile image)? addProduct,
+    TResult Function(String query)? searchProduct,
+    TResult Function()? fetchAllFromState,
+    TResult Function(Product product, XFile? image)? updateProduct,
+    TResult Function(int productId)? deleteProduct,
+    required TResult orElse(),
+  }) {
+    if (deleteProduct != null) {
+      return deleteProduct(productId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_Fetch value) fetch,
+    required TResult Function(_FetchByCategory value) fetchByCategory,
+    required TResult Function(_FetchLocal value) fetchLocal,
+    required TResult Function(_AddProduct value) addProduct,
+    required TResult Function(_SearchProduct value) searchProduct,
+    required TResult Function(_FetchAllFromState value) fetchAllFromState,
+    required TResult Function(_UpdateProduct value) updateProduct,
+    required TResult Function(_DeleteProduct value) deleteProduct,
+  }) {
+    return deleteProduct(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_Fetch value)? fetch,
+    TResult? Function(_FetchByCategory value)? fetchByCategory,
+    TResult? Function(_FetchLocal value)? fetchLocal,
+    TResult? Function(_AddProduct value)? addProduct,
+    TResult? Function(_SearchProduct value)? searchProduct,
+    TResult? Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult? Function(_UpdateProduct value)? updateProduct,
+    TResult? Function(_DeleteProduct value)? deleteProduct,
+  }) {
+    return deleteProduct?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_Fetch value)? fetch,
+    TResult Function(_FetchByCategory value)? fetchByCategory,
+    TResult Function(_FetchLocal value)? fetchLocal,
+    TResult Function(_AddProduct value)? addProduct,
+    TResult Function(_SearchProduct value)? searchProduct,
+    TResult Function(_FetchAllFromState value)? fetchAllFromState,
+    TResult Function(_UpdateProduct value)? updateProduct,
+    TResult Function(_DeleteProduct value)? deleteProduct,
+    required TResult orElse(),
+  }) {
+    if (deleteProduct != null) {
+      return deleteProduct(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _DeleteProduct implements ProductEvent {
+  const factory _DeleteProduct(final int productId) = _$DeleteProductImpl;
+
+  int get productId;
+
+  /// Create a copy of ProductEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$DeleteProductImplCopyWith<_$DeleteProductImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

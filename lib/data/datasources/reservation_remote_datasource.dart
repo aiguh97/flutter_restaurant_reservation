@@ -15,7 +15,9 @@ class ReservationRemoteDatasource {
     required String endTime,
   }) async {
     final authData = await AuthLocalDatasource().getAuthData();
-
+    if (authData == null || authData.token == null) {
+      return left('Sesi login tidak valid atau token tidak ditemukan');
+    }
     final response = await http.post(
       Uri.parse('${Variables.baseUrl}/api/reservations'),
       headers: {
@@ -34,9 +36,7 @@ class ReservationRemoteDatasource {
 
     if (response.statusCode == 201) {
       return right(
-        ReservationResponseModel.fromJson(
-          jsonDecode(response.body),
-        ),
+        ReservationResponseModel.fromJson(jsonDecode(response.body)),
       );
     } else {
       return left(response.body);

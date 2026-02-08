@@ -92,6 +92,7 @@ class MenuButton extends StatelessWidget {
           ],
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             const SpaceHeight(8.0),
             iconWidget,

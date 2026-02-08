@@ -13,6 +13,10 @@ class TableRemoteDatasource {
   }) async {
     try {
       final authData = await AuthLocalDatasource().getAuthData();
+      // 1. Tambahkan pengecekan ini
+      if (authData == null || authData.token == null) {
+        return left('Sesi login berakhir');
+      }
 
       // Build query params jika date & time dikirim
       final queryParams = <String, String>{};

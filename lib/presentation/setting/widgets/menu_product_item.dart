@@ -1,15 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pos_2/data/models/response/product_response_model.dart';
-
-import '../../../core/components/buttons.dart';
+import 'package:flutter_pos_2/presentation/home/bloc/product/product_bloc.dart';
+import 'package:flutter_pos_2/presentation/setting/pages/add_product_page.dart';
 import '../../../core/components/spaces.dart';
 import '../../../core/constants/colors.dart';
-import '../../../core/constants/variables.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MenuProductItem extends StatelessWidget {
   final Product data;
-  const MenuProductItem({super.key, required this.data});
+  final VoidCallback? onDelete; // callback hapus
+  const MenuProductItem({super.key, required this.data, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -24,119 +25,102 @@ class MenuProductItem extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Thumbnail image
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(10.0)),
             child: CachedNetworkImage(
-              imageUrl: '${Variables.imageBaseUrl}${data.image}',
-              placeholder: (context, url) => const CircularProgressIndicator(),
+              imageUrl: data.image,
+              placeholder: (context, url) => const SizedBox(
+                width: 80,
+                height: 80,
+                child: Center(child: CircularProgressIndicator()),
+              ),
               errorWidget: (context, url, error) =>
                   const Icon(Icons.food_bank_outlined, size: 80),
               width: 80,
+              height: 80,
+              fit: BoxFit.cover,
             ),
           ),
-          const SpaceWidth(22.0),
-          Flexible(
+          const SpaceWidth(16.0),
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(data.name, style: const TextStyle(fontSize: 16)),
-                const SpaceHeight(5.0),
+                const SpaceHeight(4.0),
                 Text(
                   data.categorySafe,
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
-                const SpaceHeight(10.0),
+                const SpaceHeight(8.0),
+                // Tombol Edit dan Delete di kiri bawah
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Flexible(
-                      child: Button.outlined(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                contentPadding: const EdgeInsets.all(16.0),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          data.name,
-                                          style: const TextStyle(fontSize: 20),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          icon: const Icon(Icons.close),
-                                        ),
-                                      ],
-                                    ),
-                                    const SpaceHeight(10.0),
-                                    ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(10.0),
-                                      ),
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            '${Variables.imageBaseUrl}${data.image}',
-                                        placeholder: (context, url) =>
-                                            const CircularProgressIndicator(),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(
-                                              Icons.food_bank_outlined,
-                                              size: 80,
-                                            ),
-                                        width: 80,
-                                      ),
-                                    ),
-                                    const SpaceHeight(10.0),
-                                    Text(
-                                      data.categorySafe,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    const SpaceHeight(10.0),
-                                    Text(
-                                      data.price.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    const SpaceHeight(10.0),
-                                    Text(
-                                      data.stock.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    const SpaceHeight(10.0),
-                                  ],
-                                ),
-                              );
-                            },
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () async {
+                        // 1. Tunggu proses edit selesai
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => AddProductPage(product: data),
+                          ),
+                        );
+
+                        // 2. SETELAH kembali dari AddProductPage, panggil Fetch
+                        // Ini akan memicu BlocBuilder di halaman ManageProductPage untuk merender ulang data terbaru
+                        if (context.mounted) {
+                          context.read<ProductBloc>().add(
+                            const ProductEvent.fetch(),
                           );
-                        },
-                        label: 'Detail',
-                        fontSize: 8.0,
-                        height: 31,
-                      ),
+                        }
+                      },
                     ),
-                    const SpaceWidth(6.0),
-                    Flexible(
-                      child: Button.outlined(
-                        onPressed: () {},
-                        label: 'Edit',
-                        fontSize: 8.0,
-                        height: 31,
-                      ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: AlertDialog(
+                              title: const Text('Hapus Produk'),
+                              content: Text(
+                                'Apakah Anda yakin ingin menghapus ${data.name}?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    // trigger event delete via Bloc
+                                    context.read<ProductBloc>().add(
+                                      ProductEvent.deleteProduct(data!.id!),
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          '${data.name} berhasil dihapus',
+                                        ),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Hapus',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

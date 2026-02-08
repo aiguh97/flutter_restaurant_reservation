@@ -42,11 +42,15 @@ class ProductCard extends StatelessWidget {
                     color: AppColors.disabled.withOpacity(0.4),
                   ),
                   child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(50.0)),
+                    borderRadius: BorderRadius.circular(50),
                     child: CachedNetworkImage(
                       height: 50,
-                      fit: BoxFit.fitWidth,
-                      imageUrl: '${Variables.imageBaseUrl}${data.image}',
+                      width: 50, // tambahkan width supaya tampil proporsional
+                      fit: BoxFit
+                          .cover, // lebih aman daripada fitWidth untuk gambar persegi
+                      imageUrl: Uri.encodeFull(
+                        data.image,
+                      ), // pastikan URL di-encode
                       placeholder: (context, url) =>
                           const Center(child: CircularProgressIndicator()),
                       errorWidget: (context, url, error) =>
@@ -56,7 +60,7 @@ class ProductCard extends StatelessWidget {
                 ),
                 const SpaceHeight(16.0),
                 Text(
-                  data.name,
+                  '${data.name}',
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,

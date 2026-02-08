@@ -6,39 +6,44 @@ import 'package:flutter_pos_2/presentation/setting/bloc/category/category_state.
 import 'package:flutter_pos_2/presentation/setting/models/category_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_pos_2/presentation/setting/bloc/category/category_event.dart';
-
+import '../../home/bloc/product/product_bloc.dart';
 import '../../../core/components/buttons.dart';
 import '../../../core/components/custom_dropdown.dart';
 import '../../../core/components/custom_text_field.dart';
 import '../../../core/components/image_picker_widget.dart';
 import '../../../core/components/spaces.dart';
 import '../../../data/models/response/product_response_model.dart';
-import '../../home/bloc/product/product_bloc.dart';
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({super.key});
+  final Product? product; // optional untuk edit
+  const AddProductPage({super.key, this.product});
 
   @override
   State<AddProductPage> createState() => _AddProductPageState();
 }
 
 class _AddProductPageState extends State<AddProductPage> {
-  TextEditingController? nameController;
-  TextEditingController? priceController;
-  TextEditingController? stockController;
+  late TextEditingController nameController;
+  late TextEditingController priceController;
+  late TextEditingController stockController;
 
-  Category? selectedCategory; // gunakan Category dari API
-
-  XFile? imageFile;
-
+  Category? selectedCategory; // kategori dari API
+  XFile? imageFile; // image baru
   bool isBestSeller = false;
+
+  bool get isEditMode => widget.product != null;
 
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController();
-    priceController = TextEditingController();
-    stockController = TextEditingController();
+    nameController = TextEditingController(text: widget.product?.name ?? '');
+    priceController = TextEditingController(
+      text: widget.product?.price.toString() ?? '',
+    );
+    stockController = TextEditingController(
+      text: widget.product?.stock.toString() ?? '',
+    );
+    isBestSeller = widget.product?.isBestSeller ?? false;
 
     // Load categories dari API
     context.read<CategoryBloc>().add(LoadCategories());
@@ -46,9 +51,9 @@ class _AddProductPageState extends State<AddProductPage> {
 
   @override
   void dispose() {
-    nameController!.dispose();
-    priceController!.dispose();
-    stockController!.dispose();
+    nameController.dispose();
+    priceController.dispose();
+    stockController.dispose();
     super.dispose();
   }
 
@@ -60,124 +65,180 @@ class _AddProductPageState extends State<AddProductPage> {
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Add Product',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        title: Text(
+          isEditMode ? 'Edit Product' : 'Add Product',
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         centerTitle: true,
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          CustomTextField(controller: nameController!, label: 'Product Name'),
-          const SpaceHeight(16.0),
-          CustomTextField(
-            controller: priceController!,
-            label: 'Product Price',
-            keyboardType: TextInputType.number,
-          ),
-          const SpaceHeight(16.0),
-          ImagePickerWidget(
-            label: 'Photo',
-            onChanged: (file) {
-              if (file != null) imageFile = file;
-            },
-          ),
-          const SpaceHeight(16.0),
-          CustomTextField(
-            controller: stockController!,
-            label: 'Stock',
-            keyboardType: TextInputType.number,
-          ),
-          const SpaceHeight(16.0),
-          Row(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Checkbox(
-                value: isBestSeller,
-                onChanged: (value) => setState(() => isBestSeller = value!),
+              CustomTextField(
+                controller: nameController,
+                label: 'Product Name',
               ),
-              const Text('Best Seller'),
-            ],
-          ),
-          const SpaceHeight(16.0),
-
-          /// Dropdown Category dari API
-          BlocBuilder<CategoryBloc, CategoryState>(
-            builder: (context, state) {
-              List<Category> categories = [];
-              if (state is CategoryLoaded) {
-                categories = state.categories;
-              }
-
-              return CustomDropdown<String>(
-                value: selectedCategory?.name,
-                items: categories.map((e) => e.name).toList(),
-                label: 'Category',
-                onChanged: (value) {
-                  setState(() {
-                    selectedCategory = categories.firstWhere(
-                      (c) => c.name == value,
-                    );
-                  });
+              const SpaceHeight(16.0),
+              CustomTextField(
+                controller: priceController,
+                label: 'Product Price',
+                keyboardType: TextInputType.number,
+              ),
+              const SpaceHeight(16.0),
+              ImagePickerWidget(
+                label: 'Photo',
+                initialImage: widget.product?.image,
+                onChanged: (file) {
+                  if (file != null) setState(() => imageFile = file);
                 },
-              );
-            },
-          ),
-
-          const SpaceHeight(16.0),
-          Row(
-            children: [
-              Expanded(
-                child: Button.outlined(
-                  onPressed: () => Navigator.pop(context),
-                  label: 'Batal',
-                ),
               ),
-              const SpaceWidth(16.0),
-              Expanded(
-                child: BlocConsumer<ProductBloc, ProductState>(
-                  listener: (context, state) {
-                    state.maybeMap(
-                      success: (_) => Navigator.pop(context),
-                      orElse: () {},
-                    );
-                  },
-                  builder: (context, state) {
-                    return Button.filled(
-                      onPressed: () {
-                        if (selectedCategory == null || imageFile == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Category and image are required'),
-                            ),
-                          );
+              const SpaceHeight(16.0),
+              CustomTextField(
+                controller: stockController,
+                label: 'Stock',
+                keyboardType: TextInputType.number,
+              ),
+              const SpaceHeight(16.0),
+              Row(
+                children: [
+                  Checkbox(
+                    value: isBestSeller,
+                    onChanged: (value) => setState(() => isBestSeller = value!),
+                  ),
+                  const Text('Best Seller'),
+                ],
+              ),
+              const SpaceHeight(16.0),
+              BlocBuilder<CategoryBloc, CategoryState>(
+                builder: (context, state) {
+                  List<Category> categories = [];
+                  if (state is CategoryLoaded) {
+                    categories = state.categories;
 
-                          return;
-                        }
+                    // set default category
+                    if (selectedCategory == null && categories.isNotEmpty) {
+                      selectedCategory = categories.firstWhere(
+                        (c) => c.name == widget.product?.category,
+                        orElse: () => categories.first,
+                      );
+                    }
+                  }
 
-                        final product = Product(
-                          name: nameController!.text,
-                          price: priceController!.text.toIntegerFromText,
-                          stock: stockController!.text.toIntegerFromText,
-                          category: selectedCategory!.name,
-                          categoryId: selectedCategory!.id,
-                          isBestSeller: isBestSeller,
-                          image: imageFile!.path,
+                  return CustomDropdown<String>(
+                    value: selectedCategory?.name,
+                    items: categories.map((e) => e.name).toList(),
+                    label: 'Category',
+                    onChanged: (value) {
+                      if (value == null) return;
+                      setState(() {
+                        selectedCategory = categories.firstWhere(
+                          (c) => c.name == value,
+                          orElse: () => categories.first,
                         );
-
-                        context.read<ProductBloc>().add(
-                          ProductEvent.addProduct(product, imageFile!),
+                      });
+                    },
+                  );
+                },
+              ),
+              const SpaceHeight(16.0),
+              Row(
+                children: [
+                  Expanded(
+                    child: Button.outlined(
+                      onPressed: () => Navigator.pop(context),
+                      label: 'Batal',
+                    ),
+                  ),
+                  const SpaceWidth(16.0),
+                  Expanded(
+                    child: BlocConsumer<ProductBloc, ProductState>(
+                      listener: (context, state) {
+                        state.maybeMap(
+                          success: (_) {
+                            // Tampilkan alert sukses
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  isEditMode
+                                      ? 'Produk berhasil diupdate!'
+                                      : 'Produk berhasil ditambahkan!',
+                                ),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                            // Beri jeda sedikit agar user bisa membaca alert sebelum berpindah halaman
+                            Navigator.pop(context);
+                          },
+                          error: (e) {
+                            // Tampilkan alert jika gagal dari server
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Gagal: ${e.message}'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          },
+                          orElse: () {},
                         );
                       },
-                      label: 'Simpan',
-                    );
-                  },
-                ),
+                      builder: (context, state) {
+                        // Tampilkan loading saat proses simpan
+                        return state.maybeWhen(
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          orElse: () => Button.filled(
+                            onPressed: () {
+                              // Validasi input
+                              if (selectedCategory == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Kategori harus dipilih'),
+                                    backgroundColor: Colors.orange,
+                                  ),
+                                );
+                                return;
+                              }
+                              final product = Product(
+                                id: widget.product?.id ?? 0,
+                                name: nameController.text,
+                                price: priceController.text.toIntegerFromText,
+                                stock: stockController.text.toIntegerFromText,
+                                category: selectedCategory!.name,
+                                categoryId: selectedCategory!.id,
+                                isBestSeller: isBestSeller,
+                                image:
+                                    widget.product?.image ??
+                                    '', // jangan pakai XFile
+                              );
+
+                              if (isEditMode) {
+                                context.read<ProductBloc>().add(
+                                  ProductEvent.updateProduct(
+                                    product,
+                                    imageFile,
+                                  ),
+                                );
+                              } else {
+                                context.read<ProductBloc>().add(
+                                  ProductEvent.addProduct(product, imageFile!),
+                                );
+                              }
+                            },
+                            label: isEditMode ? 'Update' : 'Simpan',
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
+              const SpaceHeight(20.0),
             ],
           ),
-          const SpaceHeight(20.0),
-        ],
+        ),
       ),
     );
   }

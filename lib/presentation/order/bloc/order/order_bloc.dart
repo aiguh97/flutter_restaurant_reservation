@@ -13,6 +13,11 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<_AddPaymentMethod>((event, emit) async {
       emit(const _Loading());
       final userData = await AuthLocalDatasource().getAuthData();
+
+      // ✅ Perbaikan: Cek nullability user
+      final idKasir = userData?.user?.id ?? 0;
+      final namaKasir = userData?.user?.name ?? 'Unknown';
+
       emit(
         _Success(
           event.orders,
@@ -27,8 +32,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           ),
           event.paymentMethod,
           0,
-          userData.user.id,
-          userData.user.name,
+          idKasir, // ✅ Gunakan variabel yang sudah dicek null
+          namaKasir, // ✅ Gunakan variabel yang sudah dicek null
           event.customerName,
         ),
       );

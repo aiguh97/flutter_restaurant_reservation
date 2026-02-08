@@ -8,11 +8,18 @@ import 'auth_local_datasource.dart';
 
 class ReportRemoteDatasource {
   Future<Either<String, SummaryResponseModel>> getSummary(
-      String startDate, String endDate) async {
+    String startDate,
+    String endDate,
+  ) async {
     final authData = await AuthLocalDatasource().getAuthData();
+    // 1. Tambahkan pengecekan ini
+    if (authData == null || authData.token == null) {
+      return left('Sesi login berakhir');
+    }
     final response = await http.get(
       Uri.parse(
-          '${Variables.baseUrl}/api/reports/summary?start_date=$startDate&end_date=$endDate'),
+        '${Variables.baseUrl}/api/reports/summary?start_date=$startDate&end_date=$endDate',
+      ),
       headers: {
         'Authorization': 'Bearer ${authData.token}',
         'Accept': 'application/json',
@@ -27,14 +34,19 @@ class ReportRemoteDatasource {
   }
 
   Future<Either<String, ProductSalesResponseModel>> getProductSales(
-      String startDate, String endDate) async {
+    String startDate,
+    String endDate,
+  ) async {
     final authData = await AuthLocalDatasource().getAuthData();
+    // 1. Tambahkan pengecekan ini
+    if (authData == null || authData.token == null) {
+      return left('Sesi login berakhir');
+    }
     final response = await http.get(
       Uri.parse(
-          '${Variables.baseUrl}/api/reports/product-sales?start_date=$startDate&end_date=$endDate'),
-      headers: {
-        'Authorization': 'Bearer ${authData.token}',
-      },
+        '${Variables.baseUrl}/api/reports/product-sales?start_date=$startDate&end_date=$endDate',
+      ),
+      headers: {'Authorization': 'Bearer ${authData.token}'},
     );
 
     if (response.statusCode == 200) {
@@ -46,6 +58,10 @@ class ReportRemoteDatasource {
 
   Future<Either<String, String>> closeCashier() async {
     final authData = await AuthLocalDatasource().getAuthData();
+    // 1. Tambahkan pengecekan ini
+    if (authData == null || authData.token == null) {
+      return left('Sesi login berakhir');
+    }
     final response = await http.get(
       Uri.parse('${Variables.baseUrl}/api/reports/close-cashier'),
       headers: {

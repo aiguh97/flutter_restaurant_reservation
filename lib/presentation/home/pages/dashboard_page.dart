@@ -31,18 +31,30 @@ class _DashboardPageState extends State<DashboardPage> {
     _loadUser();
   }
 
+  // dashboard_page.dart
   Future<void> _loadUser() async {
     final authData = await AuthLocalDatasource().getAuthData();
 
-    setState(() {
-      _isAdmin = authData.user.roles == 'admin';
-      _selectedIndex = 0; // reset aman
-    });
+    // Tambahkan pengecekan null sebelum setState
+    if (authData != null && authData.user != null) {
+      setState(() {
+        _isAdmin = authData.user!.roles == 'admin';
+      });
+    } else {
+      // Jika tidak ada data, arahkan kembali ke login atau set default
+      debugPrint("User data is null, redirecting...");
+    }
   }
 
   List<Widget> get _pages {
     if (_isAdmin == true) {
-      return const [HomePage(), OrderPage(), HistoryPage(), SettingPage()];
+      return const [
+        HomePage(),
+        OrderPage(),
+        HistoryPage(),
+        SettingPage(),
+        MyAccountPage(),
+      ];
     } else {
       return const [HomePage(), OrderPage(), MyHistoryPage(), MyAccountPage()];
     }
@@ -74,6 +86,12 @@ class _DashboardPageState extends State<DashboardPage> {
           label: 'Setting',
           isActive: _selectedIndex == 3,
           onTap: () => _onItemTapped(3),
+        ),
+        NavItem(
+          iconPath: Assets.icons.user.path,
+          label: 'Account',
+          isActive: _selectedIndex == 4,
+          onTap: () => _onItemTapped(4),
         ),
       ];
     } else {

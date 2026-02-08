@@ -1,40 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/assets/assets.gen.dart';
-import 'package:flutter_pos_2/data/datasources/auth_local_datasource.dart';
-import 'package:flutter_pos_2/data/datasources/auth_remote_datasource.dart';
-import 'package:flutter_pos_2/data/datasources/midtrans_remote_datasource.dart';
-import 'package:flutter_pos_2/data/datasources/order_remote_datasource.dart';
-import 'package:flutter_pos_2/data/datasources/product_local_datasource.dart';
-import 'package:flutter_pos_2/data/datasources/product_remote_datasource.dart';
-import 'package:flutter_pos_2/data/datasources/report_remote_datasource.dart';
-import 'package:flutter_pos_2/presentation/auth/pages/login_page.dart';
-import 'package:flutter_pos_2/presentation/draft_order/bloc/draft_order/draft_order_bloc.dart';
-import 'package:flutter_pos_2/presentation/history/bloc/history/history_bloc.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/checkout/checkout_bloc.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/product/product_bloc.dart';
-import 'package:flutter_pos_2/presentation/home/pages/dashboard_page.dart';
-import 'package:flutter_pos_2/presentation/order/bloc/order/order_bloc.dart';
-import 'package:flutter_pos_2/presentation/order/bloc/qris/qris_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/category/category_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/report/close_cashier/close_cashier_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/report/product_sales/product_sales_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/report/summary/summary_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/sync_order/sync_order_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// Core & Constants
 import 'core/constants/colors.dart';
+import 'core/assets/assets.gen.dart';
+
+// Datasources
+import 'data/datasources/auth_local_datasource.dart';
+import 'data/datasources/auth_remote_datasource.dart';
+import 'data/datasources/midtrans_remote_datasource.dart';
+import 'data/datasources/order_remote_datasource.dart';
+import 'data/datasources/product_local_datasource.dart';
+import 'data/datasources/product_remote_datasource.dart';
+import 'data/datasources/report_remote_datasource.dart';
+
+// Pages
+import 'presentation/auth/pages/login_page.dart';
+import 'presentation/home/pages/dashboard_page.dart';
+
+// Blocs
 import 'presentation/auth/bloc/login/login_bloc.dart';
 import 'presentation/home/bloc/logout/logout_bloc.dart';
+import 'presentation/home/bloc/product/product_bloc.dart';
+import 'presentation/home/bloc/checkout/checkout_bloc.dart';
+import 'presentation/order/bloc/order/order_bloc.dart';
+import 'presentation/order/bloc/qris/qris_bloc.dart';
+import 'presentation/history/bloc/history/history_bloc.dart';
+import 'presentation/setting/bloc/sync_order/sync_order_bloc.dart';
+import 'presentation/setting/bloc/category/category_bloc.dart';
+import 'presentation/draft_order/bloc/draft_order/draft_order_bloc.dart';
+import 'presentation/setting/bloc/report/summary/summary_bloc.dart';
+import 'presentation/setting/bloc/report/product_sales/product_sales_bloc.dart';
+import 'presentation/setting/bloc/report/close_cashier/close_cashier_bloc.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Pastikan plugin terinisialisasi
+  await AuthLocalDatasource().removeAuthData();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -53,6 +61,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => SyncOrderBloc(OrderRemoteDatasource()),
         ),
+        // Pastikan CategoryRepository sudah di-import atau ganti ke Datasource yang benar
         BlocProvider(create: (context) => CategoryBloc(CategoryRepository())),
         BlocProvider(
           create: (context) => DraftOrderBloc(ProductLocalDatasource.instance),
@@ -87,17 +96,29 @@ class MyApp extends StatelessWidget {
             iconTheme: const IconThemeData(color: AppColors.primary),
           ),
         ),
+        // Routes untuk navigasi pushNamed
+        routes: {
+          '/login': (context) => const LoginPage(),
+          '/home': (context) => const DashboardPage(),
+        },
+        // Auto-login logic
         home: FutureBuilder<bool>(
           future: AuthLocalDatasource().isAuth(),
           builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data == true) {
-              return const DashboardPage();
-            } else {
-              return const LoginPage();
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
             }
+            // Jika auth benar (sudah login & punya token)
+            if (snapshot.data == true) {
+              return const DashboardPage();
+            }
+            // Jika tidak, pasti ke login
+            return const LoginPage();
           },
         ),
-      ),
-    );
+      ), // MaterialApp tutup di sini
+    ); // MultiBlocProvider tutup di sini
   }
 }

@@ -7,4 +7,6 @@ class LoginState with _$LoginState {
   const factory LoginState.success(AuthResponseModel authResponseModel) =
       _Success;
   const factory LoginState.error(String message) = _Error;
+  // Pastikan nama ini sama dengan yang dipanggil di Bloc
+  const factory LoginState.twoFactorRequired(int userId) = _TwoFactorRequired;
 }

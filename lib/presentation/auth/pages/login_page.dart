@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_pos_2/data/datasources/auth_local_datasource.dart';
+import 'package:flutter_pos_2/presentation/2fa_challenge_page/pages/TwoFactorChallengepage.dart';
 import 'package:flutter_pos_2/presentation/auth/bloc/login/login_bloc.dart';
 
 import '../../../core/assets/assets.gen.dart';
@@ -73,16 +74,22 @@ class _LoginPageState extends State<LoginPage> {
             obscureText: true,
           ),
           const SpaceHeight(24.0),
-          BlocListener<LoginBloc, LoginState>(
+          BlocConsumer<LoginBloc, LoginState>(
             listener: (context, state) {
               state.maybeWhen(
-                orElse: () {},
-                success: (authResponseModel) {
-                  AuthLocalDatasource().saveAuthData(authResponseModel);
-                  Navigator.pushReplacement(
+                success: (data) async {
+                  await AuthLocalDatasource().saveAuthData(data);
+                  if (context.mounted) {
+                    Navigator.pushReplacementNamed(context, '/home');
+                  }
+                },
+                twoFactorRequired: (userId) {
+                  // ✅ Gunakan pushNamed jika sudah didaftarkan, atau push biasa
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const DashboardPage(),
+                      builder: (context) =>
+                          TwoFactorChallengePage(userId: userId),
                     ),
                   );
                 },
@@ -94,30 +101,25 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   );
                 },
+                orElse: () {},
               );
             },
-            child: BlocBuilder<LoginBloc, LoginState>(
-              builder: (context, state) {
-                return state.maybeWhen(
-                  orElse: () {
-                    return Button.filled(
-                      onPressed: () {
-                        context.read<LoginBloc>().add(
-                          LoginEvent.login(
-                            email: usernameController.text,
-                            password: passwordController.text,
-                          ),
-                        );
-                      },
-                      label: 'Login',
+            builder: (context, state) {
+              return state.maybeWhen(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                orElse: () => Button.filled(
+                  onPressed: () {
+                    context.read<LoginBloc>().add(
+                      LoginEvent.login(
+                        email: usernameController.text,
+                        password: passwordController.text,
+                      ),
                     );
                   },
-                  loading: () {
-                    return const Center(child: CircularProgressIndicator());
-                  },
-                );
-              },
-            ),
+                  label: 'Login',
+                ),
+              );
+            },
           ),
         ],
       ),
