@@ -12,6 +12,18 @@ class AuthLocalDatasource {
     await prefs.remove('auth_data');
   }
 
+  Future<void> update2FAStatus(bool isEnabled) async {
+    final authData = await getAuthData();
+    if (authData != null && authData.user != null) {
+      // Sekarang copyWith sudah tersedia
+      final updatedUser = authData.user!.copyWith(twoFactorEnabled: isEnabled);
+      final updatedAuthData = authData.copyWith(user: updatedUser);
+
+      // Simpan JSON baru ke SharedPreferences
+      await saveAuthData(updatedAuthData);
+    }
+  }
+
   Future<AuthResponseModel?> getAuthData() async {
     final pref = await SharedPreferences.getInstance();
     final authData = pref.getString('auth_data');
@@ -24,8 +36,18 @@ class AuthLocalDatasource {
   Future<bool> isAuth() async {
     final prefs = await SharedPreferences.getInstance();
     final authData = prefs.getString('auth_data');
+    print('DEBUG AUTH DATA: $authData'); // Tambahkan ini sebentar saja
 
-    return authData != null;
+    if (authData == null || authData.isEmpty) return false;
+
+    try {
+      final model = AuthResponseModel.fromJson(authData);
+      print('DEBUG TOKEN: ${model.token}'); // Pastikan token muncul di sini
+      return model.token != null && model.token!.isNotEmpty;
+    } catch (e) {
+      print('DEBUG ERROR: $e');
+      return false;
+    }
   }
 
   Future<void> saveMidtransServerKey(String serverKey) async {

@@ -15,13 +15,92 @@ class AuthRemoteDatasource {
       body: {'email': email, 'password': password},
     );
     if (response.statusCode == 200) {
-      final data = AuthResponseModel.fromJson(response.body);
-      return right(data);
+      return right(AuthResponseModel.fromJson(response.body));
     } else {
       // Mengambil pesan error dari JSON jika tersedia
       final String message =
           jsonDecode(response.body)['message'] ?? 'Login Gagal';
       return left(message);
+    }
+  }
+
+  // data/datasources/auth_remote_datasource.dart
+
+  Future<Either<String, Map<String, dynamic>>> setup2FA() async {
+    try {
+      final authData = await AuthLocalDatasource().getAuthData();
+
+      // Cek apakah token ada sebelum kirim request
+      if (authData == null || authData.token == null) {
+        return const Left("Sesi berakhir, silakan login kembali.");
+      }
+
+      final response = await http.get(
+        Uri.parse('${Variables.baseUrl}/api/2fa/setup'),
+        headers: {
+          'Authorization': 'Bearer ${authData.token}',
+          'Accept': 'application/json',
+          'ngrok-skip-browser-warning': 'true', // Penting jika pakai Ngrok
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return Right(responseData['data']);
+      } else {
+        // Ambil pesan error dari Laravel jika ada
+        final message =
+            jsonDecode(response.body)['message'] ??
+            "Gagal mengambil data setup 2FA";
+        return Left(message);
+      }
+    } catch (e) {
+      return Left("Terjadi kesalahan koneksi: $e");
+    }
+  }
+
+  Future<Either<String, String>> enable2FA(String code) async {
+    final authData = await AuthLocalDatasource().getAuthData();
+    final response = await http.post(
+      Uri.parse('${Variables.baseUrl}/api/2fa/enable'),
+      headers: {
+        'Authorization': 'Bearer ${authData!.token}',
+        'Accept': 'application/json',
+      },
+      body: {'code': code},
+    );
+
+    if (response.statusCode == 200) {
+      return const Right("2FA Enabled");
+    } else {
+      final message =
+          jsonDecode(response.body)['message'] ?? "Gagal verifikasi";
+      return Left(message);
+    }
+  }
+
+  // lib/data/datasources/auth_remote_datasource.dart
+
+  Future<Either<String, String>> disable2FA() async {
+    try {
+      final authData = await AuthLocalDatasource().getAuthData();
+      final response = await http.post(
+        Uri.parse('${Variables.baseUrl}/api/2fa/disable'),
+        headers: {
+          'Authorization': 'Bearer ${authData!.token}',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return const Right("2FA berhasil dinonaktifkan.");
+      } else {
+        final message =
+            jsonDecode(response.body)['message'] ?? "Gagal menonaktifkan 2FA";
+        return Left(message);
+      }
+    } catch (e) {
+      return Left("Terjadi kesalahan: ${e.toString()}");
     }
   }
 

@@ -17,6 +17,23 @@ class AuthResponseModel {
     this.email,
   });
 
+  // TAMBAHKAN METHOD INI
+  AuthResponseModel copyWith({
+    User? user,
+    String? token,
+    bool? is2faRequired,
+    int? userId,
+    String? message,
+  }) {
+    return AuthResponseModel(
+      user: user ?? this.user,
+      token: token ?? this.token,
+      is2faRequired: is2faRequired ?? this.is2faRequired,
+      userId: userId ?? this.userId,
+      message: message ?? this.message,
+    );
+  }
+
   // Fungsi dari String JSON ke Object
   factory AuthResponseModel.fromJson(String str) =>
       AuthResponseModel.fromMap(json.decode(str));
@@ -52,14 +69,18 @@ class User {
   final String? name;
   final String? email;
   final String? roles;
+  final bool? twoFactorEnabled; // TAMBAHKAN INI
 
-  User({this.id, this.name, this.email, this.roles});
+  User({this.id, this.name, this.email, this.roles, this.twoFactorEnabled});
 
   factory User.fromMap(Map<String, dynamic> json) => User(
     id: json["id"],
     name: json["name"],
     email: json["email"],
     roles: json["roles"],
+    // Pastikan key ini sesuai dengan JSON dari Laravel
+    twoFactorEnabled:
+        json["two_factor_enabled"] == 1 || json["two_factor_enabled"] == true,
   );
 
   Map<String, dynamic> toMap() => {
@@ -67,5 +88,23 @@ class User {
     "name": name,
     "email": email,
     "roles": roles,
+    "two_factor_enabled": twoFactorEnabled,
   };
+
+  // TAMBAHKAN METHOD INI
+  User copyWith({
+    int? id,
+    String? name,
+    String? email,
+    String? roles,
+    bool? twoFactorEnabled,
+  }) {
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      roles: roles ?? this.roles,
+      twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
+    );
+  }
 }

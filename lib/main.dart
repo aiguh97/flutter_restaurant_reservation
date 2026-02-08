@@ -36,7 +36,6 @@ import 'presentation/setting/bloc/report/close_cashier/close_cashier_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Pastikan plugin terinisialisasi
-  await AuthLocalDatasource().removeAuthData();
   runApp(const MyApp());
 }
 
