@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:flutter_pos_2/core/constants/variables.dart';
-import 'package:flutter_pos_2/data/models/request/product_request_model.dart';
-import 'package:flutter_pos_2/data/models/response/add_product_response_model.dart';
+import 'package:restoguh/core/constants/variables.dart';
+import 'package:restoguh/data/models/request/product_request_model.dart';
+import 'package:restoguh/data/models/response/add_product_response_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_pos_2/data/models/response/product_response_model.dart';
+import 'package:restoguh/data/models/response/product_response_model.dart';
 import 'auth_local_datasource.dart';
 import 'package:path/path.dart'; // untuk basename()
 

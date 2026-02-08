@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pos_2/core/components/spaces.dart';
-import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
+import 'package:restoguh/core/components/spaces.dart';
+import 'package:restoguh/core/extensions/build_context_ext.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../constants/colors.dart';
 

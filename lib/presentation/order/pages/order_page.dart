@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/constants/colors.dart';
-import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
-import 'package:flutter_pos_2/core/extensions/string_ext.dart';
-import 'package:flutter_pos_2/data/datasources/auth_local_datasource.dart';
-import 'package:flutter_pos_2/data/datasources/reservation_local_datasource.dart';
-import 'package:flutter_pos_2/data/datasources/reservation_remote_datasource.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/checkout/checkout_bloc.dart';
-import 'package:flutter_pos_2/presentation/home/models/order_item.dart';
-import 'package:flutter_pos_2/presentation/home/pages/dashboard_page.dart';
-import 'package:flutter_pos_2/presentation/reservation/bloc/reservation_bloc.dart';
-import 'package:flutter_pos_2/presentation/table/models/table_model.dart';
-import 'package:flutter_pos_2/presentation/table/pages/pilih_meja_page.dart';
+import 'package:restoguh/core/constants/colors.dart';
+import 'package:restoguh/core/extensions/build_context_ext.dart';
+import 'package:restoguh/core/extensions/string_ext.dart';
+import 'package:restoguh/data/datasources/auth_local_datasource.dart';
+import 'package:restoguh/data/datasources/reservation_local_datasource.dart';
+import 'package:restoguh/data/datasources/reservation_remote_datasource.dart';
+import 'package:restoguh/presentation/home/bloc/checkout/checkout_bloc.dart';
+import 'package:restoguh/presentation/home/models/order_item.dart';
+import 'package:restoguh/presentation/home/pages/dashboard_page.dart';
+import 'package:restoguh/presentation/reservation/bloc/reservation_bloc.dart';
+import 'package:restoguh/presentation/table/models/table_model.dart';
+import 'package:restoguh/presentation/table/pages/pilih_meja_page.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/buttons.dart';
@@ -55,7 +55,6 @@ class _OrderPageState extends State<OrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    const paddingHorizontal = EdgeInsets.symmetric(horizontal: 16.0);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

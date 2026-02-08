@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_pos_2/presentation/setting/models/category_model.dart';
+import 'package:restoguh/presentation/setting/models/category_model.dart';
 
 class CategoryResponseModel {
   final bool status;

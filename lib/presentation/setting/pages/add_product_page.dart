@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/extensions/string_ext.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/category/category_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/category/category_state.dart';
-import 'package:flutter_pos_2/presentation/setting/models/category_model.dart';
+import 'package:restoguh/core/extensions/string_ext.dart';
+import 'package:restoguh/presentation/setting/bloc/category/category_bloc.dart';
+import 'package:restoguh/presentation/setting/bloc/category/category_state.dart';
+import 'package:restoguh/presentation/setting/models/category_model.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/category/category_event.dart';
+import 'package:restoguh/presentation/setting/bloc/category/category_event.dart';
 import '../../home/bloc/product/product_bloc.dart';
 import '../../../core/components/buttons.dart';
 import '../../../core/components/custom_dropdown.dart';

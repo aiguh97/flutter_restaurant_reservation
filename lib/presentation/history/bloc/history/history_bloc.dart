@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_pos_2/data/datasources/product_local_datasource.dart';
-import 'package:flutter_pos_2/presentation/order/models/order_model.dart';
+import 'package:restoguh/data/datasources/product_local_datasource.dart';
+import 'package:restoguh/presentation/order/models/order_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'history_event.dart';

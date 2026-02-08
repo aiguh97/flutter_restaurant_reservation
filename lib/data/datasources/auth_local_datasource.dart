@@ -1,4 +1,4 @@
-import 'package:flutter_pos_2/data/models/response/auth_response_model.dart';
+import 'package:restoguh/data/models/response/auth_response_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthLocalDatasource {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/data/datasources/auth_local_datasource.dart';
-import 'package:flutter_pos_2/presentation/auth/pages/login_page.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/logout/logout_bloc.dart';
+import 'package:restoguh/data/datasources/auth_local_datasource.dart';
+import 'package:restoguh/presentation/auth/pages/login_page.dart';
+import 'package:restoguh/presentation/home/bloc/logout/logout_bloc.dart';
 
 class LogoutButton extends StatelessWidget {
   const LogoutButton({super.key});

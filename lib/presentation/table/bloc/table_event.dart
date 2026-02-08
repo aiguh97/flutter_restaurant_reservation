@@ -1,4 +1,4 @@
-import 'package:flutter_pos_2/presentation/table/models/table_model.dart';
+import 'package:restoguh/presentation/table/models/table_model.dart';
 
 abstract class TableEvent {}
 

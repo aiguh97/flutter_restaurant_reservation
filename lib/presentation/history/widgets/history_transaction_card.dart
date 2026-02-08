@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pos_2/core/components/buttons.dart';
-import 'package:flutter_pos_2/core/extensions/int_ext.dart';
-import 'package:flutter_pos_2/core/extensions/string_ext.dart';
-import 'package:flutter_pos_2/data/dataoutputs/cwb_print.dart';
-import 'package:flutter_pos_2/presentation/order/models/order_model.dart';
+import 'package:restoguh/core/components/buttons.dart';
+import 'package:restoguh/core/extensions/int_ext.dart';
+import 'package:restoguh/core/extensions/string_ext.dart';
+import 'package:restoguh/data/dataoutputs/cwb_print.dart';
+import 'package:restoguh/presentation/order/models/order_model.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/constants/colors.dart';

@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/extensions/int_ext.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/checkout/checkout_bloc.dart';
-import 'package:flutter_pos_2/presentation/home/models/order_item.dart';
+import 'package:restoguh/core/extensions/int_ext.dart';
+import 'package:restoguh/presentation/home/bloc/checkout/checkout_bloc.dart';
+import 'package:restoguh/presentation/home/models/order_item.dart';
 
 import '../../../core/components/spaces.dart';
 import '../../../core/constants/colors.dart';
@@ -28,7 +28,12 @@ class OrderCard extends StatelessWidget {
       children: [
         Container(
           margin: padding,
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(
+            top: 12,
+            left: 12,
+            right: 2,
+            bottom: 12,
+          ),
           decoration: ShapeDecoration(
             color: Colors.white,
             shape: RoundedRectangleBorder(
@@ -37,6 +42,8 @@ class OrderCard extends StatelessWidget {
             ),
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(50.0)),
@@ -44,24 +51,26 @@ class OrderCard extends StatelessWidget {
                   width: 76,
                   height: 76,
                   fit: BoxFit.cover,
-                  imageUrl: '${Variables.imageBaseUrl}${data.product.image}',
+                  imageUrl: data.product.image,
                   placeholder: (context, url) =>
                       const CircularProgressIndicator(),
                   errorWidget: (context, url, error) =>
                       const Icon(Icons.food_bank_outlined, size: 80),
                 ),
               ),
-              const SpaceWidth(24.0),
+              const SpaceWidth(12.0),
               Flexible(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           data.product.name,
                           style: const TextStyle(fontWeight: FontWeight.w700),
+                          maxLines: 4,
                         ),
                         Text(
                           data.product.price.currencyFormatRp,
@@ -69,6 +78,7 @@ class OrderCard extends StatelessWidget {
                         ),
                       ],
                     ),
+
                     const SpaceHeight(20.0),
                     StatefulBuilder(
                       builder: (context, setState) => Row(
@@ -113,14 +123,15 @@ class OrderCard extends StatelessWidget {
                   ],
                 ),
               ),
+
+              IconButton(
+                onPressed: onDeleteTap,
+                icon: const Icon(
+                  Icons.delete_forever_rounded,
+                  color: Colors.red,
+                ),
+              ),
             ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 16.0),
-          child: IconButton(
-            onPressed: onDeleteTap,
-            icon: const Icon(Icons.highlight_off, color: AppColors.primary),
           ),
         ),
       ],

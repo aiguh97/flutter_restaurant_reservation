@@ -1,4 +1,4 @@
-package com.example.flutter_pos_2
+package com.teguhdev.restoguh
 
 import io.flutter.embedding.android.FlutterActivity
 

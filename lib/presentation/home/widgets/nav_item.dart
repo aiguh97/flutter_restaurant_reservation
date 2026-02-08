@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/checkout/checkout_bloc.dart';
+import 'package:restoguh/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // import '../../../core/components/spaces.dart';

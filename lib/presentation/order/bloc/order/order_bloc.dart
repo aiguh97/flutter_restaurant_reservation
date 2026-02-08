@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_pos_2/data/datasources/auth_local_datasource.dart';
+import 'package:restoguh/data/datasources/auth_local_datasource.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../home/models/order_item.dart';

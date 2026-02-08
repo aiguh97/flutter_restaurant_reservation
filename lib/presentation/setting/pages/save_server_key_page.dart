@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pos_2/data/datasources/auth_local_datasource.dart';
+import 'package:restoguh/data/datasources/auth_local_datasource.dart';
 
 class SaveServerKeyPage extends StatefulWidget {
   const SaveServerKeyPage({super.key});

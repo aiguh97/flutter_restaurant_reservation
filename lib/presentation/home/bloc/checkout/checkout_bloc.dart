@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_pos_2/data/models/response/product_response_model.dart';
-import 'package:flutter_pos_2/presentation/home/models/order_item.dart';
-import 'package:flutter_pos_2/presentation/order/models/draft_order_model.dart';
+import 'package:restoguh/data/models/response/product_response_model.dart';
+import 'package:restoguh/presentation/home/models/order_item.dart';
+import 'package:restoguh/presentation/order/models/draft_order_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 

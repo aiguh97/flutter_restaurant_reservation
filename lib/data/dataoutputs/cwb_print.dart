@@ -1,7 +1,7 @@
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_pos_2/core/extensions/int_ext.dart';
-import 'package:flutter_pos_2/core/extensions/string_ext.dart';
+import 'package:restoguh/core/extensions/int_ext.dart';
+import 'package:restoguh/core/extensions/string_ext.dart';
 import 'package:intl/intl.dart';
 import 'package:image/image.dart' as img;
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';

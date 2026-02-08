@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
-import 'package:flutter_pos_2/core/extensions/int_ext.dart';
-import 'package:flutter_pos_2/presentation/order/bloc/qris/qris_bloc.dart';
-import 'package:flutter_pos_2/presentation/order/widgets/payment_success_dialog.dart';
+import 'package:restoguh/core/extensions/build_context_ext.dart';
+import 'package:restoguh/core/extensions/int_ext.dart';
+import 'package:restoguh/presentation/order/bloc/qris/qris_bloc.dart';
+import 'package:restoguh/presentation/order/widgets/payment_success_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 

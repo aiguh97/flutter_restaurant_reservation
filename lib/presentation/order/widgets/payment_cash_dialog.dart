@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
-import 'package:flutter_pos_2/core/extensions/int_ext.dart';
-import 'package:flutter_pos_2/core/extensions/string_ext.dart';
-import 'package:flutter_pos_2/data/datasources/product_local_datasource.dart';
-import 'package:flutter_pos_2/presentation/order/bloc/order/order_bloc.dart';
-import 'package:flutter_pos_2/presentation/order/models/order_model.dart';
-import 'package:flutter_pos_2/presentation/order/widgets/payment_success_dialog.dart';
-import 'package:flutter_pos_2/presentation/reservation/bloc/reservation_bloc.dart';
-import 'package:flutter_pos_2/presentation/reservation/bloc/reservation_event.dart';
+import 'package:restoguh/core/extensions/build_context_ext.dart';
+import 'package:restoguh/core/extensions/int_ext.dart';
+import 'package:restoguh/core/extensions/string_ext.dart';
+import 'package:restoguh/data/datasources/product_local_datasource.dart';
+import 'package:restoguh/presentation/order/bloc/order/order_bloc.dart';
+import 'package:restoguh/presentation/order/models/order_model.dart';
+import 'package:restoguh/presentation/order/widgets/payment_success_dialog.dart';
+import 'package:restoguh/presentation/reservation/bloc/reservation_bloc.dart';
+import 'package:restoguh/presentation/reservation/bloc/reservation_event.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/components/buttons.dart';

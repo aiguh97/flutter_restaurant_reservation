@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/data/datasources/auth_local_datasource.dart';
-import 'package:flutter_pos_2/presentation/history/pages/history_page.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/logout/logout_bloc.dart';
-import 'package:flutter_pos_2/presentation/home/pages/home_page.dart';
-import 'package:flutter_pos_2/presentation/my-history/pages/my_history_page.dart';
-import 'package:flutter_pos_2/presentation/my_accounts/pages/my_account_page.dart';
-import 'package:flutter_pos_2/presentation/order/pages/order_page.dart';
-import 'package:flutter_pos_2/presentation/setting/pages/setting_page.dart';
+import 'package:restoguh/data/datasources/auth_local_datasource.dart';
+import 'package:restoguh/presentation/history/pages/history_page.dart';
+import 'package:restoguh/presentation/home/pages/home_page.dart';
+import 'package:restoguh/presentation/my-history/pages/my_history_page.dart';
+import 'package:restoguh/presentation/my_accounts/pages/my_account_page.dart';
+import 'package:restoguh/presentation/order/pages/order_page.dart';
+import 'package:restoguh/presentation/setting/pages/setting_page.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/constants/colors.dart';
-import '../../auth/pages/login_page.dart';
 import '../widgets/nav_item.dart';
 
 class DashboardPage extends StatefulWidget {

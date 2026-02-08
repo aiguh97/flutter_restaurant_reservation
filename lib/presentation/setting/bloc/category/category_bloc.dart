@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/data/models/response/category_response_model.dart';
+import 'package:restoguh/data/models/response/category_response_model.dart';
 import 'package:http/http.dart' as http;
 import '../../models/category_model.dart';
 import 'category_event.dart';
 import 'category_state.dart';
-import 'package:flutter_pos_2/core/constants/variables.dart';
+import 'package:restoguh/core/constants/variables.dart';
 
 /// Optional: buat datasource/repository agar mudah test
 class CategoryRepository {

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pos_2/core/components/spaces.dart';
-import 'package:flutter_pos_2/core/constants/colors.dart';
-import 'package:flutter_pos_2/data/datasources/auth_local_datasource.dart';
-import 'package:flutter_pos_2/data/datasources/auth_remote_datasource.dart';
-import 'package:flutter_pos_2/data/models/response/auth_response_model.dart';
-import 'package:flutter_pos_2/presentation/2fa_challenge_page/pages/TwoFactorSetupPage.dart';
-import 'package:flutter_pos_2/presentation/common/widgets/logout_button.dart';
+import 'package:restoguh/core/components/spaces.dart';
+import 'package:restoguh/core/constants/colors.dart';
+import 'package:restoguh/data/datasources/auth_local_datasource.dart';
+import 'package:restoguh/data/datasources/auth_remote_datasource.dart';
+import 'package:restoguh/data/models/response/auth_response_model.dart';
+import 'package:restoguh/presentation/2fa_challenge_page/pages/TwoFactorSetupPage.dart';
+import 'package:restoguh/presentation/common/widgets/logout_button.dart';
 
 // Import halaman setup 2FA (buat jika belum ada)
-// import 'package:flutter_pos_2/presentation/auth/pages/two_factor_setup_page.dart';
+// import 'package:restoguh/presentation/auth/pages/two_factor_setup_page.dart';
 class MyAccountPage extends StatefulWidget {
   const MyAccountPage({super.key});
 
@@ -65,7 +65,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
                 title: Text("Two-Factor Authentication"),
                 subtitle: Text(is2faEnabled ? "Aktif" : "Non-Aktif"),
                 trailing: Switch(
-                  activeColor: Colors.orange,
+                  activeColor: AppColors.green,
                   value: is2faEnabled,
                   onChanged: (value) {
                     if (value) {

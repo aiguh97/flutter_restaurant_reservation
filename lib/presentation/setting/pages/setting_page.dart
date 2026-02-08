@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
-import 'package:flutter_pos_2/data/datasources/auth_local_datasource.dart';
-import 'package:flutter_pos_2/presentation/auth/pages/login_page.dart';
-import 'package:flutter_pos_2/presentation/common/widgets/logout_button.dart';
-import 'package:flutter_pos_2/presentation/home/pages/dashboard_page.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/report/close_cashier/close_cashier_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/pages/manage_category_page.dart';
-import 'package:flutter_pos_2/presentation/setting/pages/manage_printer_page.dart';
-import 'package:flutter_pos_2/presentation/setting/pages/report/report_page.dart';
-import 'package:flutter_pos_2/presentation/setting/pages/save_server_key_page.dart';
-import 'package:flutter_pos_2/presentation/setting/pages/sync_data_page.dart';
+import 'package:restoguh/core/extensions/build_context_ext.dart';
+import 'package:restoguh/data/datasources/auth_local_datasource.dart';
+import 'package:restoguh/presentation/auth/pages/login_page.dart';
+import 'package:restoguh/presentation/common/widgets/logout_button.dart';
+import 'package:restoguh/presentation/home/pages/dashboard_page.dart';
+import 'package:restoguh/presentation/setting/bloc/report/close_cashier/close_cashier_bloc.dart';
+import 'package:restoguh/presentation/setting/pages/manage_category_page.dart';
+import 'package:restoguh/presentation/setting/pages/manage_printer_page.dart';
+import 'package:restoguh/presentation/setting/pages/report/report_page.dart';
+import 'package:restoguh/presentation/setting/pages/save_server_key_page.dart';
+import 'package:restoguh/presentation/setting/pages/sync_data_page.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/menu_button.dart';

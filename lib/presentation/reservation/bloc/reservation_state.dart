@@ -1,4 +1,4 @@
-import 'package:flutter_pos_2/data/models/response/reservation_response_model.dart';
+import 'package:restoguh/data/models/response/reservation_response_model.dart';
 // import 'package:flutter_pos_app/data/models/response/reservation_response_model.dart';
 
 abstract class ReservationState {}

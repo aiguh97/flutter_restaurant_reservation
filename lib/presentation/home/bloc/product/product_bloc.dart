@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_pos_2/data/datasources/product_local_datasource.dart';
+import 'package:restoguh/data/datasources/product_local_datasource.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:flutter_pos_2/data/datasources/product_remote_datasource.dart';
+import 'package:restoguh/data/datasources/product_remote_datasource.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../data/models/request/product_request_model.dart';

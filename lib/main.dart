@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restoguh/presentation/auth/bloc/google_auth/google_auth_bloc.dart';
+import 'package:restoguh/presentation/auth/bloc/register/register_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // Core & Constants
@@ -48,12 +50,18 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => LoginBloc(AuthRemoteDatasource())),
         BlocProvider(create: (context) => LogoutBloc(AuthRemoteDatasource())),
+        BlocProvider(create: (context) => RegisterBloc(AuthRemoteDatasource())),
+
         BlocProvider(
           create: (context) =>
               ProductBloc(ProductRemoteDatasource())
                 ..add(const ProductEvent.fetchLocal()),
         ),
         BlocProvider(create: (context) => CheckoutBloc()),
+        BlocProvider(
+          create: (context) => GoogleAuthBloc(AuthRemoteDatasource()),
+        ),
+
         BlocProvider(create: (context) => OrderBloc()),
         BlocProvider(create: (context) => QrisBloc(MidtransRemoteDatasource())),
         BlocProvider(create: (context) => HistoryBloc()),

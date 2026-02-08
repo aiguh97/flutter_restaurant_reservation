@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter_pos_2/data/models/request/order_request_model.dart';
-import 'package:flutter_pos_2/data/models/response/product_response_model.dart';
+import 'package:restoguh/data/models/request/order_request_model.dart';
+import 'package:restoguh/data/models/response/product_response_model.dart';
 
 class OrderItem {
   final Product product;

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
-import 'package:flutter_pos_2/core/extensions/date_time_ext.dart';
-import 'package:flutter_pos_2/core/extensions/int_ext.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/checkout/checkout_bloc.dart';
-import 'package:flutter_pos_2/presentation/home/pages/dashboard_page.dart';
-import 'package:flutter_pos_2/presentation/order/bloc/order/order_bloc.dart';
-import 'package:flutter_pos_2/presentation/order/widgets/label_value_widget.dart';
+import 'package:restoguh/core/extensions/build_context_ext.dart';
+import 'package:restoguh/core/extensions/date_time_ext.dart';
+import 'package:restoguh/core/extensions/int_ext.dart';
+import 'package:restoguh/presentation/home/bloc/checkout/checkout_bloc.dart';
+import 'package:restoguh/presentation/home/pages/dashboard_page.dart';
+import 'package:restoguh/presentation/order/bloc/order/order_bloc.dart';
+import 'package:restoguh/presentation/order/widgets/label_value_widget.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 import '../../../core/assets/assets.gen.dart';

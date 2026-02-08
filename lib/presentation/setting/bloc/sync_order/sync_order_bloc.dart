@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_pos_2/data/datasources/product_local_datasource.dart';
+import 'package:restoguh/data/datasources/product_local_datasource.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:flutter_pos_2/data/datasources/order_remote_datasource.dart';
-import 'package:flutter_pos_2/data/models/request/order_request_model.dart';
+import 'package:restoguh/data/datasources/order_remote_datasource.dart';
+import 'package:restoguh/data/models/request/order_request_model.dart';
 
 part 'sync_order_bloc.freezed.dart';
 part 'sync_order_event.dart';

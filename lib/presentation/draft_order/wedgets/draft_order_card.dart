@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
-import 'package:flutter_pos_2/core/extensions/int_ext.dart';
-import 'package:flutter_pos_2/core/extensions/string_ext.dart';
-import 'package:flutter_pos_2/data/datasources/product_local_datasource.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/checkout/checkout_bloc.dart';
-import 'package:flutter_pos_2/presentation/order/models/order_model.dart';
-import 'package:flutter_pos_2/presentation/order/pages/order_page.dart';
+import 'package:restoguh/core/extensions/build_context_ext.dart';
+import 'package:restoguh/core/extensions/int_ext.dart';
+import 'package:restoguh/core/extensions/string_ext.dart';
+import 'package:restoguh/data/datasources/product_local_datasource.dart';
+import 'package:restoguh/presentation/home/bloc/checkout/checkout_bloc.dart';
+import 'package:restoguh/presentation/order/models/order_model.dart';
+import 'package:restoguh/presentation/order/pages/order_page.dart';
 
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/buttons.dart';

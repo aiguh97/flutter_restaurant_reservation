@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/constants/variables.dart';
-import 'package:flutter_pos_2/core/extensions/int_ext.dart';
-import 'package:flutter_pos_2/data/models/response/product_response_model.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/checkout/checkout_bloc.dart';
+import 'package:restoguh/core/constants/variables.dart';
+import 'package:restoguh/core/extensions/int_ext.dart';
+import 'package:restoguh/data/models/response/product_response_model.dart';
+import 'package:restoguh/presentation/home/bloc/checkout/checkout_bloc.dart';
 
 import '../../../core/components/spaces.dart';
 import '../../../core/constants/colors.dart';

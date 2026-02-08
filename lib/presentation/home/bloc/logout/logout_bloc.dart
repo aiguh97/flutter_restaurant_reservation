@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:flutter_pos_2/data/datasources/auth_remote_datasource.dart';
+import 'package:restoguh/data/datasources/auth_remote_datasource.dart';
 
 part 'logout_bloc.freezed.dart';
 part 'logout_event.dart';

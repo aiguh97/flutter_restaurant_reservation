@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/components/spaces.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/product/product_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/sync_order/sync_order_bloc.dart';
+import 'package:restoguh/core/components/spaces.dart';
+import 'package:restoguh/presentation/home/bloc/product/product_bloc.dart';
+import 'package:restoguh/presentation/setting/bloc/sync_order/sync_order_bloc.dart';
 
 import '../../../core/constants/colors.dart';
 import '../../../data/datasources/product_local_datasource.dart';

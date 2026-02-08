@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_pos_2/core/extensions/int_ext.dart';
-import 'package:flutter_pos_2/core/extensions/string_ext.dart';
-import 'package:flutter_pos_2/presentation/setting/pages/add_product_page.dart';
+import 'package:restoguh/core/extensions/int_ext.dart';
+import 'package:restoguh/core/extensions/string_ext.dart';
+import 'package:restoguh/presentation/setting/pages/add_product_page.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';

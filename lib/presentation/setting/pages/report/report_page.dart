@@ -2,14 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/components/buttons.dart';
-import 'package:flutter_pos_2/core/components/spaces.dart';
-import 'package:flutter_pos_2/core/constants/colors.dart';
-import 'package:flutter_pos_2/core/extensions/int_ext.dart';
-import 'package:flutter_pos_2/core/extensions/string_ext.dart';
-import 'package:flutter_pos_2/data/models/response/summary_response_model.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/report/product_sales/product_sales_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/report/summary/summary_bloc.dart';
+import 'package:restoguh/core/components/buttons.dart';
+import 'package:restoguh/core/components/spaces.dart';
+import 'package:restoguh/core/constants/colors.dart';
+import 'package:restoguh/core/extensions/int_ext.dart';
+import 'package:restoguh/core/extensions/string_ext.dart';
+import 'package:restoguh/data/models/response/summary_response_model.dart';
+import 'package:restoguh/presentation/setting/bloc/report/product_sales/product_sales_bloc.dart';
+import 'package:restoguh/presentation/setting/bloc/report/summary/summary_bloc.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 
 import 'package:intl/intl.dart';

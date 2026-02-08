@@ -1,6 +1,6 @@
-import 'package:flutter_pos_2/data/models/response/product_response_model.dart';
-import 'package:flutter_pos_2/presentation/order/models/order_model.dart';
-import 'package:flutter_pos_2/presentation/setting/models/category_model.dart';
+import 'package:restoguh/data/models/response/product_response_model.dart';
+import 'package:restoguh/presentation/order/models/order_model.dart';
+import 'package:restoguh/presentation/setting/models/category_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../presentation/home/models/draft_order_item.dart';

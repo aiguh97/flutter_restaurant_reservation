@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_pos_2/presentation/table/models/table_model.dart';
+import 'package:restoguh/presentation/table/models/table_model.dart';
 
 // import '../../presentation/table/models/table_model.dart';
 

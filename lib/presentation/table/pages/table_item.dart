@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pos_2/core/constants/colors.dart';
+import 'package:restoguh/core/constants/colors.dart';
 import '../models/table_model.dart';
 
 class TableItem extends StatelessWidget {

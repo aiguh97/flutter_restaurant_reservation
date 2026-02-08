@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
+import 'package:restoguh/core/extensions/build_context_ext.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../bloc/product/product_bloc.dart';

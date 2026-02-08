@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter_pos_2/core/extensions/int_ext.dart';
-import 'package:flutter_pos_2/data/models/request/order_request_model.dart';
+import 'package:restoguh/core/extensions/int_ext.dart';
+import 'package:restoguh/data/models/request/order_request_model.dart';
 
 import '../../home/models/order_item.dart';
 

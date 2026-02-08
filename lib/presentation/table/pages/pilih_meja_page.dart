@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:flutter_pos_2/core/components/buttons.dart';
-import 'package:flutter_pos_2/core/components/spaces.dart';
+import 'package:restoguh/core/components/buttons.dart';
+import 'package:restoguh/core/components/spaces.dart';
 
-import 'package:flutter_pos_2/data/datasources/table_remote_datasource.dart';
-import 'package:flutter_pos_2/presentation/table/bloc/table_bloc.dart';
-import 'package:flutter_pos_2/presentation/table/bloc/table_event.dart';
-import 'package:flutter_pos_2/presentation/table/bloc/table_state.dart';
-import 'package:flutter_pos_2/presentation/table/models/table_model.dart';
-import 'package:flutter_pos_2/presentation/table/pages/table_item.dart';
-import 'package:flutter_pos_2/presentation/table/pages/main_table_item.dart';
+import 'package:restoguh/data/datasources/table_remote_datasource.dart';
+import 'package:restoguh/presentation/table/bloc/table_bloc.dart';
+import 'package:restoguh/presentation/table/bloc/table_event.dart';
+import 'package:restoguh/presentation/table/bloc/table_state.dart';
+import 'package:restoguh/presentation/table/models/table_model.dart';
+import 'package:restoguh/presentation/table/pages/table_item.dart';
+import 'package:restoguh/presentation/table/pages/main_table_item.dart';
 
 class PilihMejaPage extends StatelessWidget {
   const PilihMejaPage({super.key});

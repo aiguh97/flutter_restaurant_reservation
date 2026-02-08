@@ -1,5 +1,5 @@
-import 'package:flutter_pos_2/core/extensions/int_ext.dart';
-import 'package:flutter_pos_2/presentation/setting/models/category_model.dart';
+import 'package:restoguh/core/extensions/int_ext.dart';
+import 'package:restoguh/presentation/setting/models/category_model.dart';
 
 class ProductModel {
   final String image;

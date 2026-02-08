@@ -138,6 +138,7 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/report.png
   AssetGenImage get report => const AssetGenImage('assets/images/report.png');
+  AssetGenImage get google => const AssetGenImage('assets/images/google.png');
 
   /// File path: assets/images/sync.png
   AssetGenImage get sync => const AssetGenImage('assets/images/sync.png');

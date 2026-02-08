@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "429495936261",
+    "project_id": "restoguh",
+    "storage_bucket": "restoguh.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:429495936261:android:9419bdfef5fdaf010ec36c",
+        "android_client_info": {
+          "package_name": "com.teguhdev.restoguh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "429495936261-3nisjc3gpra9hb07k90g3qcrcsk6ltrk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teguhdev.restoguh",
+            "certificate_hash": "73989bb75cace2c5faa8434e162a4c8fbd249599"
+          }
+        },
+        {
+          "client_id": "429495936261-b6v03ucuvqt8rckp90v8vt3frtdiseni.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyMBDclhppyZnR4wu1DXNGauens2Z3xrc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "429495936261-b6v03ucuvqt8rckp90v8vt3frtdiseni.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

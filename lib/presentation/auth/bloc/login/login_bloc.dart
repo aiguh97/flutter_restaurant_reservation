@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:flutter_pos_2/data/datasources/auth_remote_datasource.dart';
+import 'package:restoguh/data/datasources/auth_remote_datasource.dart';
 
 import '../../../../data/models/response/auth_response_model.dart';
 
@@ -19,9 +19,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         event.email,
         event.password,
       );
+
       response.fold((l) => emit(_Error(l)), (r) {
-        if (r.is2faRequired) {
-          // GUNAKAN LoginState.twoFactorRequired alih-alih _TwoFactorRequired
+        // Periksa field message dari AuthResponseModel
+        if (r.message == '2FA_REQUIRED') {
           emit(LoginState.twoFactorRequired(r.userId ?? 0));
         } else {
           emit(_Success(r));

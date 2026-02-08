@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pos_2/core/extensions/build_context_ext.dart';
+import 'package:restoguh/core/extensions/build_context_ext.dart';
 
 import '../../presentation/home/pages/scanner_page.dart';
 import '../constants/colors.dart';

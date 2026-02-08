@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/presentation/common/widgets/build_category_image.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/category/category_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/category/category_event.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/category/category_state.dart';
-import 'package:flutter_pos_2/presentation/setting/models/category_model.dart';
+import 'package:restoguh/presentation/common/widgets/build_category_image.dart';
+import 'package:restoguh/presentation/setting/bloc/category/category_bloc.dart';
+import 'package:restoguh/presentation/setting/bloc/category/category_event.dart';
+import 'package:restoguh/presentation/setting/bloc/category/category_state.dart';
+import 'package:restoguh/presentation/setting/models/category_model.dart';
 
 import 'add_category_page.dart';
 

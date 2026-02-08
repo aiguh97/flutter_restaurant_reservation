@@ -1,10 +1,12 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
+import 'package:restoguh/core/constants/colors.dart';
+import 'package:flutter_svg/flutter_svg.dart'; // Tambahkan ini
 import 'package:pinput/pinput.dart';
-import 'package:flutter_pos_2/core/components/spaces.dart';
-import 'package:flutter_pos_2/data/datasources/auth_remote_datasource.dart'; // Pastikan ada fungsi setup2FA & enable2FA
+import 'package:restoguh/core/components/spaces.dart';
+import 'package:restoguh/data/datasources/auth_remote_datasource.dart';
+import 'package:restoguh/data/datasources/auth_local_datasource.dart'; // Import ini untuk update status
 
 class TwoFactorSetupPage extends StatefulWidget {
   const TwoFactorSetupPage({super.key});
@@ -15,7 +17,7 @@ class TwoFactorSetupPage extends StatefulWidget {
 
 class _TwoFactorSetupPageState extends State<TwoFactorSetupPage> {
   bool _isLoading = true;
-  String? _qrCodeBase64;
+  String? _qrData; // Kita ganti nama jadi lebih umum
   String? _secretKey;
   final _pinController = TextEditingController();
 
@@ -25,36 +27,47 @@ class _TwoFactorSetupPageState extends State<TwoFactorSetupPage> {
     _loadSetupData();
   }
 
-  // Fungsi mengambil data QR dari API /2fa/setup
   Future<void> _loadSetupData() async {
-    // Idealnya gunakan Bloc, ini contoh langsung via Datasource untuk kecepatan
     final response = await AuthRemoteDatasource().setup2FA();
     response.fold(
       (error) {
-        debugPrint("Error 2FA Setup: $error"); // Cek ini di console!
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                error,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              backgroundColor: Colors.red,
-            ),
+            SnackBar(content: Text(error), backgroundColor: Colors.red),
           );
         }
       },
       (data) {
+        print("ISI QR DATA: ${data['qr_code']}"); // Lihat di debug console!
         setState(() {
-          // data['qr_code'] biasanya: data:image/png;base64,iVBORw0K...
-          _qrCodeBase64 = data['qr_code'].split(',').last;
+          _qrData = data['qr_code']; // Simpan data mentah
           _secretKey = data['secret'];
           _isLoading = false;
         });
       },
+    );
+  }
+
+  // Fungsi helper untuk merender QR Code baik format SVG maupun Base64
+  Widget _buildQrWidget(String data) {
+    String cleanData = data.trim();
+
+    // 🔥 FIX: hapus background putih SVG
+    cleanData = cleanData.replaceAll(
+      RegExp(r'<rect[^>]*fill="#fefefe"[^>]*/>'),
+      '',
+    );
+
+    // Pastikan SVG valid
+    if (cleanData.startsWith('<?xml')) {
+      cleanData = cleanData.substring(cleanData.indexOf('<svg'));
+    }
+
+    return SvgPicture.string(
+      cleanData,
+      width: 200,
+      height: 200,
+      fit: BoxFit.contain,
     );
   }
 
@@ -90,42 +103,89 @@ class _TwoFactorSetupPageState extends State<TwoFactorSetupPage> {
                   ),
                   const SpaceHeight(30),
 
-                  // Tampilan QR Code
-                  if (_qrCodeBase64 != null)
+                  if (_qrData != null)
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
+                        color: Colors.white, // Penting agar QR mudah discan
                         border: Border.all(color: Colors.grey.shade200),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Image.memory(
-                        base64Decode(_qrCodeBase64!),
-                        width: 200,
-                        height: 200,
-                      ),
+                      child: _buildQrWidget(_qrData!),
                     ),
 
                   const SpaceHeight(20),
-                  Text(
-                    "Secret Key: $_secretKey",
-                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Secret Key",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              SelectableText(
+                                _secretKey ?? "-",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.copy, size: 20),
+                          tooltip: "Copy",
+                          onPressed: () {
+                            if (_secretKey == null) return;
+
+                            Clipboard.setData(ClipboardData(text: _secretKey!));
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: Colors.green,
+                                content: Text(
+                                  "Secret key berhasil disalin",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
 
                   const SpaceHeight(40),
-                  const Text(
-                    "Masukkan 6-digit kode dari aplikasi untuk konfirmasi:",
-                  ),
+                  const Text("Masukkan 6-digit kode konfirmasi:"),
                   const SpaceHeight(16),
 
                   Pinput(
                     length: 6,
                     controller: _pinController,
                     defaultPinTheme: defaultPinTheme,
-                    focusedPinTheme: defaultPinTheme.copyWith(
-                      decoration: defaultPinTheme.decoration!.copyWith(
-                        border: Border.all(color: Colors.orange),
-                      ),
-                    ),
+                    onCompleted: (pin) => _verifyAndEnable(),
                   ),
 
                   const SpaceHeight(40),
@@ -133,9 +193,9 @@ class _TwoFactorSetupPageState extends State<TwoFactorSetupPage> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () => _verifyAndEnable(),
+                      onPressed: _verifyAndEnable,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
+                        backgroundColor: AppColors.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -159,14 +219,31 @@ class _TwoFactorSetupPageState extends State<TwoFactorSetupPage> {
       _pinController.text,
     );
     response.fold(
-      (error) => ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(error))),
-      (message) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("2FA Berhasil diaktifkan!")),
-        );
-        Navigator.pop(context); // Kembali ke MyAccountPage
+      (error) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error, style: const TextStyle(color: Colors.white)),
+          backgroundColor: Colors.red,
+        ),
+      ),
+      (message) async {
+        // PENTING: Update status 2FA di database lokal agar Switch di MyAccount berubah
+        await AuthLocalDatasource().update2FAStatus(true);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.green,
+              content: Text(
+                "2FA Berhasil diaktifkan!",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          );
+          Navigator.pop(context); // Kembali dan MyAccountPage akan reload
+        }
       },
     );
   }

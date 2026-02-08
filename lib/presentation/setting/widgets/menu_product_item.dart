@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pos_2/data/models/response/product_response_model.dart';
-import 'package:flutter_pos_2/presentation/home/bloc/product/product_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/pages/add_product_page.dart';
+import 'package:restoguh/data/models/response/product_response_model.dart';
+import 'package:restoguh/presentation/home/bloc/product/product_bloc.dart';
+import 'package:restoguh/presentation/setting/pages/add_product_page.dart';
 import '../../../core/components/spaces.dart';
 import '../../../core/constants/colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

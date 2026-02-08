@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/category/category_bloc.dart';
-import 'package:flutter_pos_2/presentation/setting/bloc/category/category_event.dart';
+import 'package:restoguh/presentation/setting/bloc/category/category_bloc.dart';
+import 'package:restoguh/presentation/setting/bloc/category/category_event.dart';
 import '../../../core/components/custom_text_field.dart';
 import '../../../core/components/image_picker_widget.dart';
 import '../../../core/components/buttons.dart';
