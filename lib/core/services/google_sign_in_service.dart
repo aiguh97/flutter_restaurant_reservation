@@ -8,9 +8,23 @@ class GoogleSignInService {
     scopes: ['email', 'profile'],
   );
 
+  /// Logout Google (hapus sesi Google)
+  static Future<void> signOut() async {
+    try {
+      await _googleSignIn.signOut(); // Hapus session
+      await _googleSignIn.disconnect(); // Hapus cached account
+    } catch (e) {
+      debugPrint('Google Sign-Out error: $e');
+    }
+  }
+
+  /// Login Google dan ambil idToken
   static Future<String?> getIdToken() async {
     try {
-      final account = await _googleSignIn.signIn();
+      // Selalu force tampilkan chooser
+      await _googleSignIn.signOut(); // Hapus session lama
+      final account = await _googleSignIn
+          .signIn(); // Akan tampil account chooser
       if (account == null) return null;
 
       final auth = await account.authentication;

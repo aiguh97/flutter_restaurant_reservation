@@ -115,7 +115,6 @@ class _HomePageState extends State<HomePage> {
             const SpaceHeight(16.0),
 
             // CATEGORY MENU
-            // CATEGORY MENU
             BlocBuilder<CategoryBloc, CategoryState>(
               builder: (context, state) {
                 if (state is CategoryLoading) {
@@ -170,8 +169,7 @@ class _HomePageState extends State<HomePage> {
                             width: 80,
                             child: MenuButton(
                               size: 41,
-                              iconPath:
-                                  '${Variables.baseUrl}/storage/categories/${e.image ?? 'default.png'}',
+                              iconPath: e.image!,
                               label: e.name,
                               isActive: currentIndex == e.id,
                               isNetwork:

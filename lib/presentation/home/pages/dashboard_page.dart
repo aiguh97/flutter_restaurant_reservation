@@ -37,6 +37,7 @@ class _DashboardPageState extends State<DashboardPage> {
       setState(() {
         _isAdmin = authData.user!.roles == 'admin';
       });
+      debugPrint("User data is null, redirecting...");
     } else {
       // Jika tidak ada data, arahkan kembali ke login atau set default
       debugPrint("User data is null, redirecting...");
@@ -80,7 +81,7 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         NavItem(
           iconPath: Assets.icons.dashboard.path,
-          label: 'Setting',
+          label: _isAdmin ?? false ? 'admin' : 'bukan',
           isActive: _selectedIndex == 3,
           onTap: () => _onItemTapped(3),
         ),

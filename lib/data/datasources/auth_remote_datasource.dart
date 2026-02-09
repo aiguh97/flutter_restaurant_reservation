@@ -100,10 +100,11 @@ class AuthRemoteDatasource {
         body: jsonEncode({'id_token': idToken}),
       );
 
-      final body = jsonDecode(response.body);
+      final Map<String, dynamic> body = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        return Right(AuthResponseModel.fromJson(body));
+        // ✅ PAKAI fromMap (BUKAN fromJson)
+        return Right(AuthResponseModel.fromMap(body));
       } else {
         return Left(body['message'] ?? 'Login Google gagal');
       }
@@ -208,7 +209,7 @@ class AuthRemoteDatasource {
         Uri.parse('${Variables.baseUrl}/api/logout'),
         headers: {..._headers, 'Authorization': 'Bearer ${authData!.token}'},
       );
-
+      await AuthLocalDatasource().removeAuthData();
       if (response.statusCode == 200) {
         return const Right('Logout berhasil');
       } else {

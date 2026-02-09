@@ -18,6 +18,13 @@ class MidtransRemoteDatasource {
     int grossAmount,
   ) async {
     final serverKey = await AuthLocalDatasource().getMitransServerKey();
+
+    print('=== MIDTRANS DEBUG ===');
+    print('Server Key RAW      : "$serverKey"');
+    print('Server Key LENGTH   : ${serverKey?.length}');
+    print('Authorization Header: ${generateBasicAuthHeader(serverKey)}');
+    print('=====================');
+
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -30,12 +37,32 @@ class MidtransRemoteDatasource {
     });
 
     final response = await http.post(
-      Uri.parse('https://api.midtrans.com/v2/charge'),
+      Uri.parse('https://api.sandbox.midtrans.com/v2/charge'),
       headers: headers,
       body: body,
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final decoded = jsonDecode(response.body);
+
+      final actions = decoded['actions'] as List;
+
+      String? qrisImageUrl;
+      String? gopaySimulatorUrl;
+
+      for (final action in actions) {
+        if (action['name'] == 'generate-qr-code-v2') {
+          qrisImageUrl = action['url'];
+        }
+
+        if (action['name'] == 'deeplink-redirect') {
+          gopaySimulatorUrl = action['url'];
+        }
+      }
+
+      print('QRIS IMAGE URL  : $qrisImageUrl');
+      print('GOPAY SIMULATOR : $gopaySimulatorUrl');
+
       return QrisResponseModel.fromJson(response.body);
     } else {
       throw Exception('Failed to generate QR Code');
@@ -51,7 +78,7 @@ class MidtransRemoteDatasource {
     };
 
     final response = await http.get(
-      Uri.parse('https://api.midtrans.com/v2/$orderId/status'),
+      Uri.parse('https://api.sandbox.midtrans.com/v2/$orderId/status'),
       headers: headers,
     );
 

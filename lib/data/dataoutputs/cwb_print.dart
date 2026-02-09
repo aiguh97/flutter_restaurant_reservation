@@ -50,7 +50,7 @@ class CwbPrint {
     }
 
     bytes += generator.text(
-      'Coffee With Bahri',
+      'Teguhdev',
       styles: const PosStyles(
         bold: true,
         align: PosAlign.center,
@@ -266,7 +266,7 @@ class CwbPrint {
     }
 
     bytes += generator.text(
-      'Coffee With Bahri Palagan',
+      'Restoguh Jakarta',
       styles: const PosStyles(
         bold: true,
         align: PosAlign.center,
@@ -456,7 +456,7 @@ class CwbPrint {
     );
     bytes += generator.feed(1);
     bytes += generator.text(
-      'instagram: @codewithbahri',
+      'instagram: @am.are.is3',
       styles: const PosStyles(bold: false, align: PosAlign.center),
     );
     bytes += generator.feed(1);
