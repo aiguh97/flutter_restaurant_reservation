@@ -1,16 +1,113 @@
-# restoguh
+<p align="center">
+  <img src="screenshoots/logo.png" width="180"/>
+</p>
 
-A new Flutter project.
+<h1 align="center">RestoGuh Mobile App</h1>
 
-## Getting Started
+<p align="center">
+  Aplikasi Mobile POS & Restaurant Management System berbasis Flutter.
+</p>
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 🚀 Overview
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+**RestoGuh Mobile** adalah aplikasi client yang terintegrasi dengan backend Laravel 11.  
+Aplikasi ini digunakan untuk kebutuhan kasir (POS), monitoring pesanan, dan manajemen transaksi secara real-time.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Backend API:  
+🔗 http://202.10.34.144/api
+
+---
+
+## ✨ Fitur Utama
+
+### 🔐 Authentication
+- Login menggunakan API
+- Support JWT / Sanctum Token
+- Secure Logout
+- 2FA Verification Support
+
+---
+
+### 🛒 POS (Point of Sales)
+- Tambah produk ke keranjang
+- Hitung total otomatis
+- Input nominal bayar
+- Generate order ke backend
+- Status transaksi: Pending / Done
+
+---
+
+### 📦 Order Management
+- Lihat daftar pesanan
+- Filter berdasarkan status
+- Update status order
+- Sinkronisasi data dengan server
+
+---
+
+### 🔄 Offline Support (Local Storage)
+- Simpan transaksi ke SQLite
+- Sync otomatis saat online
+- Status `isSync` untuk tracking
+
+---
+
+### 👤 User Info
+- Tampilkan nama kasir
+- ID kasir tersimpan
+- Session management
+
+---
+
+## 🧱 Tech Stack
+
+- Flutter 3.x
+- Dart
+- HTTP 
+- SQLite (sqflite)
+- Provider / State Management
+- REST API Integration
+- JSON Serialization
+
+---
+
+## 📸 Screenshots Interface
+
+<h3>🗂 MinIO</h3>
+<p align="center">
+  <img src="screenshoots/minio.png" width="700"/>
+</p>
+
+<h3>🏠 Dashboard Admin</h3>
+<p align="center">
+  <img src="screenshoots/dashboard.png" width="700"/>
+</p>
+
+<h3>🛒 Product Management</h3>
+<p align="center">
+  <img src="screenshoots/product.png" width="700"/>
+</p>
+
+<h3>Enable Auth</h3>
+<p align="center">
+  <img src="screenshoots/enable_auth.png" width="700"/>
+</p>
+
+<h3>Setup Auth</h3>
+<p align="center">
+  <img src="screenshoots/setup_auth.png" width="700"/>
+</p>
+
+<h3>2 FA Login</h3>
+<p align="center">
+  <img src="screenshoots/2fa_login.png" width="700"/>
+</p>
+
+<h3>Verifikasi 2 FA Via Email</h3>
+<p align="center">
+  <img src="screenshoots/verifikasi_2fa_via_email.png" width="700"/>
+</p>
+
+

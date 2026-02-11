@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:restoguh/data/datasources/auth_local_datasource.dart';
-import 'package:restoguh/presentation/history/pages/history_page.dart';
 import 'package:restoguh/presentation/home/pages/home_page.dart';
 import 'package:restoguh/presentation/kitchen/pages/kitchen_page.dart';
-import 'package:restoguh/presentation/my-history/pages/my_history_page.dart';
+import 'package:restoguh/presentation/my-order/pages/my_order_page.dart';
 import 'package:restoguh/presentation/my_accounts/pages/my_account_page.dart';
 import 'package:restoguh/presentation/order/pages/order_page.dart';
 import 'package:restoguh/presentation/setting/pages/setting_page.dart';
@@ -56,7 +55,7 @@ class _DashboardPageState extends State<DashboardPage> {
         MyAccountPage(),
       ];
     } else {
-      return const [HomePage(), OrderPage(), MyHistoryPage(), MyAccountPage()];
+      return const [HomePage(), OrderPage(), MyOrderPage(), MyAccountPage()];
     }
   }
 
@@ -110,7 +109,7 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         NavItem(
           iconPath: Assets.icons.payments.path,
-          label: 'My History',
+          label: 'My Orders',
           isActive: _selectedIndex == 2,
           onTap: () => _onItemTapped(2),
         ),

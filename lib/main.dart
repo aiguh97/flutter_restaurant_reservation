@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restoguh/data/datasources/kitchen_remote_datasource.dart';
+import 'package:restoguh/data/datasources/my_order_remote_datasource.dart';
 import 'package:restoguh/presentation/auth/bloc/google_auth/google_auth_bloc.dart';
 import 'package:restoguh/presentation/auth/bloc/register/register_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restoguh/presentation/kitchen/bloc/kitchen_bloc.dart';
+import 'package:restoguh/presentation/my-order/bloc/my_order_bloc.dart';
 
 // Core & Constants
 import 'core/constants/colors.dart';
@@ -67,6 +69,9 @@ class MyApp extends StatelessWidget {
           create: (context) =>
               KitchenBloc(KitchenRemoteDatasource())
                 ..add(const KitchenEvent.fetch()),
+        ),
+        BlocProvider(
+          create: (context) => MyOrderBloc(MyOrderRemoteDatasource()),
         ),
         BlocProvider(create: (context) => OrderBloc()),
         BlocProvider(create: (context) => QrisBloc(MidtransRemoteDatasource())),
