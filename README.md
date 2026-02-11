@@ -99,13 +99,17 @@ Backend API:
 
 <h3>Enable 2FA Auth</h3>
 <p align="center">
-  <img src="screenshoots/setup_auth.png" width="700"/>
+  <img src="screenshoots/settings.png" width="700"/>
 </p>
 
-<h3>2 FA Login</h3>
+<h3>Setup 2 FA Login</h3>
 <p align="center">
-  <img src="screenshoots/2fa_login.png" width="700"/>
+  <img src="screenshoots/setup.jpeg" width="700"/>
 </p>
 
 
+<h3>Verify 2 FA Login</h3>
+<p align="center">
+  <img src="screenshoots/verify.jpeg" width="700"/>
+</p>
 
