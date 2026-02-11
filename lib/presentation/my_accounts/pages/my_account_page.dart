@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:restoguh/core/components/spaces.dart';
-import 'package:restoguh/core/constants/colors.dart';
 import 'package:restoguh/data/datasources/auth_local_datasource.dart';
 import 'package:restoguh/data/datasources/auth_remote_datasource.dart';
 import 'package:restoguh/data/models/response/auth_response_model.dart';
 import 'package:restoguh/presentation/2fa_challenge_page/pages/TwoFactorSetupPage.dart';
 import 'package:restoguh/presentation/common/widgets/logout_button.dart';
 
-// Import halaman setup 2FA (buat jika belum ada)
-// import 'package:restoguh/presentation/auth/pages/two_factor_setup_page.dart';
 class MyAccountPage extends StatefulWidget {
   const MyAccountPage({super.key});
 
@@ -50,43 +47,234 @@ class _MyAccountPageState extends State<MyAccountPage> {
     bool is2faEnabled = user.twoFactorEnabled ?? false;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My Account'), centerTitle: true),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: ListView(
+      backgroundColor: const Color(
+        0xFFF8F9FD,
+      ), // Latar belakang abu-abu sangat muda
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // HEADER BIRU MELENGKUNG (Sesuai Gambar)
+            _buildHeader(user),
+
+            // CONTENT LIST MENU
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Column(
+                children: [
+                  _buildMenuItem(
+                    icon: Icons.person_outline,
+                    title: "Edit Profile",
+                    onTap: () {},
+                  ),
+                  _buildMenuItem(
+                    icon: Icons.lock_outline,
+                    title: "Change Password",
+                    onTap: () {},
+                  ),
+                  _buildMenuItem(
+                    icon: Icons.language,
+                    title: "Language",
+                    subtitle: "English (US)",
+                    onTap: () {},
+                  ),
+                  // MENU 2FA (Khusus Aplikasi Anda)
+                  _build2FAMenu(is2faEnabled),
+
+                  _buildMenuItem(
+                    icon: Icons.help_outline,
+                    title: "Help Center",
+                    onTap: () {},
+                  ),
+                  // _buildMenuItem(
+                  //   icon: Icons.privacy_tip_outline,
+                  //   title: "Privacy Policy",
+                  //   onTap: () {},
+                  // ),
+                  const SpaceHeight(10),
+                  const LogoutButton(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // WIDGET HEADER SESUAI DESAIN GAMBAR
+  // WIDGET HEADER SESUAI DESAIN GAMBAR (DIPERBAIKI)
+  Widget _buildHeader(dynamic user) {
+    // Mengambil inisial nama (huruf pertama)
+    String getInitial(String? name) {
+      if (name == null || name.isEmpty) return "AD"; // Default Admin
+
+      List<String> parts = name.trim().split(" ");
+      if (parts.length > 1) {
+        // Ambil huruf pertama kata pertama + huruf pertama kata kedua
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      } else {
+        // Jika hanya 1 kata, ambil 2 huruf pertama (jika ada) atau 1 huruf saja
+        return name.length >= 2
+            ? name.substring(0, 2).toUpperCase()
+            : name[0].toUpperCase();
+      }
+    }
+
+    String initials = getInitial(user.name);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(
+        top: 50,
+        bottom: 20,
+      ), // Padding disesuaikan
+      decoration: const BoxDecoration(
+        color: Color(0xFF4C4DDC),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(50),
+          bottomRight: Radius.circular(50),
+        ),
+      ),
+      child: Column(
+        children: [
+          Stack(
+            alignment: Alignment.bottomRight,
             children: [
-              const SpaceHeight(30),
-              _buildProfileHeader(user),
-              const SpaceHeight(30),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.security, color: Colors.orange),
-                title: Text("Two-Factor Authentication"),
-                subtitle: Text(is2faEnabled ? "Aktif" : "Non-Aktif"),
-                trailing: Switch(
-                  activeColor: AppColors.green,
-                  value: is2faEnabled,
-                  onChanged: (value) {
-                    if (value) {
-                      if (!is2faEnabled) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TwoFactorSetupPage(),
-                          ),
-                        ).then((_) => _loadInitialData());
-                      }
-                    } else {
-                      _showDisableConfirmation(context);
-                    }
-                  },
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white24,
+                    width: 3,
+                  ), // Border diperkecil
+                ),
+                child: CircleAvatar(
+                  radius: 40, // Ukuran diperkecil dari 55 ke 40
+                  backgroundColor: const Color(0xFF9192F1),
+                  child: Text(
+                    initials, // Menggunakan Inisial Nama
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
-              const SpaceHeight(40),
-              const LogoutButton(),
+              const CircleAvatar(
+                radius: 14, // Ukuran ikon kamera diperkecil
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.camera_alt,
+                  size: 14,
+                  color: Color(0xFF4C4DDC),
+                ),
+              ),
             ],
           ),
+          const SpaceHeight(12),
+          Text(
+            user.name ?? "Admin Cashier",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20, // Font sedikit diperkecil agar proporsional
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            user.email ?? "admin@cafepos.com",
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 13,
+            ),
+          ),
+          const SpaceHeight(10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Text(
+              "Store ID: #8823-CAFE",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // WIDGET LIST ITEM SESUAI DESAIN GAMBAR
+  Widget _buildMenuItem({
+    required IconData icon,
+    required String title,
+    String? subtitle,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ListTile(
+        onTap: onTap,
+        leading: CircleAvatar(
+          backgroundColor: const Color(0xFFEEF0FF),
+          child: Icon(icon, color: const Color(0xFF4C4DDC)),
+        ),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+        subtitle: subtitle != null ? Text(subtitle) : null,
+        trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+      ),
+    );
+  }
+
+  // WIDGET KHUSUS UNTUK TOGGLE 2FA
+  Widget _build2FAMenu(bool isEnabled) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: ListTile(
+        leading: const CircleAvatar(
+          backgroundColor: Color(0xFFFFF4E5),
+          child: Icon(Icons.security, color: Colors.orange),
+        ),
+        title: const Text(
+          "Two-Factor Auth",
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        subtitle: Text(isEnabled ? "Aktif" : "Non-Aktif"),
+        trailing: Switch(
+          activeColor: const Color(0xFF4C4DDC),
+          value: isEnabled,
+          onChanged: (value) {
+            if (value) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const TwoFactorSetupPage(),
+                ),
+              ).then((_) => _loadInitialData());
+            } else {
+              _showDisableConfirmation(context);
+            }
+          },
         ),
       ),
     );
@@ -105,9 +293,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(dialogContext); // tutup dialog konfirmasi
-
-              // tampilkan loading pakai PARENT context
+              Navigator.pop(dialogContext);
               showDialog(
                 context: parentContext,
                 barrierDismissible: false,
@@ -116,29 +302,20 @@ class _MyAccountPageState extends State<MyAccountPage> {
               );
 
               final result = await AuthRemoteDatasource().disable2FA();
-
               if (!mounted) return;
+              Navigator.pop(parentContext);
 
-              Navigator.pop(parentContext); // tutup loading
-
-              result.fold(
-                (error) {
-                  _showSnackBar(parentContext, error);
-                },
-                (message) async {
-                  await AuthLocalDatasource().update2FAStatus(false);
-
-                  if (!mounted) return;
-
-                  setState(() {
-                    _authData = _authData?.copyWith(
-                      user: _authData?.user?.copyWith(twoFactorEnabled: false),
-                    );
-                  });
-
-                  _showSnackBar(parentContext, message);
-                },
-              );
+              result.fold((error) => _showSnackBar(parentContext, error), (
+                message,
+              ) async {
+                await AuthLocalDatasource().update2FAStatus(false);
+                setState(() {
+                  _authData = _authData?.copyWith(
+                    user: _authData?.user?.copyWith(twoFactorEnabled: false),
+                  );
+                });
+                _showSnackBar(parentContext, message);
+              });
             },
             child: const Text(
               "Ya, Nonaktifkan",
@@ -150,38 +327,9 @@ class _MyAccountPageState extends State<MyAccountPage> {
     );
   }
 
-  // METHOD YANG TADI HILANG
   void _showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  Widget _buildProfileHeader(dynamic user) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 40,
-          backgroundColor: Colors.orange.withOpacity(0.2),
-          child: Text(
-            user.name[0].toUpperCase(),
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
-            ),
-          ),
-        ),
-        const SpaceHeight(16),
-        Text(
-          user.name,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        Text(
-          "Role : ${user.roles}",
-          style: const TextStyle(color: Colors.white),
-        ),
-      ],
-    );
   }
 }

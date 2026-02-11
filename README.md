@@ -8,6 +8,9 @@
   Aplikasi Mobile POS & Restaurant Management System berbasis Flutter.
 </p>
 
+<p align="center">
+  <img src="screenshoots/banner.png" width="700"/>
+</p>
 ---
 
 ## 🚀 Overview
