@@ -1,23 +1,16 @@
-<p align="center">
+<div align="center">
   <img src="screenshoots/logo.png" width="180"/>
-</p>
-<h2 align="center">Guhresto Mobile App</h2>
+</div>
+**RestoGuh Mobile** adalah aplikasi client yang terintegrasi dengan backend Laravel 11.  
+Aplikasi ini digunakan untuk kebutuhan kasir (POS), monitoring pesanan, dan manajemen transaksi secara real-time.
 <p align="center">
-  Aplikasi Mobile POS & Restaurant Management System berbasis Flutter.
+  Aplikasi Mobile POS & Restaurant Management System berbasis Flutter,BLOC,Freezed
 </p>
 
 <p align="center">
   <img src="screenshoots/banner.png" width="100%"/>
 </p>
 ---
-
-## 🚀 Overview
-
-**RestoGuh Mobile** adalah aplikasi client yang terintegrasi dengan backend Laravel 11.  
-Aplikasi ini digunakan untuk kebutuhan kasir (POS), monitoring pesanan, dan manajemen transaksi secara real-time.
-
-Backend API:  
-🔗 http://202.10.34.144/api
 
 ---
 
