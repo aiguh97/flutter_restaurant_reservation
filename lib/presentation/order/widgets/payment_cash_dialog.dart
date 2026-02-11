@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restoguh/core/extensions/build_context_ext.dart';
@@ -186,6 +188,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                 orElse: () => const SizedBox(),
                 success: (data, qty, total, payment, _, idKasir, namaKasir, __) {
                   return Button.filled(
+                    // Di dalam file payment_cash_dialog.dart, pada bagian BlocBuilder > Button.filled > onPressed:
                     onPressed: () async {
                       final nominalBayar =
                           priceController!.text.toIntegerFromText;
@@ -207,7 +210,7 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                             const Center(child: CircularProgressIndicator()),
                       );
 
-                      // 2. Siapkan Request Order
+                      // 2. Siapkan Request Order (Data sudah ada di kode Anda)
                       final orderRequest = OrderRequestModel(
                         transactionTime: DateFormat(
                           'yyyy-MM-dd HH:mm:ss',
@@ -226,25 +229,39 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                             )
                             .toList(),
                       );
-
+                      print(
+                        'Payload: ${jsonEncode(orderRequest.toJson())}',
+                      ); // Debugging
                       // 3. Kirim Order ke API
                       final result = await OrderRemoteDatasource().sendOrder(
                         orderRequest,
                       );
 
                       if (!mounted) return;
-                      Navigator.pop(context); // Tutup loading
+
+                      // --- PERBAIKAN DI SINI ---
+
+                      // A. TUTUP LOADING
+                      Navigator.pop(context);
 
                       result.fold(
-                        (error) => ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text(error))),
+                        (error) {
+                          // B. TUTUP DIALOG PAYMENT SAAT ERROR
+                          Navigator.pop(context);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('$error'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        },
                         (orderId) {
-                          // ✅ 4. JIKA ORDER SUKSES, KIRIM RESERVASI
+                          // C. KIRIM RESERVASI
                           context.read<ReservationBloc>().add(
                             CreateReservation(
                               tableId: widget.tableId,
-                              orderId: orderId, // Menggunakan ID dari server
+                              orderId: orderId,
                               date: DateFormat(
                                 'yyyy-MM-dd',
                               ).format(DateTime.now()),
@@ -254,11 +271,11 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                               endTime: DateFormat('HH:mm:ss').format(
                                 DateTime.now().add(const Duration(hours: 2)),
                               ),
-                              status: 'reserved', // Meja langsung merah
+                              status: 'reserved',
                             ),
                           );
 
-                          // 5. Simpan ke Local Database (Optional/Offline Support)
+                          // D. SIMPAN LOKAL
                           final orderModel = OrderModel(
                             id: orderId,
                             paymentMethod: 'CASH',
@@ -275,8 +292,10 @@ class _PaymentCashDialogState extends State<PaymentCashDialog> {
                           );
                           ProductLocalDatasource.instance.saveOrder(orderModel);
 
-                          // 6. Selesai! Tutup Dialog Bayar dan Tampilkan Sukses
-                          Navigator.pop(context); // Tutup PaymentCashDialog
+                          // E. TUTUP DIALOG PAYMENT SAAT SUCCESS
+                          Navigator.pop(context);
+
+                          // F. TAMPILKAN DIALOG SUKSES
                           showDialog(
                             context: context,
                             builder: (context) => const PaymentSuccessDialog(),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:restoguh/data/datasources/auth_local_datasource.dart';
 import 'package:restoguh/presentation/history/pages/history_page.dart';
 import 'package:restoguh/presentation/home/pages/home_page.dart';
+import 'package:restoguh/presentation/kitchen/pages/kitchen_page.dart';
 import 'package:restoguh/presentation/my-history/pages/my_history_page.dart';
 import 'package:restoguh/presentation/my_accounts/pages/my_account_page.dart';
 import 'package:restoguh/presentation/order/pages/order_page.dart';
@@ -49,7 +50,8 @@ class _DashboardPageState extends State<DashboardPage> {
       return const [
         HomePage(),
         OrderPage(),
-        HistoryPage(),
+        // HistoryPage(),
+        KitchenPage(),
         SettingPage(),
         MyAccountPage(),
       ];
@@ -75,7 +77,7 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
         NavItem(
           iconPath: Assets.icons.payments.path,
-          label: 'History',
+          label: 'Kitchen',
           isActive: _selectedIndex == 2,
           onTap: () => _onItemTapped(2),
         ),

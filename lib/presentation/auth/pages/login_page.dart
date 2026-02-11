@@ -36,19 +36,12 @@ class _LoginPageState extends State<LoginPage> {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          const SpaceHeight(80.0),
+          const SpaceHeight(60.0),
           Center(
             child: Image.asset(
               Assets.images.logo.path,
               width: 100,
               height: 100,
-            ),
-          ),
-          const SpaceHeight(24.0),
-          const Center(
-            child: Text(
-              "POS Batch 11",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
           ),
           const SpaceHeight(8.0),

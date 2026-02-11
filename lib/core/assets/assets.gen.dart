@@ -121,8 +121,14 @@ class $AssetsImagesGen {
   /// File path: assets/images/f8.jpeg
   AssetGenImage get f8 => const AssetGenImage('assets/images/f8.jpeg');
 
+  /// File path: assets/images/google.png
+  AssetGenImage get google => const AssetGenImage('assets/images/google.png');
+
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
+
+  /// File path: assets/images/logo1.png
+  AssetGenImage get logo1 => const AssetGenImage('assets/images/logo1.png');
 
   /// File path: assets/images/manage_printer.png
   AssetGenImage get managePrinter =>
@@ -138,7 +144,6 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/report.png
   AssetGenImage get report => const AssetGenImage('assets/images/report.png');
-  AssetGenImage get google => const AssetGenImage('assets/images/google.png');
 
   /// File path: assets/images/sync.png
   AssetGenImage get sync => const AssetGenImage('assets/images/sync.png');
@@ -154,7 +159,9 @@ class $AssetsImagesGen {
     f6,
     f7,
     f8,
+    google,
     logo,
+    logo1,
     managePrinter,
     manageProduct,
     manageQr,
@@ -169,8 +176,11 @@ class $AssetsLogoGen {
   /// File path: assets/logo/mylogo.png
   AssetGenImage get mylogo => const AssetGenImage('assets/logo/mylogo.png');
 
+  /// File path: assets/logo/mylogo1.png
+  AssetGenImage get mylogo1 => const AssetGenImage('assets/logo/mylogo1.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [mylogo];
+  List<AssetGenImage> get values => [mylogo, mylogo1];
 }
 
 class Assets {

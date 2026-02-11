@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restoguh/core/constants/colors.dart';
 import 'package:restoguh/core/services/google_sign_in_service.dart';
 import 'package:restoguh/presentation/auth/bloc/google_auth/google_auth_bloc.dart';
 
@@ -60,7 +61,7 @@ class GoogleAuthButton extends StatelessWidget {
                   },
             style: OutlinedButton.styleFrom(
               backgroundColor: Colors.white,
-              side: const BorderSide(color: Colors.blue),
+              side: const BorderSide(color: AppColors.primary),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

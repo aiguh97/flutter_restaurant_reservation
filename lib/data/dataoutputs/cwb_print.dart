@@ -450,10 +450,6 @@ class CwbPrint {
       '================================',
       styles: const PosStyles(bold: false, align: PosAlign.center),
     );
-    bytes += generator.text(
-      'Password: fic11jilid2',
-      styles: const PosStyles(bold: false, align: PosAlign.center),
-    );
     bytes += generator.feed(1);
     bytes += generator.text(
       'instagram: @am.are.is3',

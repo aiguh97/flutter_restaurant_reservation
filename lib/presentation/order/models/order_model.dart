@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import 'package:restoguh/core/extensions/int_ext.dart';
-import 'package:restoguh/data/models/request/order_request_model.dart';
-
 import '../../home/models/order_item.dart';
 
 class OrderModel {
@@ -95,19 +92,21 @@ class OrderModel {
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
+    final rawOrders = map['order_items'];
+
     return OrderModel(
-      paymentMethod: map['paymentMethod'] ?? '',
-      nominalBayar: map['nominalBayar']?.toInt() ?? 0,
-      orders: List<OrderItem>.from(
-        map['orders']?.map((x) => OrderItem.fromMap(x)),
-      ),
-      totalQuantity: map['totalQuantity']?.toInt() ?? 0,
-      totalPrice: map['totalPrice']?.toInt() ?? 0,
-      idKasir: map['idKasir']?.toInt() ?? 0,
-      isSync: map['isSync'] ?? false,
-      namaKasir: map['namaKasir'] ?? '',
-      id: map['id']?.toInt() ?? 0,
-      transactionTime: map['transactionTime'] ?? '',
+      paymentMethod: map['payment_method'] ?? '',
+      nominalBayar: map['nominal_bayar'] ?? 0,
+      orders: rawOrders is List
+          ? rawOrders.map((e) => OrderItem.fromMap(e)).toList()
+          : <OrderItem>[],
+      totalQuantity: map['total_item'] ?? 0,
+      totalPrice: map['total_price'] ?? 0,
+      idKasir: map['kasir_id'] ?? 0,
+      namaKasir: map['nama_kasir'] ?? '',
+      isSync: true,
+      id: map['id'],
+      transactionTime: map['transaction_time'] ?? '',
     );
   }
 

@@ -39,7 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
         key: const Key('register_listview'),
         padding: const EdgeInsets.all(16),
         children: [
-          const SpaceHeight(80),
+          const SpaceHeight(60),
           Center(
             child: Image.asset(
               Assets.images.logo.path,
@@ -47,21 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
               height: 100,
             ),
           ),
-          const SpaceHeight(24),
-          const Center(
-            child: Text(
-              "POS Batch 11",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-            ),
-          ),
           const SpaceHeight(8),
-          const Center(
-            child: Text(
-              'Create your account',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-          ),
-          const SpaceHeight(40),
           CustomTextField(controller: nameController, label: 'Name'),
           const SpaceHeight(12),
           CustomTextField(controller: emailController, label: 'Email'),
@@ -146,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
             },
           ),
           const SpaceHeight(16),
-          GoogleAuthButton(label: 'Login with Google'),
+          GoogleAuthButton(label: 'Regisster with Google'),
 
           const SpaceHeight(16),
           Row(
