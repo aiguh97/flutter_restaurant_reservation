@@ -1,15 +1,13 @@
 <p align="center">
   <img src="screenshoots/logo.png" width="180"/>
 </p>
-
-<h1 align="center">RestoGuh Mobile App</h1>
-
+<h2 align="center">Guhresto Mobile App</h2>
 <p align="center">
   Aplikasi Mobile POS & Restaurant Management System berbasis Flutter.
 </p>
 
 <p align="center">
-  <img src="screenshoots/banner.png" width="700"/>
+  <img src="screenshoots/banner.png" width="100%"/>
 </p>
 ---
 
