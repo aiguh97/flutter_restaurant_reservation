@@ -75,14 +75,16 @@ Backend API:
 
 ## 📸 Screenshots Interface
 
-<h3>🗂 MinIO</h3>
+
+
+<h3>🏠 Home</h3>
 <p align="center">
-  <img src="screenshoots/minio.png" width="700"/>
+  <img src="screenshoots/home.jpeg" width="700"/>
 </p>
 
-<h3>🏠 Dashboard Admin</h3>
+<h3>🗂 Orders</h3>
 <p align="center">
-  <img src="screenshoots/dashboard.png" width="700"/>
+  <img src="screenshoots/orders.png" width="700"/>
 </p>
 
 <h3>🛒 Product Management</h3>
@@ -90,9 +92,9 @@ Backend API:
   <img src="screenshoots/product.png" width="700"/>
 </p>
 
-<h3>Enable Auth</h3>
+<h3>Pilih Meja</h3>
 <p align="center">
-  <img src="screenshoots/enable_auth.png" width="700"/>
+  <img src="screenshoots/pilih_meja.png" width="700"/>
 </p>
 
 <h3>Setup Auth</h3>
