@@ -7,13 +7,31 @@ import '../../models/category_model.dart';
 import 'category_event.dart';
 import 'category_state.dart';
 import 'package:restoguh/core/constants/variables.dart';
+import 'package:restoguh/data/datasources/auth_local_datasource.dart';
 
 /// Optional: buat datasource/repository agar mudah test
 class CategoryRepository {
   final String baseUrl = Variables.baseUrl + '/api/categories';
 
+  Future<Map<String, String>> _getHeaders() async {
+    final authData = await AuthLocalDatasource().getAuthData();
+
+    if (authData == null || authData.token == null) {
+      throw Exception("Session expired");
+    }
+
+    return {
+      'Authorization': 'Bearer ${authData.token}',
+      'Accept': 'application/json',
+    };
+  }
+
   Future<List<Category>> getCategories() async {
-    final response = await http.get(Uri.parse(baseUrl));
+    final response = await http.get(
+      Uri.parse(baseUrl),
+      headers: await _getHeaders(),
+    );
+
     if (response.statusCode == 200) {
       final resModel = CategoryResponseModel.fromJson(response.body);
       // Convert API response ke Bloc Category
@@ -29,6 +47,8 @@ class CategoryRepository {
     File? image,
   }) async {
     var request = http.MultipartRequest('POST', Uri.parse(baseUrl));
+    request.headers.addAll(await _getHeaders());
+
     request.fields['name'] = name;
     if (description != null) request.fields['description'] = description;
     if (image != null) {
@@ -53,6 +73,8 @@ class CategoryRepository {
       'POST',
       Uri.parse('$baseUrl/${category.id}?_method=PUT'),
     );
+    request.headers.addAll(await _getHeaders());
+
     request.fields['name'] = name;
     if (description != null) request.fields['description'] = description;
     if (image != null) {
@@ -68,7 +90,11 @@ class CategoryRepository {
   }
 
   Future<void> deleteCategory(Category category) async {
-    final response = await http.delete(Uri.parse('$baseUrl/${category.id}'));
+    final response = await http.delete(
+      Uri.parse('$baseUrl/${category.id}'),
+      headers: await _getHeaders(),
+    );
+
     if (response.statusCode != 200) {
       final body = json.decode(response.body);
       throw Exception(body['errors'] ?? response.body);

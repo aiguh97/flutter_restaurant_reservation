@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restoguh/core/constants/colors.dart';
 import 'package:restoguh/core/services/google_sign_in_service.dart';
+import 'package:restoguh/presentation/2fa_challenge_page/pages/TwoFactorChallengepage.dart';
 import 'package:restoguh/presentation/auth/bloc/google_auth/google_auth_bloc.dart';
 
-import '../../../core/components/buttons.dart';
 import '../../../core/assets/assets.gen.dart';
 import '../../../data/datasources/auth_local_datasource.dart';
 
@@ -17,17 +17,31 @@ class GoogleAuthButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<GoogleAuthBloc, GoogleAuthState>(
       listener: (context, state) async {
-        state.whenOrNull(
+        state.maybeWhen(
           success: (data) async {
-            await AuthLocalDatasource().saveAuthData(data);
-            if (!context.mounted) return;
-            Navigator.pushReplacementNamed(context, '/home');
+            // Jika ternyata response mengandung 2FA_REQUIRED
+            if (data.message == '2FA_REQUIRED') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TwoFactorChallengePage(
+                    userId: data.userId!,
+                    twoFactorToken: data.twoFactorToken ?? '',
+                  ),
+                ),
+              );
+            } else {
+              await AuthLocalDatasource().saveAuthData(data);
+              if (!context.mounted) return;
+              Navigator.pushReplacementNamed(context, '/home');
+            }
           },
           error: (message) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(message), backgroundColor: Colors.red),
             );
           },
+          orElse: () {},
         );
       },
       builder: (context, state) {

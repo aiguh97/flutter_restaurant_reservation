@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restoguh/core/utils/auth_guard.dart';
 import 'package:restoguh/data/datasources/auth_local_datasource.dart';
 import 'package:restoguh/presentation/home/pages/home_page.dart';
 import 'package:restoguh/presentation/kitchen/pages/kitchen_page.dart';
@@ -25,7 +26,16 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
+    _checkAuth();
     _loadUser();
+  }
+
+  Future<void> _checkAuth() async {
+    final isAuth = await AuthGuard.checkAuth(context);
+
+    if (isAuth) {
+      _loadUser();
+    }
   }
 
   // dashboard_page.dart

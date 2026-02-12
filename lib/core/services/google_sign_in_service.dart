@@ -21,16 +21,28 @@ class GoogleSignInService {
   /// Login Google dan ambil idToken
   static Future<String?> getIdToken() async {
     try {
-      // Selalu force tampilkan chooser
-      await _googleSignIn.signOut(); // Hapus session lama
-      final account = await _googleSignIn
-          .signIn(); // Akan tampil account chooser
-      if (account == null) return null;
+      await _googleSignIn.signOut();
+
+      final account = await _googleSignIn.signIn();
+      if (account == null) {
+        print("❌ USER CANCEL LOGIN");
+        return null;
+      }
+
+      print("✅ GOOGLE ACCOUNT:");
+      print("EMAIL: ${account.email}");
+      print("NAME: ${account.displayName}");
 
       final auth = await account.authentication;
+
+      print("========== GOOGLE TOKEN DEBUG ==========");
+      print("ACCESS TOKEN: ${auth.accessToken}");
+      print("ID TOKEN: ${auth.idToken}");
+      print("========================================");
+
       return auth.idToken;
     } catch (e) {
-      debugPrint('Google Sign-In error: $e');
+      print("❌ GOOGLE SIGN IN ERROR: $e");
       return null;
     }
   }

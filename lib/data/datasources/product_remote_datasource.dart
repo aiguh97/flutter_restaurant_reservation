@@ -7,140 +7,131 @@ import 'package:restoguh/data/models/response/add_product_response_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:restoguh/data/models/response/product_response_model.dart';
 import 'auth_local_datasource.dart';
-import 'package:path/path.dart'; // untuk basename()
 
 class ProductRemoteDatasource {
-  Future<Either<String, ProductResponseModel>> getProducts() async {
+  Future<Map<String, String>> _getHeaders() async {
     final authData = await AuthLocalDatasource().getAuthData();
-    // 1. Tambahkan pengecekan ini
+
     if (authData == null || authData.token == null) {
-      return left('Sesi login berakhir');
+      throw Exception("Session expired");
     }
-    final response = await http.get(
-      Uri.parse('${Variables.baseUrl}/api/products'),
-      headers: {'Authorization': 'Bearer ${authData.token}'},
-    );
 
-    if (response.statusCode == 200) {
-      return right(ProductResponseModel.fromJson(response.body));
-    } else {
-      return left(response.body);
-    }
+    return {
+      'Authorization': 'Bearer ${authData.token}',
+      'Accept': 'application/json',
+    };
   }
 
-  Future<Either<String, ProductResponseModel>> updateProduct(
-    ProductRequestModel product,
-  ) async {
+  // ================= GET PRODUCTS =================
+
+  Future<Either<String, ProductResponseModel>> getProducts() async {
     try {
-      final authData = await AuthLocalDatasource().getAuthData();
-      // 1. Tambahkan pengecekan ini
-      if (authData == null || authData.token == null) {
-        return left('Sesi login berakhir');
-      }
-      // Gunakan Uri.parse yang bersih
-      final url = Uri.parse('${Variables.baseUrl}/api/products/${product.id}');
+      final headers = await _getHeaders();
 
-      var request = http.MultipartRequest('POST', url);
-
-      // Tambahkan Header (Sangat Penting)
-      request.headers.addAll({
-        'Authorization': 'Bearer ${authData.token}',
-        'Accept': 'application/json',
-        'Content-Type': 'multipart/form-data',
-      });
-
-      // Method Spoofing
-      request.fields['_method'] = 'PUT';
-
-      // Isi data lainnya
-      request.fields['name'] = product.name;
-      request.fields['price'] = product.price.toString();
-      request.fields['stock'] = product.stock.toString();
-      request.fields['category_id'] = product.categoryId.toString();
-
-      // Kirim file jika ada
-      if (product.image != null) {
-        final file = File(product.image!.path);
-        if (await file.exists()) {
-          request.files.add(
-            await http.MultipartFile.fromPath(
-              'image',
-              file.path,
-              filename: basename(file.path),
-            ),
-          );
-        }
-      }
-
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200) {
-        return right(ProductResponseModel.fromJson(response.body));
-      } else {
-        // Log body agar kita tahu jika ada error validasi lagi
-        print("Error Update: ${response.body}");
-        return left('Error ${response.statusCode}: ${response.body}');
-      }
-    } catch (e) {
-      return left('Exception: $e');
-    }
-  }
-
-  Future<Either<String, void>> deleteProduct(int id) async {
-    try {
-      final authData = await AuthLocalDatasource().getAuthData();
-      // 1. Tambahkan pengecekan ini
-      if (authData == null || authData.token == null) {
-        return left('Sesi login berakhir');
-      }
-      final response = await http.delete(
-        Uri.parse('${Variables.baseUrl}/api/products/$id'),
-        headers: {'Authorization': 'Bearer ${authData.token}'},
+      final response = await http.get(
+        Uri.parse('${Variables.baseUrl}/api/products'),
+        headers: headers,
       );
 
       if (response.statusCode == 200) {
-        return right(null);
-      } else {
-        return left('Gagal menghapus produk: ${response.body}');
+        return right(ProductResponseModel.fromJson(response.body));
       }
+
+      return left("Error ${response.statusCode}: ${response.body}");
     } catch (e) {
       return left(e.toString());
     }
   }
 
-  Future<Either<String, AddProductResponseModel>> addProduct(
-    ProductRequestModel productRequestModel,
+  // ================= UPDATE PRODUCT =================
+
+  Future<Either<String, ProductResponseModel>> updateProduct(
+    ProductRequestModel product,
   ) async {
-    final authData = await AuthLocalDatasource().getAuthData();
-    // 1. Tambahkan pengecekan ini
-    if (authData == null || authData.token == null) {
-      return left('Sesi login berakhir');
+    try {
+      final headers = await _getHeaders();
+
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${Variables.baseUrl}/api/products/${product.id}'),
+      );
+
+      request.headers.addAll(headers);
+
+      request.fields['_method'] = 'PUT';
+      request.fields['name'] = product.name;
+      request.fields['price'] = product.price.toString();
+      request.fields['stock'] = product.stock.toString();
+      request.fields['category_id'] = product.categoryId.toString();
+
+      if (product.image != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('image', product.image!.path),
+        );
+      }
+
+      final response = await http.Response.fromStream(await request.send());
+
+      if (response.statusCode == 200) {
+        return right(ProductResponseModel.fromJson(response.body));
+      }
+
+      return left(response.body);
+    } catch (e) {
+      return left(e.toString());
     }
-    final Map<String, String> headers = {
-      'Authorization': 'Bearer ${authData.token}',
-    };
-    var request = http.MultipartRequest(
-      'POST',
-      Uri.parse('${Variables.baseUrl}/api/products'),
-    );
-    request.fields.addAll(productRequestModel.toMap());
-    request.files.add(
-      await http.MultipartFile.fromPath(
-        'image',
-        productRequestModel.image!.path,
-      ),
-    );
-    request.headers.addAll(headers);
+  }
 
-    http.StreamedResponse response = await request.send();
+  // ================= DELETE =================
 
-    final String body = await response.stream.bytesToString();
+  Future<Either<String, void>> deleteProduct(int id) async {
+    try {
+      final headers = await _getHeaders();
 
-    if (response.statusCode == 201) {
-      return right(AddProductResponseModel.fromJson(body));
-    } else {
-      return left(body);
+      final response = await http.delete(
+        Uri.parse('${Variables.baseUrl}/api/products/$id'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) return right(null);
+
+      return left(response.body);
+    } catch (e) {
+      return left(e.toString());
+    }
+  }
+
+  // ================= ADD PRODUCT =================
+
+  Future<Either<String, AddProductResponseModel>> addProduct(
+    ProductRequestModel model,
+  ) async {
+    try {
+      final headers = await _getHeaders();
+
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${Variables.baseUrl}/api/products'),
+      );
+
+      request.headers.addAll(headers);
+      request.fields.addAll(model.toMap());
+
+      if (model.image != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('image', model.image!.path),
+        );
+      }
+
+      final response = await http.Response.fromStream(await request.send());
+
+      if (response.statusCode == 201) {
+        return right(AddProductResponseModel.fromJson(response.body));
+      }
+
+      return left(response.body);
+    } catch (e) {
+      return left(e.toString());
     }
   }
 }

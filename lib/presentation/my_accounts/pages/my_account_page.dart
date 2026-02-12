@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restoguh/core/components/spaces.dart';
+import 'package:restoguh/core/constants/colors.dart';
 import 'package:restoguh/data/datasources/auth_local_datasource.dart';
 import 'package:restoguh/data/datasources/auth_remote_datasource.dart';
 import 'package:restoguh/data/models/response/auth_response_model.dart';
@@ -129,7 +130,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
         bottom: 20,
       ), // Padding disesuaikan
       decoration: const BoxDecoration(
-        color: Color(0xFF4C4DDC),
+        color: AppColors.primary,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(50),
           bottomRight: Radius.circular(50),
@@ -150,7 +151,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
                 ),
                 child: CircleAvatar(
                   radius: 40, // Ukuran diperkecil dari 55 ke 40
-                  backgroundColor: const Color(0xFF9192F1),
+                  backgroundColor: const Color.fromARGB(255, 31, 158, 6),
                   child: Text(
                     initials, // Menggunakan Inisial Nama
                     style: const TextStyle(
@@ -167,7 +168,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
                 child: Icon(
                   Icons.camera_alt,
                   size: 14,
-                  color: Color(0xFF4C4DDC),
+                  color: Color.fromARGB(255, 15, 134, 41),
                 ),
               ),
             ],
@@ -186,22 +187,6 @@ class _MyAccountPageState extends State<MyAccountPage> {
             style: TextStyle(
               color: Colors.white.withOpacity(0.8),
               fontSize: 13,
-            ),
-          ),
-          const SpaceHeight(10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Text(
-              "Store ID: #8823-CAFE",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-              ),
             ),
           ),
         ],
@@ -233,7 +218,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
         onTap: onTap,
         leading: CircleAvatar(
           backgroundColor: const Color(0xFFEEF0FF),
-          child: Icon(icon, color: const Color(0xFF4C4DDC)),
+          child: Icon(icon, color: AppColors.primary),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: subtitle != null ? Text(subtitle) : null,

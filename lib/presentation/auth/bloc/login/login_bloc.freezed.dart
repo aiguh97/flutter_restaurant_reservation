@@ -21,19 +21,21 @@ mixin _$LoginEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function(String email, String password) login,
-    required TResult Function(int userId, String code) verify2FA,
+    required TResult Function(int userId, String code, String twoFactorToken)
+    verify2FA,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function(String email, String password)? login,
-    TResult? Function(int userId, String code)? verify2FA,
+    TResult? Function(int userId, String code, String twoFactorToken)?
+    verify2FA,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(String email, String password)? login,
-    TResult Function(int userId, String code)? verify2FA,
+    TResult Function(int userId, String code, String twoFactorToken)? verify2FA,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -124,7 +126,8 @@ class _$StartedImpl implements _Started {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function(String email, String password) login,
-    required TResult Function(int userId, String code) verify2FA,
+    required TResult Function(int userId, String code, String twoFactorToken)
+    verify2FA,
   }) {
     return started();
   }
@@ -134,7 +137,8 @@ class _$StartedImpl implements _Started {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function(String email, String password)? login,
-    TResult? Function(int userId, String code)? verify2FA,
+    TResult? Function(int userId, String code, String twoFactorToken)?
+    verify2FA,
   }) {
     return started?.call();
   }
@@ -144,7 +148,7 @@ class _$StartedImpl implements _Started {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(String email, String password)? login,
-    TResult Function(int userId, String code)? verify2FA,
+    TResult Function(int userId, String code, String twoFactorToken)? verify2FA,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -272,7 +276,8 @@ class _$LoginImpl implements _Login {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function(String email, String password) login,
-    required TResult Function(int userId, String code) verify2FA,
+    required TResult Function(int userId, String code, String twoFactorToken)
+    verify2FA,
   }) {
     return login(email, password);
   }
@@ -282,7 +287,8 @@ class _$LoginImpl implements _Login {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function(String email, String password)? login,
-    TResult? Function(int userId, String code)? verify2FA,
+    TResult? Function(int userId, String code, String twoFactorToken)?
+    verify2FA,
   }) {
     return login?.call(email, password);
   }
@@ -292,7 +298,7 @@ class _$LoginImpl implements _Login {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(String email, String password)? login,
-    TResult Function(int userId, String code)? verify2FA,
+    TResult Function(int userId, String code, String twoFactorToken)? verify2FA,
     required TResult orElse(),
   }) {
     if (login != null) {
@@ -359,7 +365,7 @@ abstract class _$$Verify2FAImplCopyWith<$Res> {
     $Res Function(_$Verify2FAImpl) then,
   ) = __$$Verify2FAImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int userId, String code});
+  $Res call({int userId, String code, String twoFactorToken});
 }
 
 /// @nodoc
@@ -375,7 +381,11 @@ class __$$Verify2FAImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? userId = null, Object? code = null}) {
+  $Res call({
+    Object? userId = null,
+    Object? code = null,
+    Object? twoFactorToken = null,
+  }) {
     return _then(
       _$Verify2FAImpl(
         userId: null == userId
@@ -386,6 +396,10 @@ class __$$Verify2FAImplCopyWithImpl<$Res>
             ? _value.code
             : code // ignore: cast_nullable_to_non_nullable
                   as String,
+        twoFactorToken: null == twoFactorToken
+            ? _value.twoFactorToken
+            : twoFactorToken // ignore: cast_nullable_to_non_nullable
+                  as String,
       ),
     );
   }
@@ -394,16 +408,22 @@ class __$$Verify2FAImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$Verify2FAImpl implements _Verify2FA {
-  const _$Verify2FAImpl({required this.userId, required this.code});
+  const _$Verify2FAImpl({
+    required this.userId,
+    required this.code,
+    required this.twoFactorToken,
+  });
 
   @override
   final int userId;
   @override
   final String code;
+  @override
+  final String twoFactorToken;
 
   @override
   String toString() {
-    return 'LoginEvent.verify2FA(userId: $userId, code: $code)';
+    return 'LoginEvent.verify2FA(userId: $userId, code: $code, twoFactorToken: $twoFactorToken)';
   }
 
   @override
@@ -412,11 +432,13 @@ class _$Verify2FAImpl implements _Verify2FA {
         (other.runtimeType == runtimeType &&
             other is _$Verify2FAImpl &&
             (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.code, code) || other.code == code));
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.twoFactorToken, twoFactorToken) ||
+                other.twoFactorToken == twoFactorToken));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, userId, code);
+  int get hashCode => Object.hash(runtimeType, userId, code, twoFactorToken);
 
   /// Create a copy of LoginEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -431,9 +453,10 @@ class _$Verify2FAImpl implements _Verify2FA {
   TResult when<TResult extends Object?>({
     required TResult Function() started,
     required TResult Function(String email, String password) login,
-    required TResult Function(int userId, String code) verify2FA,
+    required TResult Function(int userId, String code, String twoFactorToken)
+    verify2FA,
   }) {
-    return verify2FA(userId, code);
+    return verify2FA(userId, code, twoFactorToken);
   }
 
   @override
@@ -441,9 +464,10 @@ class _$Verify2FAImpl implements _Verify2FA {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
     TResult? Function(String email, String password)? login,
-    TResult? Function(int userId, String code)? verify2FA,
+    TResult? Function(int userId, String code, String twoFactorToken)?
+    verify2FA,
   }) {
-    return verify2FA?.call(userId, code);
+    return verify2FA?.call(userId, code, twoFactorToken);
   }
 
   @override
@@ -451,11 +475,11 @@ class _$Verify2FAImpl implements _Verify2FA {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
     TResult Function(String email, String password)? login,
-    TResult Function(int userId, String code)? verify2FA,
+    TResult Function(int userId, String code, String twoFactorToken)? verify2FA,
     required TResult orElse(),
   }) {
     if (verify2FA != null) {
-      return verify2FA(userId, code);
+      return verify2FA(userId, code, twoFactorToken);
     }
     return orElse();
   }
@@ -499,10 +523,12 @@ abstract class _Verify2FA implements LoginEvent {
   const factory _Verify2FA({
     required final int userId,
     required final String code,
+    required final String twoFactorToken,
   }) = _$Verify2FAImpl;
 
   int get userId;
   String get code;
+  String get twoFactorToken;
 
   /// Create a copy of LoginEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -519,7 +545,8 @@ mixin _$LoginState {
     required TResult Function() loading,
     required TResult Function(AuthResponseModel authResponseModel) success,
     required TResult Function(String message) error,
-    required TResult Function(int userId) twoFactorRequired,
+    required TResult Function(int userId, String twoFactorToken)
+    twoFactorRequired,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
@@ -527,7 +554,7 @@ mixin _$LoginState {
     TResult? Function()? loading,
     TResult? Function(AuthResponseModel authResponseModel)? success,
     TResult? Function(String message)? error,
-    TResult? Function(int userId)? twoFactorRequired,
+    TResult? Function(int userId, String twoFactorToken)? twoFactorRequired,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
@@ -535,7 +562,7 @@ mixin _$LoginState {
     TResult Function()? loading,
     TResult Function(AuthResponseModel authResponseModel)? success,
     TResult Function(String message)? error,
-    TResult Function(int userId)? twoFactorRequired,
+    TResult Function(int userId, String twoFactorToken)? twoFactorRequired,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -634,7 +661,8 @@ class _$InitialImpl implements _Initial {
     required TResult Function() loading,
     required TResult Function(AuthResponseModel authResponseModel) success,
     required TResult Function(String message) error,
-    required TResult Function(int userId) twoFactorRequired,
+    required TResult Function(int userId, String twoFactorToken)
+    twoFactorRequired,
   }) {
     return initial();
   }
@@ -646,7 +674,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function()? loading,
     TResult? Function(AuthResponseModel authResponseModel)? success,
     TResult? Function(String message)? error,
-    TResult? Function(int userId)? twoFactorRequired,
+    TResult? Function(int userId, String twoFactorToken)? twoFactorRequired,
   }) {
     return initial?.call();
   }
@@ -658,7 +686,7 @@ class _$InitialImpl implements _Initial {
     TResult Function()? loading,
     TResult Function(AuthResponseModel authResponseModel)? success,
     TResult Function(String message)? error,
-    TResult Function(int userId)? twoFactorRequired,
+    TResult Function(int userId, String twoFactorToken)? twoFactorRequired,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -759,7 +787,8 @@ class _$LoadingImpl implements _Loading {
     required TResult Function() loading,
     required TResult Function(AuthResponseModel authResponseModel) success,
     required TResult Function(String message) error,
-    required TResult Function(int userId) twoFactorRequired,
+    required TResult Function(int userId, String twoFactorToken)
+    twoFactorRequired,
   }) {
     return loading();
   }
@@ -771,7 +800,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function()? loading,
     TResult? Function(AuthResponseModel authResponseModel)? success,
     TResult? Function(String message)? error,
-    TResult? Function(int userId)? twoFactorRequired,
+    TResult? Function(int userId, String twoFactorToken)? twoFactorRequired,
   }) {
     return loading?.call();
   }
@@ -783,7 +812,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function()? loading,
     TResult Function(AuthResponseModel authResponseModel)? success,
     TResult Function(String message)? error,
-    TResult Function(int userId)? twoFactorRequired,
+    TResult Function(int userId, String twoFactorToken)? twoFactorRequired,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -912,7 +941,8 @@ class _$SuccessImpl implements _Success {
     required TResult Function() loading,
     required TResult Function(AuthResponseModel authResponseModel) success,
     required TResult Function(String message) error,
-    required TResult Function(int userId) twoFactorRequired,
+    required TResult Function(int userId, String twoFactorToken)
+    twoFactorRequired,
   }) {
     return success(authResponseModel);
   }
@@ -924,7 +954,7 @@ class _$SuccessImpl implements _Success {
     TResult? Function()? loading,
     TResult? Function(AuthResponseModel authResponseModel)? success,
     TResult? Function(String message)? error,
-    TResult? Function(int userId)? twoFactorRequired,
+    TResult? Function(int userId, String twoFactorToken)? twoFactorRequired,
   }) {
     return success?.call(authResponseModel);
   }
@@ -936,7 +966,7 @@ class _$SuccessImpl implements _Success {
     TResult Function()? loading,
     TResult Function(AuthResponseModel authResponseModel)? success,
     TResult Function(String message)? error,
-    TResult Function(int userId)? twoFactorRequired,
+    TResult Function(int userId, String twoFactorToken)? twoFactorRequired,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -1073,7 +1103,8 @@ class _$ErrorImpl implements _Error {
     required TResult Function() loading,
     required TResult Function(AuthResponseModel authResponseModel) success,
     required TResult Function(String message) error,
-    required TResult Function(int userId) twoFactorRequired,
+    required TResult Function(int userId, String twoFactorToken)
+    twoFactorRequired,
   }) {
     return error(message);
   }
@@ -1085,7 +1116,7 @@ class _$ErrorImpl implements _Error {
     TResult? Function()? loading,
     TResult? Function(AuthResponseModel authResponseModel)? success,
     TResult? Function(String message)? error,
-    TResult? Function(int userId)? twoFactorRequired,
+    TResult? Function(int userId, String twoFactorToken)? twoFactorRequired,
   }) {
     return error?.call(message);
   }
@@ -1097,7 +1128,7 @@ class _$ErrorImpl implements _Error {
     TResult Function()? loading,
     TResult Function(AuthResponseModel authResponseModel)? success,
     TResult Function(String message)? error,
-    TResult Function(int userId)? twoFactorRequired,
+    TResult Function(int userId, String twoFactorToken)? twoFactorRequired,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -1166,7 +1197,7 @@ abstract class _$$TwoFactorRequiredImplCopyWith<$Res> {
     $Res Function(_$TwoFactorRequiredImpl) then,
   ) = __$$TwoFactorRequiredImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int userId});
+  $Res call({int userId, String twoFactorToken});
 }
 
 /// @nodoc
@@ -1182,13 +1213,17 @@ class __$$TwoFactorRequiredImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? userId = null}) {
+  $Res call({Object? userId = null, Object? twoFactorToken = null}) {
     return _then(
       _$TwoFactorRequiredImpl(
         null == userId
             ? _value.userId
             : userId // ignore: cast_nullable_to_non_nullable
                   as int,
+        null == twoFactorToken
+            ? _value.twoFactorToken
+            : twoFactorToken // ignore: cast_nullable_to_non_nullable
+                  as String,
       ),
     );
   }
@@ -1197,14 +1232,16 @@ class __$$TwoFactorRequiredImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$TwoFactorRequiredImpl implements _TwoFactorRequired {
-  const _$TwoFactorRequiredImpl(this.userId);
+  const _$TwoFactorRequiredImpl(this.userId, this.twoFactorToken);
 
   @override
   final int userId;
+  @override
+  final String twoFactorToken;
 
   @override
   String toString() {
-    return 'LoginState.twoFactorRequired(userId: $userId)';
+    return 'LoginState.twoFactorRequired(userId: $userId, twoFactorToken: $twoFactorToken)';
   }
 
   @override
@@ -1212,11 +1249,13 @@ class _$TwoFactorRequiredImpl implements _TwoFactorRequired {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TwoFactorRequiredImpl &&
-            (identical(other.userId, userId) || other.userId == userId));
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.twoFactorToken, twoFactorToken) ||
+                other.twoFactorToken == twoFactorToken));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, userId);
+  int get hashCode => Object.hash(runtimeType, userId, twoFactorToken);
 
   /// Create a copy of LoginState
   /// with the given fields replaced by the non-null parameter values.
@@ -1236,9 +1275,10 @@ class _$TwoFactorRequiredImpl implements _TwoFactorRequired {
     required TResult Function() loading,
     required TResult Function(AuthResponseModel authResponseModel) success,
     required TResult Function(String message) error,
-    required TResult Function(int userId) twoFactorRequired,
+    required TResult Function(int userId, String twoFactorToken)
+    twoFactorRequired,
   }) {
-    return twoFactorRequired(userId);
+    return twoFactorRequired(userId, twoFactorToken);
   }
 
   @override
@@ -1248,9 +1288,9 @@ class _$TwoFactorRequiredImpl implements _TwoFactorRequired {
     TResult? Function()? loading,
     TResult? Function(AuthResponseModel authResponseModel)? success,
     TResult? Function(String message)? error,
-    TResult? Function(int userId)? twoFactorRequired,
+    TResult? Function(int userId, String twoFactorToken)? twoFactorRequired,
   }) {
-    return twoFactorRequired?.call(userId);
+    return twoFactorRequired?.call(userId, twoFactorToken);
   }
 
   @override
@@ -1260,11 +1300,11 @@ class _$TwoFactorRequiredImpl implements _TwoFactorRequired {
     TResult Function()? loading,
     TResult Function(AuthResponseModel authResponseModel)? success,
     TResult Function(String message)? error,
-    TResult Function(int userId)? twoFactorRequired,
+    TResult Function(int userId, String twoFactorToken)? twoFactorRequired,
     required TResult orElse(),
   }) {
     if (twoFactorRequired != null) {
-      return twoFactorRequired(userId);
+      return twoFactorRequired(userId, twoFactorToken);
     }
     return orElse();
   }
@@ -1311,9 +1351,13 @@ class _$TwoFactorRequiredImpl implements _TwoFactorRequired {
 }
 
 abstract class _TwoFactorRequired implements LoginState {
-  const factory _TwoFactorRequired(final int userId) = _$TwoFactorRequiredImpl;
+  const factory _TwoFactorRequired(
+    final int userId,
+    final String twoFactorToken,
+  ) = _$TwoFactorRequiredImpl;
 
   int get userId;
+  String get twoFactorToken;
 
   /// Create a copy of LoginState
   /// with the given fields replaced by the non-null parameter values.

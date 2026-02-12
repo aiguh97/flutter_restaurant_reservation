@@ -12,5 +12,6 @@ class LoginEvent with _$LoginEvent {
   const factory LoginEvent.verify2FA({
     required int userId,
     required String code,
+    required String twoFactorToken,
   }) = _Verify2FA;
 }

@@ -8,5 +8,8 @@ class LoginState with _$LoginState {
       _Success;
   const factory LoginState.error(String message) = _Error;
   // Pastikan nama ini sama dengan yang dipanggil di Bloc
-  const factory LoginState.twoFactorRequired(int userId) = _TwoFactorRequired;
+  const factory LoginState.twoFactorRequired(
+    int userId,
+    String twoFactorToken,
+  ) = _TwoFactorRequired;
 }

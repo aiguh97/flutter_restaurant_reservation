@@ -2,10 +2,7 @@
   <img src="screenshoots/logo.png" width="180"/>
 </div>
 <span style="color:#008C8C; font-weight:bold;">RestoGuh Mobile</span> adalah aplikasi client yang terintegrasi dengan backend Laravel 11.  
-Aplikasi ini digunakan untuk kebutuhan kasir (POS), monitoring pesanan, dan manajemen transaksi secara real-time.
-<p align="center">
-  Aplikasi Mobile POS & Restaurant Management System berbasis Flutter,BLOC,Freezed
-</p>
+Aplikasi ini digunakan untuk kebutuhan kasir (POS), monitoring pesanan, dan manajemen transaksi secara real-time,Aplikasi Mobile POS & Restaurant Management System berbasis Flutter,BLOC,Freezed.
 
 <p align="center">
   <img src="screenshoots/banner.png" width="100%"/>

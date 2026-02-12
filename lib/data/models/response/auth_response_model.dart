@@ -7,6 +7,7 @@ class AuthResponseModel {
   final int? userId;
   final String? message;
   final String? email;
+  final String? twoFactorToken;
 
   AuthResponseModel({
     this.user,
@@ -15,6 +16,7 @@ class AuthResponseModel {
     this.userId,
     this.message,
     this.email,
+    this.twoFactorToken,
   });
 
   // =========================
@@ -29,6 +31,7 @@ class AuthResponseModel {
       userId: json['user_id'],
       message: json['message'],
       email: json['email'],
+      twoFactorToken: json['two_factor_token']?.toString(),
     );
   }
 
@@ -62,6 +65,7 @@ class AuthResponseModel {
     int? userId,
     String? message,
     String? email,
+    String? twoFactorToken,
   }) {
     return AuthResponseModel(
       user: user ?? this.user,
@@ -70,6 +74,7 @@ class AuthResponseModel {
       userId: userId ?? this.userId,
       message: message ?? this.message,
       email: email ?? this.email,
+      twoFactorToken: twoFactorToken ?? this.twoFactorToken,
     );
   }
 }

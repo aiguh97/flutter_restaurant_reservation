@@ -1,13 +1,22 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinput/pinput.dart';
+import 'package:restoguh/core/constants/colors.dart'; // Sesuaikan path AppColors Anda
 import 'package:restoguh/core/components/spaces.dart';
 import 'package:restoguh/data/datasources/auth_local_datasource.dart';
+import 'package:restoguh/data/datasources/auth_remote_datasource.dart';
 import 'package:restoguh/presentation/auth/bloc/login/login_bloc.dart';
-import 'package:pinput/pinput.dart';
 
 class TwoFactorChallengePage extends StatefulWidget {
   final int userId;
-  const TwoFactorChallengePage({super.key, required this.userId});
+  final String twoFactorToken;
+
+  const TwoFactorChallengePage({
+    super.key,
+    required this.userId,
+    required this.twoFactorToken,
+  });
 
   @override
   State<TwoFactorChallengePage> createState() => _TwoFactorChallengePageState();
@@ -15,107 +24,141 @@ class TwoFactorChallengePage extends StatefulWidget {
 
 class _TwoFactorChallengePageState extends State<TwoFactorChallengePage> {
   final codeController = TextEditingController();
+  int _cooldownSeconds = 0;
+  bool _isSendingEmail = false;
+  Timer? _timer;
+
+  void _startCooldown(int seconds) {
+    setState(() => _cooldownSeconds = seconds);
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_cooldownSeconds == 0) {
+        timer.cancel();
+      } else {
+        setState(() => _cooldownSeconds--);
+      }
+    });
+  }
+
+  Future<void> _handleSendEmail() async {
+    setState(() => _isSendingEmail = true);
+    final result = await AuthRemoteDatasource().sendEmailOTP(widget.userId);
+    setState(() => _isSendingEmail = false);
+
+    result.fold(
+      (l) => ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l), backgroundColor: Colors.red)),
+      (r) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(r), backgroundColor: Colors.green),
+        );
+        _startCooldown(30);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    codeController.dispose();
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    // PinTheme yang lebih modern & clean
     final defaultPinTheme = PinTheme(
-      width: 52,
+      width: 50,
       height: 60,
-      textStyle: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+      textStyle: const TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+        color: AppColors.primary,
+      ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
+        color: Colors.grey.shade50,
         border: Border.all(color: Colors.grey.shade300),
       ),
     );
 
+    final focusedPinTheme = defaultPinTheme.copyWith(
+      decoration: defaultPinTheme.decoration!.copyWith(
+        color: Colors.white,
+        border: Border.all(color: AppColors.primary, width: 2),
+      ),
+    );
+
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(title: const Text('Verifikasi 2FA'), centerTitle: true),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: const BackButton(color: Colors.black),
+      ),
+      body: SafeArea(
+        child: Center(
+          // Menempatkan konten di tengah layar
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // 🔐 Icon
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.security,
-                    size: 40,
-                    color: Colors.orange,
+                // Icon Security untuk kesan modern
+                const Icon(
+                  Icons.vpn_key_rounded,
+                  size: 80,
+                  color: AppColors.primary,
+                ),
+                const SpaceHeight(24),
+                const Text(
+                  "Verifikasi 2FA",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
-
-                const SpaceHeight(20),
-
+                const SpaceHeight(12),
                 const Text(
-                  "Verifikasi Dua Langkah",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-
-                const SpaceHeight(8),
-
-                const Text(
-                  "Masukkan 6 digit kode dari aplikasi Authenticator",
+                  "Masukkan 6 digit kode keamanan Anda",
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
+                const SpaceHeight(32),
 
-                const SpaceHeight(30),
-
-                // 🔢 PIN INPUT
+                // Pinput dengan spacing antar box yang rata
                 Pinput(
                   controller: codeController,
                   length: 6,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   defaultPinTheme: defaultPinTheme,
-                  focusedPinTheme: defaultPinTheme.copyWith(
-                    decoration: defaultPinTheme.decoration!.copyWith(
-                      border: Border.all(color: Colors.orange, width: 2),
-                    ),
-                  ),
-                  submittedPinTheme: defaultPinTheme.copyWith(
-                    decoration: defaultPinTheme.decoration!.copyWith(
-                      color: Colors.orange.withOpacity(0.1),
-                    ),
-                  ),
+                  focusedPinTheme: focusedPinTheme,
                   onCompleted: (pin) {
                     context.read<LoginBloc>().add(
-                      LoginEvent.verify2FA(userId: widget.userId, code: pin),
+                      LoginEvent.verify2FA(
+                        userId: widget.userId,
+                        code: pin,
+                        twoFactorToken: widget.twoFactorToken,
+                      ),
                     );
                   },
                 ),
 
-                const SpaceHeight(30),
+                const SpaceHeight(32),
 
+                // Tombol Verifikasi Utama
                 BlocConsumer<LoginBloc, LoginState>(
                   listener: (context, state) {
                     state.maybeWhen(
                       success: (authData) async {
                         await AuthLocalDatasource().saveAuthData(authData);
-
                         if (context.mounted) {
                           Navigator.pushNamedAndRemoveUntil(
                             context,
                             '/home',
-                            (route) => false,
+                            (r) => false,
                           );
                         }
                       },
@@ -132,24 +175,30 @@ class _TwoFactorChallengePageState extends State<TwoFactorChallengePage> {
                   },
                   builder: (context, state) {
                     return state.maybeWhen(
-                      loading: () => const CircularProgressIndicator(),
+                      loading: () => const CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
                       orElse: () => SizedBox(
                         width: double.infinity,
-                        height: 50,
+                        height: 52,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange,
+                            backgroundColor: AppColors.primary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
+                            elevation: 0,
                           ),
                           onPressed: () {
-                            context.read<LoginBloc>().add(
-                              LoginEvent.verify2FA(
-                                userId: widget.userId,
-                                code: codeController.text,
-                              ),
-                            );
+                            if (codeController.text.length == 6) {
+                              context.read<LoginBloc>().add(
+                                LoginEvent.verify2FA(
+                                  userId: widget.userId,
+                                  code: codeController.text,
+                                  twoFactorToken: widget.twoFactorToken,
+                                ),
+                              );
+                            }
                           },
                           child: const Text(
                             "Verifikasi",
@@ -164,6 +213,35 @@ class _TwoFactorChallengePageState extends State<TwoFactorChallengePage> {
                     );
                   },
                 ),
+
+                const SpaceHeight(24),
+
+                // Opsi Kirim Ulang Email
+                _isSendingEmail
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.primary,
+                        ),
+                      )
+                    : TextButton(
+                        onPressed: _cooldownSeconds > 0
+                            ? null
+                            : _handleSendEmail,
+                        child: Text(
+                          _cooldownSeconds > 0
+                              ? "Kirim ulang tersedia dalam $_cooldownSeconds dtk"
+                              : "Kirim kode via Email",
+                          style: TextStyle(
+                            color: _cooldownSeconds > 0
+                                ? Colors.grey
+                                : AppColors.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
               ],
             ),
           ),

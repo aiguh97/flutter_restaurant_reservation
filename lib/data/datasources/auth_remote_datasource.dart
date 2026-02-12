@@ -89,6 +89,29 @@ class AuthRemoteDatasource {
     }
   }
 
+  Future<Either<String, String>> sendEmailOTP(int userId) async {
+    try {
+      final response = await http.post(
+        Uri.parse(
+          '${Variables.baseUrl}/api/2fa/send-email',
+        ), // Pastikan route ini sesuai api.php
+        headers: _headers,
+        body: jsonEncode({
+          'user_id': userId, // Ini harus terkirim
+        }),
+      );
+
+      final body = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return Right(body['message']);
+      } else {
+        return Left(body['message'] ?? 'Gagal mengirim OTP');
+      }
+    } catch (e) {
+      return Left('Koneksi Gagal: $e');
+    }
+  }
+
   // ===================== GOOGLE AUTH =====================
   Future<Either<String, AuthResponseModel>> loginWithGoogle(
     String idToken,
@@ -103,7 +126,10 @@ class AuthRemoteDatasource {
       final Map<String, dynamic> body = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        // ✅ PAKAI fromMap (BUKAN fromJson)
+        // ✅ Cek apakah isinya challenge 2FA
+        if (body['message'] == '2FA_REQUIRED') {
+          return Right(AuthResponseModel.fromMap(body));
+        }
         return Right(AuthResponseModel.fromMap(body));
       } else {
         return Left(body['message'] ?? 'Login Google gagal');
@@ -117,6 +143,7 @@ class AuthRemoteDatasource {
   Future<Either<String, Map<String, dynamic>>> setup2FA() async {
     try {
       final authData = await AuthLocalDatasource().getAuthData();
+      print("TOKEN = ${authData?.token}");
 
       if (authData?.token == null) {
         return const Left('Sesi berakhir, silakan login kembali.');
@@ -127,7 +154,7 @@ class AuthRemoteDatasource {
         headers: {
           ..._headers,
           'Authorization': 'Bearer ${authData!.token}',
-          'ngrok-skip-browser-warning': 'true',
+          // 'ngrok-skip-browser-warning': 'true',
         },
       );
 
@@ -226,12 +253,17 @@ class AuthRemoteDatasource {
   Future<Either<String, AuthResponseModel>> verify2FA(
     int userId,
     String code,
+    String twoFactorToken,
   ) async {
     try {
       final response = await http.post(
         Uri.parse('${Variables.baseUrl}/api/2fa/verify'),
         headers: _headers,
-        body: jsonEncode({'user_id': userId, 'code': code}),
+        body: jsonEncode({
+          'user_id': userId,
+          'code': code,
+          'two_factor_token': twoFactorToken,
+        }),
       );
 
       final body = jsonDecode(response.body);

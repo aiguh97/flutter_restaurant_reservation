@@ -78,11 +78,14 @@ class _LoginPageState extends State<LoginPage> {
                   });
                 },
 
-                twoFactorRequired: (userId) {
+                twoFactorRequired: (userId, token) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => TwoFactorChallengePage(userId: userId),
+                      builder: (_) => TwoFactorChallengePage(
+                        userId: userId,
+                        twoFactorToken: token,
+                      ),
                     ),
                   );
                 },
