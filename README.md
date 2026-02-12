@@ -66,41 +66,48 @@ Aplikasi ini digunakan untuk kebutuhan kasir (POS), monitoring pesanan, dan mana
 
 ## 📸 Screenshots Interface
 
+<table align="center">
+  <tr>
+    <td align="center">
+      <h3>🏠 Home</h3>
+      <img src="screenshoots/home.jpeg" width="350"/>
+    </td>
+    <td align="center">
+      <h3>🗂 Orders</h3>
+      <img src="screenshoots/orders.png" width="350"/>
+    </td>
+  </tr>
 
+  <tr>
+    <td align="center">
+      <h3>🛒 Product Management</h3>
+      <img src="screenshoots/product.png" width="350"/>
+    </td>
+    <td align="center">
+      <h3>Pilih Meja</h3>
+      <img src="screenshoots/pilih_meja.png" width="350"/>
+    </td>
+  </tr>
 
-<h3>🏠 Home</h3>
-<p align="center">
-  <img src="screenshoots/home.jpeg" width="700"/>
-</p>
+  <tr>
+    <td align="center">
+      <h3>Enable 2FA Auth</h3>
+      <img src="screenshoots/settings.png" width="350"/>
+    </td>
+    <td align="center">
+      <h3>Setup 2FA Login</h3>
+      <img src="screenshoots/setup.jpeg" width="350"/>
+    </td>
+  </tr>
 
-<h3>🗂 Orders</h3>
-<p align="center">
-  <img src="screenshoots/orders.png" width="700"/>
-</p>
-
-<h3>🛒 Product Management</h3>
-<p align="center">
-  <img src="screenshoots/product.png" width="700"/>
-</p>
-
-<h3>Pilih Meja</h3>
-<p align="center">
-  <img src="screenshoots/pilih_meja.png" width="700"/>
-</p>
-
-<h3>Enable 2FA Auth</h3>
-<p align="center">
-  <img src="screenshoots/settings.png" width="700"/>
-</p>
-
-<h3>Setup 2 FA Login</h3>
-<p align="center">
-  <img src="screenshoots/setup.jpeg" width="700"/>
-</p>
-
-
-<h3>Verify 2 FA Login</h3>
-<p align="center">
-  <img src="screenshoots/verify.jpeg" width="700"/>
-</p>
-
+  <tr>
+    <td align="center">
+      <h3>Verify 2FA Login</h3>
+      <img src="screenshoots/verify.jpeg" width="350"/>
+    </td>
+    <td align="center">
+      <h3>Printer</h3>
+      <img src="screenshoots/printer.png" width="350"/>
+    </td>
+  </tr>
+</table>

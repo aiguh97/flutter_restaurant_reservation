@@ -10,6 +10,7 @@ import 'package:restoguh/presentation/home/bloc/checkout/checkout_bloc.dart';
 import 'package:restoguh/presentation/home/models/order_item.dart';
 import 'package:restoguh/presentation/home/pages/dashboard_page.dart';
 import 'package:restoguh/presentation/reservation/bloc/reservation_bloc.dart';
+import 'package:restoguh/presentation/table/cubit/selected_table_cubit.dart';
 import 'package:restoguh/presentation/table/models/table_model.dart';
 import 'package:restoguh/presentation/table/pages/pilih_meja_page.dart';
 
@@ -196,9 +197,9 @@ class _OrderPageState extends State<OrderPage> {
                         );
 
                         if (result != null) {
-                          setState(() {
-                            selectedTable = result;
-                          });
+                          context.read<SelectedTableCubit>().selectTable(
+                            result,
+                          );
                         }
                       },
                       child: Container(
@@ -221,15 +222,17 @@ class _OrderPageState extends State<OrderPage> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Text(
-                                    selectedTable == null
-                                        ? 'Belum dipilih'
-                                        : selectedTable!.name,
-                                    style: TextStyle(
-                                      color: selectedTable == null
-                                          ? Colors.orange
-                                          : AppColors.primary,
-                                    ),
+                                  BlocBuilder<SelectedTableCubit, TableModel?>(
+                                    builder: (context, table) {
+                                      return Text(
+                                        table == null
+                                            ? "Belum pilih meja"
+                                            : "Meja: ${table.name}",
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ],
                               ),

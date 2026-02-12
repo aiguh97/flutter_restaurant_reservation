@@ -20,12 +20,13 @@ class TableBloc extends Bloc<TableEvent, TableState> {
   ) async {
     emit(TableLoading());
 
-    // Panggil tanpa parameter
     final result = await datasource.getTables();
 
     result.fold(
       (error) => emit(TableError(error)),
-      (tables) => emit(TableLoaded(tables: tables)),
+      (tables) => emit(
+        TableLoaded(tables: tables, selectedTable: event.initialSelected),
+      ),
     );
   }
 

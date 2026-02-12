@@ -8,6 +8,7 @@ import 'package:restoguh/data/datasources/table_remote_datasource.dart';
 import 'package:restoguh/presentation/table/bloc/table_bloc.dart';
 import 'package:restoguh/presentation/table/bloc/table_event.dart';
 import 'package:restoguh/presentation/table/bloc/table_state.dart';
+import 'package:restoguh/presentation/table/cubit/selected_table_cubit.dart';
 import 'package:restoguh/presentation/table/models/table_model.dart';
 import 'package:restoguh/presentation/table/pages/table_item.dart';
 import 'package:restoguh/presentation/table/pages/main_table_item.dart';
@@ -19,7 +20,13 @@ class PilihMejaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       // Pastikan FetchTables dipanggil
-      create: (_) => TableBloc(TableRemoteDatasource())..add(FetchTables()),
+      create: (context) {
+        final cubitSelected = context.read<SelectedTableCubit>().state;
+
+        return TableBloc(TableRemoteDatasource())
+          ..add(FetchTables(initialSelected: cubitSelected));
+      },
+
       child: Scaffold(
         appBar: AppBar(title: const Text('Pilih Meja'), centerTitle: true),
         body: SafeArea(
@@ -151,8 +158,17 @@ class PilihMejaPage extends StatelessWidget {
                       child: Button.filled(
                         label: 'Confirm Table',
                         disabled: state.selectedTable == null,
-                        onPressed: () =>
-                            Navigator.pop(context, state.selectedTable),
+                        onPressed: () {
+                          final selected = state.selectedTable!;
+
+                          // simpan ke cubit global
+                          context.read<SelectedTableCubit>().selectTable(
+                            selected,
+                          );
+
+                          // kembali ke home
+                          Navigator.pop(context);
+                        },
                       ),
                     ),
                   ],

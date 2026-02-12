@@ -8,9 +8,9 @@ class KitchenOrderCard extends StatelessWidget {
 
   const KitchenOrderCard({super.key, required this.order});
 
-  // Logika Warna Berdasarkan Status
+  String get status => order.status.toLowerCase();
   Color get statusColor {
-    switch (order.status.toLowerCase()) {
+    switch (status) {
       case 'pending':
         return Colors.orange;
       case 'processing':
@@ -24,18 +24,40 @@ class KitchenOrderCard extends StatelessWidget {
   }
 
   // Logika Teks Tombol
-  String get buttonText => order.status.toLowerCase() == 'pending'
-      ? 'Start Cooking'
-      : 'Mark Complete';
+  String? get buttonText {
+    switch (status) {
+      case 'pending':
+        return 'Start Cooking';
+      case 'processing':
+        return 'Mark Complete';
+      default:
+        return null; // DONE → tidak ada tombol
+    }
+  }
 
   // Logika Status Berikutnya
-  String get nextStatus =>
-      order.status.toLowerCase() == 'pending' ? 'processing' : 'done';
+  String? get nextStatus {
+    switch (status) {
+      case 'pending':
+        return 'processing';
+      case 'processing':
+        return 'completed';
+      default:
+        return null;
+    }
+  }
 
   // Logika Icon Tombol
-  IconData get buttonIcon => order.status.toLowerCase() == 'pending'
-      ? Icons.play_circle_fill
-      : Icons.check_circle;
+  IconData get buttonIcon {
+    switch (status) {
+      case 'pending':
+        return Icons.play_circle_fill;
+      case 'processing':
+        return Icons.check_circle;
+      default:
+        return Icons.check;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,35 +193,38 @@ class KitchenOrderCard extends StatelessWidget {
                 const SizedBox(height: 12),
 
                 /// ACTION BUTTON
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: order.status == 'pending'
-                          ? const Color(0xFF4255D4)
-                          : Colors.green,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                if (buttonText != null)
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: status == 'pending'
+                            ? const Color(0xFF4255D4)
+                            : Colors.green,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      context.read<KitchenBloc>().add(
-                        KitchenEvent.updateStatus(order.id, nextStatus),
-                      );
-                    },
-                    icon: Icon(buttonIcon, size: 20),
-                    label: Text(
-                      buttonText,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                      onPressed: () {
+                        if (nextStatus == null) return;
+
+                        context.read<KitchenBloc>().add(
+                          KitchenEvent.updateStatus(order.id, nextStatus!),
+                        );
+                      },
+                      icon: Icon(buttonIcon, size: 20),
+                      label: Text(
+                        buttonText!,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
           ),

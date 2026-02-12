@@ -15,7 +15,7 @@ class TableLoaded extends TableState {
   TableLoaded copyWith({List<TableModel>? tables, TableModel? selectedTable}) {
     return TableLoaded(
       tables: tables ?? this.tables,
-      selectedTable: selectedTable,
+      selectedTable: selectedTable ?? this.selectedTable,
     );
   }
 }

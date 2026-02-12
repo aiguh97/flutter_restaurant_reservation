@@ -7,6 +7,7 @@ import 'package:restoguh/presentation/auth/bloc/register/register_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:restoguh/presentation/kitchen/bloc/kitchen_bloc.dart';
 import 'package:restoguh/presentation/my-order/bloc/my_order_bloc.dart';
+import 'package:restoguh/presentation/table/cubit/selected_table_cubit.dart';
 
 // Core & Constants
 import 'core/constants/colors.dart';
@@ -65,6 +66,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => GoogleAuthBloc(AuthRemoteDatasource()),
         ),
+        BlocProvider(create: (_) => SelectedTableCubit()),
         BlocProvider<KitchenBloc>(
           create: (context) =>
               KitchenBloc(KitchenRemoteDatasource())

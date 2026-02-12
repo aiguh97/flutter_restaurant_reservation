@@ -8,6 +8,9 @@ import 'package:restoguh/presentation/setting/bloc/category/category_bloc.dart';
 import 'package:restoguh/presentation/setting/bloc/category/category_event.dart';
 import 'package:restoguh/presentation/setting/bloc/category/category_state.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
+import 'package:restoguh/presentation/table/cubit/selected_table_cubit.dart';
+import 'package:restoguh/presentation/table/models/table_model.dart';
+import 'package:restoguh/presentation/table/pages/pilih_meja_page.dart';
 import '../../../core/assets/assets.gen.dart';
 import '../../../core/components/menu_button.dart';
 import '../../../core/components/search_input.dart';
@@ -83,11 +86,26 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              context.push(const DraftOrderPage());
+            onPressed: () async {
+              final result = await Navigator.push<TableModel>(
+                context,
+                MaterialPageRoute(builder: (_) => const PilihMejaPage()),
+              );
+
+              if (result != null) {
+                context.read<SelectedTableCubit>().selectTable(result);
+              }
             },
+
             icon: const Icon(Icons.note_alt_rounded),
           ),
+
+          // IconButton(
+          //   onPressed: () {
+          //     context.push(const DraftOrderPage());
+          //   },
+          //   icon: const Icon(Icons.note_alt_rounded),
+          // ),
           const SpaceWidth(8),
         ],
         centerTitle: true,
